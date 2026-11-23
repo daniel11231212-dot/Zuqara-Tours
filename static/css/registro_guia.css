@@ -1,0 +1,835 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --verde: #16735d;
+    --verde-hover: #125f4e;
+    --verde-oscuro: #0d493c;
+    --verde-profundo: #073a30;
+    --verde-claro: #dff2eb;
+    --verde-muy-claro: #f3faf7;
+    --blanco: #ffffff;
+    --texto: #173b33;
+    --texto-suave: #71817b;
+    --borde: #dce9e4;
+    --fondo: #edf6f2;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--texto);
+    background:
+        radial-gradient(
+            circle at 5% 5%,
+            rgba(22, 115, 93, 0.12),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 95% 95%,
+            rgba(22, 115, 93, 0.10),
+            transparent 25%
+        ),
+        var(--fondo);
+}
+
+.registro-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.registro-card {
+    position: relative;
+    width: 100%;
+    max-width: 1180px;
+    min-height: 760px;
+    display: grid;
+    grid-template-columns: 39% 61%;
+    overflow: hidden;
+    background: var(--blanco);
+    border-radius: 30px;
+    box-shadow:
+        0 35px 90px rgba(8, 59, 49, 0.16),
+        0 10px 30px rgba(8, 59, 49, 0.06);
+    animation: aparecer 0.65s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.registro-visual {
+    position: relative;
+    min-height: 760px;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(4, 44, 36, 0.18),
+            rgba(4, 44, 36, 0.90)
+        ),
+        url("../img/guia-turistico.jpg") center center / cover no-repeat;
+}
+
+.visual-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(86, 190, 157, 0.20),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(5, 55, 45, 0.15),
+            rgba(5, 55, 45, 0.30)
+        );
+}
+
+.visual-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    min-height: 760px;
+    padding: 38px 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo-link {
+    display: inline-flex;
+    width: fit-content;
+}
+
+.logo-proyecto {
+    display: block;
+    width: 150px;
+    height: auto;
+    max-height: 90px;
+    object-fit: contain;
+    filter: none;
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    z-index: 10;
+    transition: 0.25s ease;
+}
+
+.logo-link:hover .logo-proyecto {
+    transform: scale(1.04);
+}
+
+.visual-bottom {
+    max-width: 410px;
+}
+
+.visual-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    backdrop-filter: blur(8px);
+}
+
+.visual-badge i {
+    font-size: 13px;
+}
+
+.visual-bottom h1 {
+    margin: 20px 0 14px;
+    color: #ffffff;
+    font-size: 39px;
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -1.1px;
+}
+
+.visual-bottom p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 13.5px;
+    line-height: 1.75;
+}
+
+.visual-features {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-top: 28px;
+}
+
+.visual-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.visual-feature > span {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+}
+
+.visual-feature > span i {
+    font-size: 15px;
+}
+
+.visual-feature div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.visual-feature strong {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.visual-feature small {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 10.5px;
+}
+
+.registro-formulario {
+    position: relative;
+    padding: 42px 54px 30px;
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-icon {
+    width: 57px;
+    height: 57px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: var(--verde-claro);
+    color: var(--verde);
+    font-size: 25px;
+    box-shadow: 0 8px 20px rgba(22, 115, 93, 0.08);
+}
+
+.form-tag {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--verde);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.form-header h2 {
+    margin: 0;
+    color: var(--verde-profundo);
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.form-description {
+    max-width: 550px;
+    margin: 13px 0 20px;
+    color: var(--texto-suave);
+    font-size: 12.5px;
+    line-height: 1.6;
+}
+
+.pasos {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.paso {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.paso span {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #edf2f0;
+    color: #84938e;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.paso small {
+    color: #84938e;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.paso.activo span {
+    background: var(--verde);
+    color: #ffffff;
+}
+
+.paso.activo small {
+    color: var(--verde-oscuro);
+}
+
+.paso-linea {
+    flex: 1;
+    height: 1px;
+    margin: 0 10px;
+    background: var(--borde);
+}
+
+.form-guia {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.seccion-form {
+    padding: 18px;
+    border: 1px solid #e5efeb;
+    border-radius: 16px;
+    background: #fcfefd;
+}
+
+.seccion-titulo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 16px;
+}
+
+.seccion-icono {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--verde-claro);
+    color: var(--verde);
+    font-size: 14px;
+}
+
+.seccion-titulo div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.seccion-titulo strong {
+    color: var(--texto);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.seccion-titulo small {
+    color: var(--texto-suave);
+    font-size: 10px;
+}
+
+.campos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px 14px;
+}
+
+.campo {
+    min-width: 0;
+}
+
+.campo-completo {
+    grid-column: 1 / 3;
+}
+
+.campo label {
+    display: block;
+    margin: 0 0 7px 2px;
+    color: #3d5951;
+    font-size: 10.5px;
+    font-weight: 700;
+}
+
+.input-box,
+.textarea-box {
+    position: relative;
+    width: 100%;
+}
+
+.input-box > i:first-child,
+.textarea-box > i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    color: #829790;
+    font-size: 14px;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+.input-box input,
+.input-box select,
+.textarea-box textarea {
+    width: 100%;
+    border: 1px solid var(--borde);
+    outline: none;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #24453c;
+    font-family: inherit;
+    font-size: 11.5px;
+    transition: 0.22s ease;
+}
+
+.input-box input,
+.input-box select {
+    height: 45px;
+    padding: 0 13px 0 40px;
+}
+
+.input-box select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 35px;
+}
+
+.select-box::after {
+    content: "\F282";
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "bootstrap-icons";
+    color: #829790;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.textarea-box textarea {
+    min-height: 78px;
+    padding: 12px 13px 12px 40px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.input-box input::placeholder,
+.textarea-box textarea::placeholder {
+    color: #a4b0ac;
+}
+
+.input-box input:hover,
+.input-box select:hover,
+.textarea-box textarea:hover {
+    border-color: #bad6cd;
+}
+
+.input-box input:focus,
+.input-box select:focus,
+.textarea-box textarea:focus {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 3px rgba(22, 115, 93, 0.07);
+}
+
+.input-box:focus-within > i:first-child,
+.textarea-box:focus-within > i {
+    color: var(--verde);
+}
+
+.password-box input {
+    padding-right: 43px;
+}
+
+.icono-alternar-password {
+    position: absolute !important;
+    left: auto !important;
+    right: 14px;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #829790 !important;
+    font-size: 15px !important;
+    cursor: pointer;
+    pointer-events: auto !important;
+    transition: 0.2s ease;
+}
+
+.icono-alternar-password:hover {
+    color: var(--verde) !important;
+}
+
+.aviso-solicitud {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 15px;
+    border: 1px solid #cfe5dd;
+    border-radius: 13px;
+    background: var(--verde-muy-claro);
+}
+
+.aviso-icono {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: var(--verde-claro);
+    color: var(--verde);
+    font-size: 13px;
+}
+
+.aviso-solicitud strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--verde-oscuro);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.aviso-solicitud p {
+    margin: 0;
+    color: #668078;
+    font-size: 10.5px;
+    line-height: 1.5;
+}
+
+.boton-registrar {
+    width: 100%;
+    min-height: 51px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px 0 20px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(
+        135deg,
+        var(--verde-oscuro),
+        var(--verde)
+    );
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 9px 22px rgba(22, 115, 93, 0.19);
+    transition: 0.25s ease;
+}
+
+.boton-registrar span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.boton-registrar span i {
+    font-size: 13px;
+}
+
+.boton-registrar > i {
+    font-size: 15px;
+    transition: 0.25s ease;
+}
+
+.boton-registrar:hover {
+    background: linear-gradient(
+        135deg,
+        var(--verde),
+        #1d8068
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 13px 28px rgba(22, 115, 93, 0.25);
+}
+
+.boton-registrar:hover > i {
+    transform: translateX(4px);
+}
+
+.boton-registrar:active {
+    transform: translateY(0);
+}
+
+.form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 21px;
+    color: #82908b;
+    font-size: 10.5px;
+}
+
+.form-footer a {
+    color: var(--verde);
+    text-decoration: none;
+    font-weight: 800;
+    transition: 0.2s ease;
+}
+
+.form-footer a:hover {
+    color: var(--verde-hover);
+}
+
+.form-footer a i {
+    margin-left: 2px;
+    font-size: 9px;
+}
+
+.volver {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 13px;
+    color: #8a9692;
+    text-decoration: none;
+    font-size: 10.5px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.volver:hover {
+    color: var(--verde);
+}
+
+.volver i {
+    transition: 0.2s ease;
+}
+
+.volver:hover i {
+    transform: translateX(-3px);
+}
+
+@media (max-width: 1050px) {
+
+    .registro-page {
+        padding: 20px;
+    }
+
+    .registro-card {
+        max-width: 950px;
+        grid-template-columns: 34% 66%;
+    }
+
+    .visual-content {
+        padding: 30px;
+    }
+
+    .visual-bottom h1 {
+        font-size: 32px;
+    }
+
+    .registro-formulario {
+        padding: 35px 35px 28px;
+    }
+}
+
+@media (max-width: 800px) {
+
+    .registro-page {
+        padding: 12px;
+        align-items: flex-start;
+    }
+
+    .registro-card {
+        display: block;
+        max-width: 600px;
+        min-height: auto;
+        border-radius: 22px;
+    }
+
+    .registro-visual {
+        min-height: 235px;
+    }
+
+    .visual-content {
+        min-height: 235px;
+        padding: 25px 28px;
+    }
+
+    .logo-proyecto {
+        width: 105px;
+    }
+
+    .visual-bottom {
+        max-width: 100%;
+    }
+
+    .visual-bottom h1 {
+        margin: 13px 0 7px;
+        font-size: 25px;
+    }
+
+    .visual-bottom p {
+        max-width: 500px;
+        font-size: 11.5px;
+    }
+
+    .visual-features {
+        display: none;
+    }
+
+    .registro-formulario {
+        padding: 32px 28px 28px;
+        overflow: visible;
+    }
+}
+
+@media (max-width: 560px) {
+
+    .registro-page {
+        padding: 7px;
+    }
+
+    .registro-card {
+        border-radius: 18px;
+    }
+
+    .registro-visual {
+        min-height: 200px;
+    }
+
+    .visual-content {
+        min-height: 200px;
+        padding: 22px;
+    }
+
+    .logo-proyecto {
+        width: 95px;
+    }
+
+    .visual-badge {
+        padding: 6px 10px;
+        font-size: 8.5px;
+    }
+
+    .visual-bottom h1 {
+        font-size: 22px;
+    }
+
+    .visual-bottom p {
+        display: none;
+    }
+
+    .registro-formulario {
+        padding: 27px 19px 24px;
+    }
+
+    .form-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        font-size: 21px;
+    }
+
+    .form-header h2 {
+        font-size: 24px;
+    }
+
+    .form-description {
+        font-size: 11.5px;
+    }
+
+    .pasos {
+        margin-bottom: 20px;
+    }
+
+    .paso small {
+        display: none;
+    }
+
+    .paso-linea {
+        margin: 0 7px;
+    }
+
+    .seccion-form {
+        padding: 14px;
+    }
+
+    .campos-grid {
+        display: block;
+    }
+
+    .campo {
+        margin-bottom: 13px;
+    }
+
+    .campo:last-child {
+        margin-bottom: 0;
+    }
+
+    .campo-completo {
+        width: 100%;
+    }
+
+    .aviso-solicitud {
+        padding: 12px;
+    }
+
+    .aviso-solicitud p {
+        font-size: 10px;
+    }
+
+    .boton-registrar {
+        min-height: 50px;
+        font-size: 11.5px;
+    }
+
+    .form-footer {
+        flex-direction: column;
+        gap: 3px;
+    }
+}

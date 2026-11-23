@@ -1,0 +1,414 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #f5f7f6;
+    color: #25352d;
+}
+
+.guia-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 270px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #ffffff;
+    border-right: 1px solid #e3e8e5;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-sidebar {
+    padding: 28px 25px 20px;
+    text-align: center;
+    border-bottom: 1px solid #edf0ee;
+}
+
+.logo-sidebar img {
+    width: 145px;
+    max-height: 70px;
+    object-fit: contain;
+}
+
+.perfil-sidebar {
+    text-align: center;
+    padding: 25px 20px;
+}
+
+.avatar {
+    width: 68px;
+    height: 68px;
+    margin: auto;
+    border-radius: 50%;
+    background: #e8f5ee;
+    color: #198754;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 29px;
+}
+
+.perfil-sidebar h3 {
+    font-size: 16px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+.perfil-sidebar span {
+    color: #7b867f;
+    font-size: 13px;
+}
+
+.menu-sidebar {
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #626f68;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.menu-sidebar a:hover,
+.menu-sidebar a.activo {
+    background: #e8f5ee;
+    color: #198754;
+}
+
+.menu-sidebar i {
+    font-size: 18px;
+}
+
+.cerrar-sidebar {
+    margin-top: auto;
+    padding: 18px 16px;
+    border-top: 1px solid #edf0ee;
+}
+
+.cerrar-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #dc3545;
+    font-size: 14px;
+}
+
+.cerrar-sidebar a:hover {
+    background: #fff1f2;
+}
+
+.contenido {
+    margin-left: 270px;
+    width: calc(100% - 270px);
+    padding: 45px;
+}
+
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #198754;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.encabezado h1 {
+    font-size: 34px;
+    margin: 8px 0;
+    color: #1d3027;
+}
+
+.encabezado p {
+    color: #758078;
+    margin: 0;
+}
+
+.contador {
+    background: white;
+    border: 1px solid #e2e8e4;
+    border-radius: 15px;
+    padding: 15px 25px;
+    text-align: center;
+}
+
+.contador strong {
+    display: block;
+    color: #198754;
+    font-size: 27px;
+}
+
+.contador span {
+    color: #7b867f;
+    font-size: 12px;
+}
+
+.viajeros-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.viajero-card {
+    background: white;
+    border: 1px solid #e1e7e3;
+    border-radius: 18px;
+    padding: 23px;
+    display: grid;
+    grid-template-columns: 65px 1fr auto;
+    gap: 20px;
+    align-items: start;
+    transition: 0.2s;
+}
+
+.viajero-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(30, 60, 45, 0.07);
+}
+
+.avatar-viajero {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #eef6f1;
+    color: #198754;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.nombre {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 17px;
+}
+
+.nombre h2 {
+    font-size: 18px;
+    margin: 0;
+    color: #26372e;
+}
+
+.estado {
+    background: #e8f5ee;
+    color: #198754;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.datos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+    gap: 17px;
+}
+
+.dato {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+}
+
+.dato > i {
+    color: #198754;
+    font-size: 17px;
+}
+
+.dato span {
+    display: block;
+    color: #8a958f;
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.dato strong {
+    display: block;
+    color: #3c4b43;
+    font-size: 12px;
+    word-break: break-word;
+}
+
+.total {
+    min-width: 100px;
+    text-align: right;
+    padding-top: 4px;
+}
+
+.total span {
+    display: block;
+    color: #89938d;
+    font-size: 11px;
+}
+
+.total strong {
+    display: block;
+    margin-top: 4px;
+    color: #198754;
+    font-size: 17px;
+}
+
+.vacio {
+    background: white;
+    border: 1px dashed #ccd7d0;
+    border-radius: 20px;
+    min-height: 390px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.icono-vacio {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e8f5ee;
+    color: #198754;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    margin-bottom: 20px;
+}
+
+.vacio h2 {
+    color: #26352e;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.vacio p {
+    color: #7a857e;
+    max-width: 520px;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.vacio a {
+    margin-top: 18px;
+    background: #198754;
+    color: white;
+    text-decoration: none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vacio a:hover {
+    background: #146c43;
+    color: white;
+}
+
+@media (max-width: 1000px) {
+
+    .viajero-card {
+        grid-template-columns: 60px 1fr;
+    }
+
+    .total {
+        grid-column: 2;
+        text-align: left;
+    }
+
+    .datos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 80px;
+    }
+
+    .logo-sidebar {
+        padding: 20px 10px;
+    }
+
+    .logo-sidebar img {
+        width: 55px;
+    }
+
+    .perfil-sidebar h3,
+    .perfil-sidebar span,
+    .menu-sidebar span,
+    .cerrar-sidebar span {
+        display: none;
+    }
+
+    .menu-sidebar a,
+    .cerrar-sidebar a {
+        justify-content: center;
+        padding: 13px 5px;
+    }
+
+    .contenido {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+        padding: 25px 18px;
+    }
+
+    .encabezado {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .contador {
+        width: 100%;
+    }
+
+    .viajero-card {
+        grid-template-columns: 1fr;
+    }
+
+    .datos {
+        grid-template-columns: 1fr;
+    }
+
+    .total {
+        grid-column: auto;
+    }
+
+    .nombre {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}

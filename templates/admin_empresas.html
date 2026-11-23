@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Empresas | Zuqara Admin</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('admin_dashboard') %}
+
+{% include "components/boton_volver.html" %}
+
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>
+            Zuqara Admin
+        </h2>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a
+            class="activo"
+            href="{{ url_for('admin_empresas') }}"
+        >
+            <i class="bi bi-buildings-fill"></i>
+            <span>Empresas</span>
+        </a>
+
+        <a href="{{ url_for('admin_usuarios') }}">
+            <i class="bi bi-people-fill"></i>
+            <span>Usuarios</span>
+        </a>
+
+        <a href="{{ url_for('admin_tours') }}">
+            <i class="bi bi-airplane-fill"></i>
+            <span>Tours</span>
+        </a>
+
+        <a href="{{ url_for('admin_comentarios') }}">
+            <i class="bi bi-chat-square-text-fill"></i>
+            <span>Comentarios</span>
+        </a>
+
+        <a href="{{ url_for('admin_parametros') }}">
+            <i class="bi bi-gear-fill"></i>
+            <span>Parámetros</span>
+        </a>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout"
+        >
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar sesión</span>
+        </a>
+
+    </aside>
+
+
+    <main class="contenido">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h2 class="mb-1">
+                    Empresas Registradas
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Gestiona y verifica las empresas registradas en Zuqara Tours.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-striped align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Nombre
+                        </th>
+
+                        <th>
+                            NIT
+                        </th>
+
+                        <th>
+                            Correo
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th>
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for empresa in empresas %}
+
+                    <tr>
+
+                        <td>
+                            {{ empresa.id }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ empresa.nombre }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ empresa.nit }}
+                        </td>
+
+                        <td>
+                            {{ empresa.correo }}
+                        </td>
+
+                        <td>
+
+                            {% if empresa.estado_verificacion == "verificada" %}
+
+                                <span class="badge bg-success">
+                                    <i class="bi bi-patch-check-fill"></i>
+                                    Verificada
+                                </span>
+
+                            {% elif empresa.estado_verificacion == "en_revision" %}
+
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-search"></i>
+                                    En revisión
+                                </span>
+
+                            {% elif empresa.estado_verificacion == "requiere_correcciones" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    Requiere correcciones
+                                </span>
+
+                            {% elif empresa.estado_verificacion == "rechazada" %}
+
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    Rechazada
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-clock-fill"></i>
+                                    Pendiente
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if empresa.estado_verificacion != "verificada" %}
+
+                                <a
+                                    href="{{ url_for('revisar_empresa', id=empresa.id) }}"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    <i class="bi bi-search"></i>
+                                    Revisar
+                                </a>
+
+                            {% else %}
+
+                                <a
+                                    href="{{ url_for('revisar_empresa', id=empresa.id) }}"
+                                    class="btn btn-outline-primary btn-sm"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                    Ver revisión
+                                </a>
+
+                            {% endif %}
+
+                            <a
+                                href="{{ url_for('eliminar_empresa_admin', id=empresa.id) }}"
+                                class="btn btn-danger btn-sm"
+                            >
+                                <i class="bi bi-trash"></i>
+                                Eliminar
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="text-center py-4"
+                        >
+
+                            <i class="bi bi-buildings fs-1 text-muted"></i>
+
+                            <p class="mt-2 mb-0 text-muted">
+                                No hay empresas registradas.
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

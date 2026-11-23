@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Factura {{ numero_factura }} | Zuqara Tours</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/factura.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+
+<div class="barra-acciones no-imprimir">
+
+    <a href="{{ url_for('reservas') }}"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+        Volver a Mis Reservas
+
+    </a>
+
+    <button onclick="window.print()"
+            class="btn btn-success">
+
+        <i class="bi bi-printer"></i>
+        Imprimir / Guardar como PDF
+
+    </button>
+
+</div>
+
+
+<div class="hoja-factura">
+
+
+    <div class="encabezado-factura">
+
+        <div>
+
+            <img
+                src="{{ url_for('static', filename='img/Log.png') }}"
+                class="logo-factura"
+                alt="Zuqara Tours"
+            >
+
+            <h4>Zuqara Tours</h4>
+
+            <p class="text-muted mb-0">
+                Plataforma de tours y experiencias turísticas
+            </p>
+
+        </div>
+
+
+        <div class="datos-factura">
+
+            <h3>FACTURA DE VENTA</h3>
+
+            <p>
+                <strong>N.º</strong>
+                {{ numero_factura }}
+            </p>
+
+            <p>
+                <strong>Fecha de pago:</strong>
+                {{ pago.fecha_pago.strftime("%d/%m/%Y") }}
+            </p>
+
+            <p>
+                <strong>Estado:</strong>
+                {{ pago.estado }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <hr>
+
+
+    <div class="row mb-4">
+
+
+        <div class="col-md-6">
+
+            <h6>Cliente</h6>
+
+            <p class="mb-0">
+                {{ reserva.viajero.nombre }}
+            </p>
+
+            <p class="mb-0">
+                {{ reserva.viajero.correo }}
+            </p>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <h6>Operador</h6>
+
+            {% if empresa %}
+
+                <p class="mb-0">
+                    {{ empresa.nombre }}
+                </p>
+
+                <p class="mb-0">
+                    NIT: {{ empresa.nit }}
+                </p>
+
+                <p class="mb-0">
+                    {{ empresa.correo }}
+                </p>
+
+            {% else %}
+
+                <p class="mb-0">
+                    Empresa no disponible
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <table class="table table-bordered">
+
+        <thead>
+
+            <tr>
+
+                <th>Tour</th>
+                <th>Fecha de reserva</th>
+                <th>Personas</th>
+                <th class="text-end">
+                    Subtotal
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td>
+                    {{ reserva.tour.titulo }}
+                    —
+                    {{ reserva.tour.ciudad }}
+                </td>
+
+                <td>
+                    {{ reserva.fecha_reserva.strftime("%d/%m/%Y") }}
+                </td>
+
+                <td>
+                    {{ reserva.cantidad_personas }}
+                </td>
+
+                <td class="text-end">
+
+                    ${{ "{:,.0f}".format(reserva.total_pago) }}
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="resumen-pago">
+
+
+        <div class="fila-resumen">
+
+            <span>
+                Método de pago
+            </span>
+
+            <span>
+
+                {{ pago.metodo_pago }}
+
+                {% if pago.referencia %}
+
+                    ({{ pago.referencia }})
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+        <div class="fila-resumen total">
+
+            <span>
+                Total pagado
+            </span>
+
+            <span>
+
+                ${{ "{:,.0f}".format(pago.monto) }}
+
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <p class="pie-factura">
+
+        Gracias por reservar con Zuqara Tours.
+        Esta factura fue generada automáticamente
+        y es válida como comprobante de tu pago.
+
+    </p>
+
+
+</div>
+
+
+</body>
+
+</html>

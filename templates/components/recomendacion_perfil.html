@@ -1,0 +1,14 @@
+{% if session.get("usuario_id") and not tiene_perfil_viajero %}
+<div class="alerta-recomendacion-perfil">
+    <div>
+        <i class="bi bi-person-badge"></i>
+        <div>
+            <strong>Crea tu perfil de usuario</strong>
+            <p>Cuéntanos cómo te gusta viajar y te recomendaremos mejores tours.</p>
+        </div>
+    </div>
+    <a href="{{ url_for('perfil') }}#perfil-viajero" class="btn btn-sm boton-crear-perfil">
+        Crear perfil de usuario
+    </a>
+</div>
+{% endif %}

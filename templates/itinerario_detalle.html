@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ itinerario.nombre }} | Zuqara Tours</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tours.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/itinerarios.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="contenedor-dashboard">
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <img src="{{ url_for('static', filename='img/Log.png') }}" class="logo" alt="Logo">
+
+            <h3 class="nombre-app">
+                Zuqara Tours
+            </h3>
+
+        </div>
+
+        <nav class="menu">
+
+            <a href="{{ url_for('principal') }}">
+                <i class="bi bi-grid"></i>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('tours') }}">
+                <i class="bi bi-airplane"></i>
+                Tours
+            </a>
+
+            <a href="{{ url_for('favoritos') }}">
+                <i class="bi bi-heart"></i>
+                Favoritos
+            </a>
+
+            <a href="{{ url_for('reservas') }}">
+                <i class="bi bi-calendar-check"></i>
+                Mis Reservas
+            </a>
+
+            <a href="{{ url_for('itinerarios') }}" class="activo">
+                <i class="bi bi-map"></i>
+                Itinerarios
+            </a>
+
+            <a href="{{ url_for('perfil') }}">
+                <i class="bi bi-person"></i>
+                Perfil
+            </a>
+
+        </nav>
+
+        <a href="{{ url_for('logout') }}" class="cerrar-sesion">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar sesión
+        </a>
+
+    </aside>
+
+    <main class="contenido-principal">
+
+        <a href="{{ url_for('itinerarios') }}" class="btn btn-light mb-4">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Mis Itinerarios
+        </a>
+
+        <div class="cabecera-itinerario mb-4">
+
+            <h1>{{ itinerario.nombre }}</h1>
+
+            {% if itinerario.fecha_inicio or itinerario.fecha_fin %}
+
+            <p>
+                <i class="bi bi-calendar-range"></i>
+
+                {% if itinerario.fecha_inicio %}
+                    {{ itinerario.fecha_inicio.strftime("%d/%m/%Y") }}
+                {% endif %}
+
+                {% if itinerario.fecha_fin %}
+                    — {{ itinerario.fecha_fin.strftime("%d/%m/%Y") }}
+                {% endif %}
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% if itinerario.tours_incluidos %}
+
+        <div class="row">
+
+            {% for item in itinerario.tours_incluidos %}
+
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <div class="card tarjeta-tour h-100">
+
+                    {% if item.tour.imagenes and item.tour.imagenes|length > 0 %}
+
+                        <img
+                            src="{{ url_for('static', filename=item.tour.imagenes[0].url) }}"
+                            class="card-img-top"
+                            alt="{{ item.tour.titulo }}"
+                        >
+
+                    {% else %}
+
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                             style="height: 220px;">
+
+                            <i class="bi bi-image fs-1 text-muted"></i>
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="card-body">
+
+                        <h5>{{ item.tour.titulo }}</h5>
+
+                        <p>
+                            <strong>{{ item.tour.ciudad }}</strong>
+                        </p>
+
+                        {% if item.fecha_programada %}
+
+                        <p class="fecha-programada">
+
+                            <i class="bi bi-calendar-event"></i>
+
+                            Programado para el
+                            {{ item.fecha_programada.strftime("%d/%m/%Y") }}
+
+                        </p>
+
+                        {% endif %}
+
+                        <h4>
+                            ${{ "{:,.0f}".format(item.tour.precio) }}
+                        </h4>
+
+                        <div class="d-flex gap-2">
+
+                            <a
+                                href="{{ url_for('detalle_tour', id=item.tour.id_tour) }}"
+                                class="btn boton-tour flex-fill"
+                            >
+                                Ver tour
+                            </a>
+
+                            <a
+                                href="{{ url_for('quitar_tour_itinerario', item_id=item.id) }}"
+                                class="btn btn-outline-danger"
+                                title="Quitar del itinerario"
+                            >
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-info text-center">
+
+            <h4>
+                Todavía no le has agregado tours a este itinerario.
+            </h4>
+
+            <p>
+                Ve a
+                <a href="{{ url_for('tours') }}">Tours</a>,
+                entra a la ficha del que te interese
+                y usa la opción "Agregar a mi itinerario".
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

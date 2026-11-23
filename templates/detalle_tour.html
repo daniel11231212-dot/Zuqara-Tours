@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ tour.titulo }} | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/detalle_tour.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<header class="topbar">
+
+    <div class="container topbar-content">
+
+        <a
+            href="{{ url_for('tours') }}"
+            class="back-link"
+        >
+            <span class="back-icon">
+                <i class="bi bi-arrow-left"></i>
+            </span>
+
+            Volver a explorar
+        </a>
+
+
+        <a
+            href="{{ url_for('tours') }}"
+            class="brand"
+        >
+
+            <span class="brand-icon">
+                <i class="bi bi-compass-fill"></i>
+            </span>
+
+            <span>ZUQARA</span>
+
+        </a>
+
+
+        <div class="top-actions">
+
+            {% if session.get("usuario_id") %}
+
+            <button
+                type="button"
+                class="share-button"
+            >
+                <i class="bi bi-share"></i>
+                Compartir
+            </button>
+
+            <button
+                type="button"
+                class="heart-button"
+                id="saveTour"
+            >
+                <i class="bi bi-heart"></i>
+            </button>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container tour-container">
+
+
+    <section class="hero-info">
+
+        <div class="hero-location">
+
+            <i class="bi bi-geo-alt-fill"></i>
+
+            {{ tour.ciudad }}, Colombia
+
+        </div>
+
+
+        <h1>
+            {{ tour.titulo }}
+        </h1>
+
+
+        <div class="hero-meta">
+
+  {% if promedio_calificacion is not none %}
+
+    <span class="hero-rating"> 
+
+     <i class="bi bi-star-fill"></i>
+
+     <strong>
+        {{ promedio_calificacion }}
+     </strong>
+
+       <span>
+         {{ comentarios|length }}
+         {% if comentarios|length == 1 %}
+            calificación
+         {% else %}
+            calificaciones
+         {% endif %}
+        </span>
+
+        </span>
+
+        {% else %}
+
+        <span class="hero-rating without-rating">
+
+        <i class="bi bi-star"></i>
+
+        <strong>
+          Nuevo
+        </strong>
+
+        <span>
+          Aún no tiene calificaciones
+        </span>
+
+        </span>
+
+        {% endif %}
+
+
+
+
+            {% if tour.dificultad %}
+
+            <span class="meta-dot"></span>
+
+            <span>
+                {{ tour.dificultad }}
+            </span>
+
+            {% endif %}
+
+
+            <span class="meta-dot"></span>
+
+            <span>
+                {{ tour.cupo_disponible }} cupos disponibles
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <section class="hero-gallery">
+
+
+        <div class="main-image-wrapper">
+
+            {% if tour.imagenes and tour.imagenes|length > 0 %}
+
+            <img
+                id="mainImage"
+                src="{{ url_for('static', filename=tour.imagenes[0].url) }}"
+                alt="{{ tour.titulo }}"
+            >
+
+            {% else %}
+
+            <div class="image-placeholder">
+
+                <i class="bi bi-image"></i>
+
+                <span>
+                    Este tour no tiene imágenes
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="image-shade"></div>
+
+
+            <div class="image-location">
+
+                <i class="bi bi-geo-alt-fill"></i>
+
+                {{ tour.ciudad }}, Colombia
+
+            </div>
+
+
+            {% if tour.imagenes and tour.imagenes|length > 1 %}
+
+            <div class="photo-total">
+
+                <i class="bi bi-images"></i>
+
+                {{ tour.imagenes|length }} fotos
+
+            </div>
+
+            {% endif %}
+
+
+            {% if tour.imagenes and tour.imagenes|length > 1 %}
+
+            <div class="floating-thumbnails">
+
+                {% for imagen in tour.imagenes %}
+
+                <button
+                    type="button"
+                    class="floating-thumb {% if loop.first %}active{% endif %}"
+                    data-image="{{ url_for('static', filename=imagen.url) }}"
+                >
+
+                    <img
+                        src="{{ url_for('static', filename=imagen.url) }}"
+                        alt="Foto {{ loop.index }}"
+                    >
+
+                </button>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <section class="main-grid">
+
+
+        <div class="left-content">
+
+
+            <section class="experience-intro">
+
+                <div class="section-tag">
+                    LA EXPERIENCIA
+                </div>
+
+                <h2>
+                    Vive este destino de una manera diferente
+                </h2>
+
+                <p>
+                    {{ tour.descripcion }}
+                </p>
+
+            </section>
+
+
+            <section class="highlights">
+
+                <div class="highlight">
+
+                    <div class="highlight-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <small>
+                            CAPACIDAD
+                        </small>
+
+                        <strong>
+                            {{ tour.cupo_disponible }} personas
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                {% if tour.dificultad %}
+
+                <div class="highlight">
+
+                    <div class="highlight-icon">
+                        <i class="bi bi-signpost-2-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <small>
+                            DIFICULTAD
+                        </small>
+
+                        <strong>
+                            {{ tour.dificultad }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="highlight">
+
+                    <div class="highlight-icon">
+
+                        {% if tour.acceso_rampa %}
+                            <i class="bi bi-universal-access"></i>
+                        {% else %}
+                            <i class="bi bi-person-walking"></i>
+                        {% endif %}
+
+                    </div>
+
+                    <div>
+
+                        <small>
+                            ACCESIBILIDAD
+                        </small>
+
+                        <strong>
+
+                            {% if tour.acceso_rampa %}
+                                Accesible
+                            {% else %}
+                                Consultar
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="includes-section">
+
+                <div class="section-tag">
+                    ¿QUÉ INCLUYE?
+                </div>
+
+                <h2>
+                    Todo preparado para tu experiencia
+                </h2>
+
+
+                {% if tour.incluye %}
+
+                <div class="includes-grid">
+
+                    {% for item in tour.incluye.split('\n') %}
+
+                        {% if item.strip() %}
+
+                        <div class="include-card">
+
+                            <div class="include-check">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+
+                            <span>
+                                {{ item.strip() }}
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <div class="empty-includes">
+
+                    <i class="bi bi-info-circle"></i>
+
+                    La empresa no ha especificado qué incluye este tour.
+
+                </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <section class="destination-section">
+
+                <div class="section-tag">
+                    DESTINO
+                </div>
+
+                <h2>
+                    Conoce la ubicación
+                </h2>
+
+                <div class="destination-title">
+
+                    <i class="bi bi-geo-alt-fill"></i>
+
+                    <strong>
+                        {{ tour.ciudad }}, Colombia
+                    </strong>
+
+                </div>
+
+                <div id="mapa-tour"></div>
+
+                <div class="map-note">
+
+                    <i class="bi bi-info-circle"></i>
+
+                    La ubicación del mapa es aproximada.
+
+                </div>
+
+            </section>
+
+
+            {% if comentarios %}
+
+            <section class="reviews-section">
+
+                <div class="section-tag">
+                    EXPERIENCIAS
+                </div>
+
+                <div class="reviews-title-row">
+
+                    <div>
+
+                        <h2>
+                            Lo que dicen nuestros viajeros
+                        </h2>
+
+                        <div class="overall-rating">
+
+                            <span class="rating-number">
+                                4.9
+                            </span>
+
+                            <span class="rating-stars">
+
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+
+                            </span>
+
+                            <span>
+                                Experiencias verificadas
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="reviews-grid">
+
+                    {% for comentario in comentarios %}
+
+                    <article class="review-card">
+
+                        <div class="review-header">
+
+                            <div class="review-user">
+
+                                <div class="review-avatar">
+
+                                    {{ comentario.usuario.nombre_completo[0]|upper }}
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ comentario.usuario.nombre_completo }}
+                                    </strong>
+
+                                    <span>
+                                        Viajero Zuqara
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="review-stars">
+
+                                {% for i in range(comentario.calificacion) %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+                        <p>
+                            {{ comentario.comentario }}
+                        </p>
+
+
+                        {% if comentario.created_at %}
+
+                        <time>
+                            {{ comentario.created_at.strftime("%d/%m/%Y") }}
+                        </time>
+
+                        {% endif %}
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+
+            {% if tour.itinerario_dias %}
+
+            <section class="itinerary-section">
+
+                <div class="section-tag">
+                    TU AVENTURA
+                </div>
+
+                <h2>
+                    Así será tu recorrido
+                </h2>
+
+
+                <div class="timeline">
+
+                    {% for dia in tour.itinerario_dias %}
+
+                    <div class="timeline-day">
+
+                        <div class="timeline-marker">
+
+                            <span>
+                                {{ dia.numero_dia }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="timeline-content">
+
+                            <small>
+                                DÍA {{ dia.numero_dia }}
+                            </small>
+
+                            <h3>
+                                {{ dia.titulo }}
+                            </h3>
+
+                            {% if dia.descripcion %}
+
+                            <p>
+                                {{ dia.descripcion }}
+                            </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+        </div>
+
+
+        <aside class="booking-column">
+
+
+            <div class="booking-card">
+
+                <div class="booking-price">
+
+                    <span>
+                        PRECIO POR PERSONA
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            ${{ "{:,.0f}".format(tour.precio) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="booking-summary">
+
+                    <div class="summary-row">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-calendar2-check"></i>
+                        </div>
+
+                        <div>
+
+                            <small>
+                                DISPONIBILIDAD
+                            </small>
+
+                            <strong>
+                                Reserva para tu fecha
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <div>
+
+                            <small>
+                                CUPOS
+                            </small>
+
+                            <strong>
+                                {{ tour.cupo_disponible }} disponibles
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if tour.dificultad %}
+
+                    <div class="summary-row">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-signpost-2-fill"></i>
+                        </div>
+
+                        <div>
+
+                            <small>
+                                DIFICULTAD
+                            </small>
+
+                            <strong>
+                                {{ tour.dificultad }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('reservar_tour', tour_id=tour.id_tour) }}"
+                    class="reserve-button"
+                >
+
+                    Reservar ahora
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+
+                <div class="secure">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    Reserva segura con Zuqara
+
+                </div>
+
+            </div>
+
+
+            {% if session.get("usuario_id") %}
+
+            <div class="itinerary-card">
+
+                <div class="itinerary-heading">
+
+                    <div class="itinerary-icon">
+                        <i class="bi bi-map-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Planifica tu viaje
+                        </h3>
+
+                        <p>
+                            Guarda este tour en tu itinerario.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {% if itinerarios %}
+
+                <form
+                    action="{{ url_for('agregar_tour_itinerario', tour_id=tour.id_tour) }}"
+                    method="POST"
+                >
+
+                    <label>
+                        Selecciona un itinerario
+                    </label>
+
+                    <select
+                        name="itinerario_id"
+                        class="form-select"
+                        required
+                    >
+
+                        {% for itinerario in itinerarios %}
+
+                        <option value="{{ itinerario.id }}">
+                            {{ itinerario.nombre }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+
+                    <label>
+                        Fecha del tour
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha_programada"
+                        class="form-control"
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="add-trip-button"
+                    >
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Agregar al itinerario
+
+                    </button>
+
+                </form>
+
+                {% else %}
+
+                <p class="no-itineraries">
+                    Aún no tienes itinerarios creados.
+                </p>
+
+                <a
+                    href="{{ url_for('itinerarios') }}"
+                    class="create-itinerary"
+                >
+
+                    Crear mi itinerario
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="trust-card">
+
+                <div class="trust-icon">
+                    <i class="bi bi-headset"></i>
+                </div>
+
+                <div>
+
+                    <strong>
+                        ¿Necesitas ayuda?
+                    </strong>
+
+                    <span>
+                        Estamos para ayudarte con tu viaje.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+    </section>
+
+
+    <footer class="footer">
+
+        <div class="footer-brand">
+
+            <span class="footer-logo">
+                <i class="bi bi-compass-fill"></i>
+            </span>
+
+            <div>
+
+                <strong>
+                    ZUQARA TOURS
+                </strong>
+
+                <span>
+                    Descubre Colombia. Vive la experiencia.
+                </span>
+
+            </div>
+
+        </div>
+
+        <i class="bi bi-map footer-map-icon"></i>
+
+    </footer>
+
+</main>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+    const thumbnails =
+        document.querySelectorAll(".floating-thumb");
+
+    const mainImage =
+        document.getElementById("mainImage");
+
+
+    thumbnails.forEach(thumbnail => {
+
+        thumbnail.addEventListener(
+            "click",
+            () => {
+
+                if (!mainImage) {
+                    return;
+                }
+
+                thumbnails.forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                thumbnail.classList.add("active");
+
+                mainImage.style.opacity = "0";
+
+                setTimeout(() => {
+
+                    mainImage.src =
+                        thumbnail.dataset.image;
+
+                    mainImage.style.opacity = "1";
+
+                }, 140);
+
+            }
+        );
+
+    });
+
+
+    const saveButton =
+        document.getElementById("saveTour");
+
+
+    if (saveButton) {
+
+        saveButton.addEventListener(
+            "click",
+            () => {
+
+                saveButton.classList.toggle("saved");
+
+                const icon =
+                    saveButton.querySelector("i");
+
+                if (
+                    saveButton.classList.contains("saved")
+                ) {
+
+                    icon.className =
+                        "bi bi-heart-fill";
+
+                } else {
+
+                    icon.className =
+                        "bi bi-heart";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    const ciudad =
+        "{{ tour.ciudad }}";
+
+
+    const mapa =
+        L.map(
+            "mapa-tour",
+            {
+                scrollWheelZoom: false
+            }
+        ).setView(
+            [4.5709, -74.2973],
+            6
+        );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap"
+        }
+    ).addTo(mapa);
+
+
+    fetch(
+        "https://nominatim.openstreetmap.org/search?format=json&country=Colombia&city=" +
+        encodeURIComponent(ciudad)
+    )
+    .then(
+        response => response.json()
+    )
+    .then(
+        data => {
+
+            if (!data.length) {
+                return;
+            }
+
+            const lat =
+                parseFloat(data[0].lat);
+
+            const lon =
+                parseFloat(data[0].lon);
+
+
+            mapa.setView(
+                [lat, lon],
+                13
+            );
+
+
+            L.marker(
+                [lat, lon]
+            )
+            .addTo(mapa)
+            .bindPopup(
+                "<strong>{{ tour.titulo }}</strong><br>" +
+                ciudad +
+                ", Colombia"
+            );
+
+        }
+    )
+    .catch(
+        error => {
+            console.error(
+                "Error cargando ubicación:",
+                error
+            );
+        }
+    );
+
+</script>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+></script>
+
+</body>
+
+</html>

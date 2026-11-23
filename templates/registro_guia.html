@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zuqara Tours | Registro de Guía</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registro_guia.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/componentes.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<main class="registro-page">
+
+    <section class="registro-card">
+
+        <div class="registro-visual">
+
+            <div class="visual-overlay"></div>
+
+            <div class="visual-content">
+
+                <a href="{{ url_for('login_guia') }}" class="logo-link">
+
+                    <img
+                        src="{{ url_for('static', filename='img/Log.png') }}"
+                        class="logo-proyecto"
+                        alt="Zuqara Tours"
+                    >
+
+                </a>
+
+                <div class="visual-bottom">
+
+                    <span class="visual-badge">
+                        <i class="bi bi-compass-fill"></i>
+                        ZUQARA TOURS
+                    </span>
+
+                    <h1>
+                        Convierte cada recorrido en una gran experiencia.
+                    </h1>
+
+                    <p>
+                        Forma parte de nuestra comunidad de guías turísticos,
+                        conecta con viajeros y comparte lo mejor de cada destino.
+                    </p>
+
+                    <div class="visual-features">
+
+                        <div class="visual-feature">
+                            <span>
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </span>
+                            <div>
+                                <strong>Destinos</strong>
+                                <small>Descubre nuevos lugares</small>
+                            </div>
+                        </div>
+
+                        <div class="visual-feature">
+                            <span>
+                                <i class="bi bi-people-fill"></i>
+                            </span>
+                            <div>
+                                <strong>Viajeros</strong>
+                                <small>Conecta con personas</small>
+                            </div>
+                        </div>
+
+                        <div class="visual-feature">
+                            <span>
+                                <i class="bi bi-star-fill"></i>
+                            </span>
+                            <div>
+                                <strong>Experiencias</strong>
+                                <small>Deja tu huella</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="registro-formulario">
+
+            <div class="form-header">
+
+                <div class="form-icon">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+
+                <div>
+
+                    <span class="form-tag">
+                        NUEVO GUÍA
+                    </span>
+
+                    <h2>
+                        Crear cuenta
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <p class="form-description">
+                Completa tus datos para solicitar tu registro como guía turístico.
+            </p>
+
+            <div class="pasos">
+
+                <div class="paso activo">
+                    <span>1</span>
+                    <small>Información</small>
+                </div>
+
+                <div class="paso-linea"></div>
+
+                <div class="paso">
+                    <span>2</span>
+                    <small>Empresa</small>
+                </div>
+
+                <div class="paso-linea"></div>
+
+                <div class="paso">
+                    <span>3</span>
+                    <small>Solicitud</small>
+                </div>
+
+            </div>
+
+            <form
+                action="{{ url_for('registro_guia_post') }}"
+                method="POST"
+                class="form-guia"
+            >
+
+                <div class="seccion-form">
+
+                    <div class="seccion-titulo">
+
+                        <span class="seccion-icono">
+                            <i class="bi bi-person-fill"></i>
+                        </span>
+
+                        <div>
+                            <strong>Información personal</strong>
+                            <small>Cuéntanos quién eres</small>
+                        </div>
+
+                    </div>
+
+                    <div class="campos-grid">
+
+                        <div class="campo">
+
+                            <label for="nombre">
+                                Nombre completo
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="bi bi-person"></i>
+
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    placeholder="Ej. Daniel Rodríguez"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label for="correo">
+                                Correo electrónico
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="bi bi-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    name="correo"
+                                    placeholder="ejemplo@correo.com"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label for="telefono">
+                                Número de teléfono
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="bi bi-telephone"></i>
+
+                                <input
+                                    type="text"
+                                    id="telefono"
+                                    name="telefono"
+                                    placeholder="3001234567"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    minlength="10"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    autocomplete="tel"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label for="ciudad_base">
+                                Ciudad base
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                <input
+                                    type="text"
+                                    id="ciudad_base"
+                                    name="ciudad_base"
+                                    placeholder="Ej. Bogotá"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="seccion-form">
+
+                    <div class="seccion-titulo">
+
+                        <span class="seccion-icono">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </span>
+
+                        <div>
+                            <strong>Perfil profesional</strong>
+                            <small>Cuéntanos sobre tu experiencia</small>
+                        </div>
+
+                    </div>
+
+                    <div class="campos-grid">
+
+                        <div class="campo campo-completo">
+
+                            <label for="empresa_id">
+                                Empresa turística
+                            </label>
+
+                            <div class="input-box select-box">
+
+                                <i class="bi bi-buildings"></i>
+
+                                <select
+                                    id="empresa_id"
+                                    name="empresa_id"
+                                    required
+                                >
+
+                                    <option value="" selected disabled>
+                                        Selecciona la empresa a la que perteneces
+                                    </option>
+
+                                    {% for empresa in empresas %}
+
+                                        <option value="{{ empresa.id }}">
+                                            {{ empresa.nombre }}
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label for="especialidad">
+                                Especialidad
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="bi bi-map"></i>
+
+                                <input
+                                    type="text"
+                                    id="especialidad"
+                                    name="especialidad"
+                                    placeholder="Ej. Turismo de naturaleza"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label for="experiencia">
+                                Experiencia
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="bi bi-award"></i>
+
+                                <input
+                                    type="text"
+                                    id="experiencia"
+                                    name="experiencia"
+                                    placeholder="Ej. 3 años"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo campo-completo">
+
+                            <label for="descripcion">
+                                Sobre ti
+                            </label>
+
+                            <div class="textarea-box">
+
+                                <i class="bi bi-chat-left-text"></i>
+
+                                <textarea
+                                    id="descripcion"
+                                    name="descripcion"
+                                    rows="3"
+                                    placeholder="Cuéntanos brevemente sobre ti, tus conocimientos y qué tipo de experiencias te gustaría ofrecer..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="seccion-form">
+
+                    <div class="seccion-titulo">
+
+                        <span class="seccion-icono">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </span>
+
+                        <div>
+                            <strong>Seguridad de tu cuenta</strong>
+                            <small>Crea una contraseña segura</small>
+                        </div>
+
+                    </div>
+
+                    <div class="campos-grid">
+
+                        <div class="campo">
+
+                            <label for="password_guia">
+                                Contraseña
+                            </label>
+
+                            <div class="input-box password-box">
+
+                                <i class="bi bi-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="password_guia"
+                                    name="password"
+                                    placeholder="Ingresa una contraseña"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <i
+                                    id="icono_password_guia"
+                                    class="bi bi-eye icono-alternar-password"
+                                    onclick="zuqaraAlternarPassword('password_guia', 'icono_password_guia')"
+                                ></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label for="confirmar_password_guia">
+                                Confirmar contraseña
+                            </label>
+
+                            <div class="input-box password-box">
+
+                                <i class="bi bi-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="confirmar_password_guia"
+                                    name="confirmar_password"
+                                    placeholder="Repite tu contraseña"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <i
+                                    id="icono_confirmar_password_guia"
+                                    class="bi bi-eye icono-alternar-password"
+                                    onclick="zuqaraAlternarPassword('confirmar_password_guia', 'icono_confirmar_password_guia')"
+                                ></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="aviso-solicitud">
+
+                    <div class="aviso-icono">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </div>
+
+                    <div>
+                        <strong>Tu solicitud será revisada</strong>
+
+                        <p>
+                            Después de registrarte, la empresa seleccionada
+                            deberá confirmar que perteneces a su equipo.
+                            Mientras tanto, tu cuenta permanecerá pendiente.
+                        </p>
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="boton-registrar"
+                >
+
+                    <span>
+                        <i class="bi bi-send-fill"></i>
+                        Solicitar registro como guía
+                    </span>
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+            <div class="form-footer">
+
+                <span>
+                    ¿Ya tienes una cuenta?
+                </span>
+
+                <a href="{{ url_for('login_guia') }}">
+                    Iniciar sesión
+                    <i class="bi bi-arrow-up-right"></i>
+                </a>
+
+            </div>
+
+            <a
+                href="{{ url_for('login_usuario') }}"
+                class="volver"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Volver al acceso principal
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+{% include "components/alternar_password.html" %}
+
+</body>
+
+</html>

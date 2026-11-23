@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reservar {{ tour.titulo }} | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/reservar_tour.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="reserva-page">
+
+    <div class="container py-5">
+
+        <div class="mb-4">
+
+            <a
+                href="{{ url_for('detalle_tour', id=tour.id_tour) }}"
+                class="volver-btn">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver al tour
+
+            </a>
+
+        </div>
+
+
+        <div class="reserva-header mb-4">
+
+            <div>
+
+                <span class="reserva-etiqueta">
+                    <i class="bi bi-calendar-check"></i>
+                    RESERVA
+                </span>
+
+                <h1>
+                    Reserva tu experiencia
+                </h1>
+
+                <p>
+                    Completa los datos para reservar tu tour en Zuqara Tours.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <div class="col-lg-7">
+
+                <div class="reserva-card">
+
+                    <div class="reserva-card-header">
+
+                        <div class="icono-seccion">
+
+                            <i class="bi bi-calendar-check"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Datos de la reserva
+                            </h2>
+
+                            <p>
+                                Selecciona la fecha y cantidad de viajeros.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="contactar-box">
+
+                        <div class="contactar-icono">
+
+                            <i class="bi bi-chat-dots-fill"></i>
+
+                        </div>
+
+                        <div class="contactar-texto">
+
+                            <strong>
+                                ¿Tienes alguna pregunta?
+                            </strong>
+
+                            <span>
+                                Contacta directamente con la empresa.
+                            </span>
+
+                        </div>
+
+                        <a
+                            href="{{ url_for('chat_tour', tour_id=tour.id_tour) }}"
+                            class="btn-contactar">
+
+                            Contactar
+
+                        </a>
+
+                    </div>
+
+
+                    <form method="POST">
+
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <span class="section-number">
+                                    01
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Fecha del viaje
+                                    </h3>
+
+                                    <p>
+                                        ¿Cuándo quieres realizar el tour?
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="fecha">
+
+                                    <i class="bi bi-calendar-event"></i>
+
+                                    Fecha del viaje
+
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="fecha"
+                                    name="fecha"
+                                    class="form-control"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <span class="section-number">
+                                    02
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Viajeros
+                                    </h3>
+
+                                    <p>
+                                        Indica cuántas personas participarán.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <div class="cantidad-card">
+
+                                        <div class="cantidad-icono adulto">
+
+                                            <i class="bi bi-person-fill"></i>
+
+                                        </div>
+
+                                        <div class="cantidad-info">
+
+                                            <label for="adultos">
+                                                Adultos
+                                            </label>
+
+                                            <small>
+                                                Personas mayores
+                                            </small>
+
+                                        </div>
+
+                                        <input
+                                            type="number"
+                                            id="adultos"
+                                            name="adultos"
+                                            class="cantidad-input"
+                                            min="1"
+                                            max="50"
+                                            value="1"
+                                            required>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <div class="cantidad-card">
+
+                                        <div class="cantidad-icono nino">
+
+                                            <i class="bi bi-person"></i>
+
+                                        </div>
+
+                                        <div class="cantidad-info">
+
+                                            <label for="ninos">
+                                                Niños
+                                            </label>
+
+                                            <small>
+                                                Menores de edad
+                                            </small>
+
+                                        </div>
+
+                                        <input
+                                            type="number"
+                                            id="ninos"
+                                            name="ninos"
+                                            class="cantidad-input"
+                                            min="0"
+                                            max="50"
+                                            value="0">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <span class="section-number">
+                                    03
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Información de los viajeros
+                                    </h3>
+
+                                    <p>
+                                        Ingresa los datos de cada persona que participará en el tour.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div id="pasajeros-container"></div>
+
+                        </div>
+
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <span class="section-number">
+                                    04
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Observaciones
+                                    </h3>
+
+                                    <p>
+                                        Agrega información importante sobre tu reserva.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="observaciones">
+
+                                    <i class="bi bi-chat-left-text"></i>
+
+                                    Observaciones generales
+
+                                </label>
+
+                                <textarea
+                                    id="observaciones"
+                                    name="observaciones"
+                                    class="form-control observaciones"
+                                    rows="4"
+                                    placeholder="Escribe aquí cualquier información importante sobre la reserva..."></textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="resumen-mobile">
+
+                            <div class="section-title">
+
+                                <span class="section-number">
+                                    05
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Resumen
+                                    </h3>
+
+                                    <p>
+                                        Revisa los datos de tu reserva.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="resumen-pasajeros">
+
+                                <div>
+
+                                    <span>
+                                        Adultos
+                                    </span>
+
+                                    <strong id="resumen-adultos">
+                                        1
+                                    </strong>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span>
+                                        Niños
+                                    </span>
+
+                                    <strong id="resumen-ninos">
+                                        0
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="precio-linea">
+
+                                <span>
+                                    Precio adulto
+                                </span>
+
+                                <strong>
+                                    ${{ "{:,.0f}".format(tour.precio) }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="precio-linea">
+
+                                <span>
+                                    Precio niño
+                                </span>
+
+                                <strong>
+                                    ${{ "{:,.0f}".format(tour.precio / 2) }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="total-box">
+
+                                <div>
+
+                                    <span>
+                                        Total de la reserva
+                                    </span>
+
+                                    <small>
+                                        Precio calculado según viajeros
+                                    </small>
+
+                                </div>
+
+                                <strong id="total">
+
+                                    ${{ "{:,.0f}".format(tour.precio) }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn-confirmar">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Confirmar Reserva
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-5">
+
+                <div class="tour-resumen">
+
+
+                    {% if tour.imagenes and tour.imagenes|length > 0 %}
+
+                        <div class="tour-imagen-container">
+
+                            <img
+                                src="{{ url_for('static', filename=tour.imagenes[0].url) }}"
+                                class="tour-imagen"
+                                alt="{{ tour.titulo }}">
+
+                            <div class="imagen-badge">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Tour verificado
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="tour-imagen-vacia">
+
+                            <i class="bi bi-image"></i>
+
+                            <span>
+                                Este tour no tiene imagen
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="tour-info">
+
+                        <span class="tour-categoria">
+
+                            <i class="bi bi-compass"></i>
+
+                            Experiencia Zuqara
+
+                        </span>
+
+
+                        <h2>
+                            {{ tour.titulo }}
+                        </h2>
+
+
+                        <p class="tour-ciudad">
+
+                            <i class="bi bi-geo-alt-fill"></i>
+
+                            {{ tour.ciudad }}
+
+                        </p>
+
+
+                        <p class="tour-descripcion">
+
+                            {{ tour.descripcion }}
+
+                        </p>
+
+
+                        <div class="tour-datos">
+
+                            <div>
+
+                                <i class="bi bi-people-fill"></i>
+
+                                <span>
+                                    {{ tour.cupo_disponible }} cupos
+                                </span>
+
+                            </div>
+
+
+                            <div>
+
+                                <i class="bi bi-person-check-fill"></i>
+
+                                <span>
+                                    Niños pagan 50%
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="tour-precio">
+
+                            <div>
+
+                                <small>
+                                    Desde
+                                </small>
+
+                                <strong>
+                                    ${{ "{:,.0f}".format(tour.precio) }}
+                                </strong>
+
+                                <span>
+                                    por adulto
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="seguridad-box">
+
+                            <i class="bi bi-shield-check"></i>
+
+                            <div>
+
+                                <strong>
+                                    Reserva segura
+                                </strong>
+
+                                <span>
+                                    Tus datos serán utilizados para gestionar tu reserva.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const PRECIO_ADULTO = Number("{{ tour.precio }}");
+
+    const PRECIO_NINO = PRECIO_ADULTO * 0.5;
+
+
+    const adultosInput =
+        document.getElementById("adultos");
+
+    const ninosInput =
+        document.getElementById("ninos");
+
+    const pasajerosContainer =
+        document.getElementById("pasajeros-container");
+
+    const totalElement =
+        document.getElementById("total");
+
+    const resumenAdultos =
+        document.getElementById("resumen-adultos");
+
+    const resumenNinos =
+        document.getElementById("resumen-ninos");
+
+
+    function generarPasajeros() {
+
+        let adultos =
+            parseInt(adultosInput.value) || 0;
+
+        let ninos =
+            parseInt(ninosInput.value) || 0;
+
+
+        if (adultos < 1) {
+
+            adultos = 1;
+
+            adultosInput.value = 1;
+
+        }
+
+
+        if (adultos > 50) {
+
+            adultos = 50;
+
+            adultosInput.value = 50;
+
+        }
+
+
+        if (ninos < 0) {
+
+            ninos = 0;
+
+            ninosInput.value = 0;
+
+        }
+
+
+        if (ninos > 50) {
+
+            ninos = 50;
+
+            ninosInput.value = 50;
+
+        }
+
+
+        pasajerosContainer.innerHTML = "";
+
+
+        for (let i = 1; i <= adultos; i++) {
+
+            const pasajero =
+                document.createElement("div");
+
+            pasajero.className =
+                "pasajero-card";
+
+
+            pasajero.innerHTML = `
+
+                <div class="pasajero-header">
+
+                    <div class="pasajero-icon adulto">
+
+                        <i class="bi bi-person-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Adulto ${i}
+                        </h4>
+
+                        <span>
+                            Viajero ${i}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row g-3">
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Nombre completo
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pasajeros_nombre[]"
+                            class="form-control"
+                            placeholder="Nombre completo del adulto ${i}"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Tipo de documento
+                        </label>
+
+                        <select
+                            name="pasajeros_tipo_documento[]"
+                            class="form-select"
+                            required>
+
+                            <option value="CC">
+                                Cédula de ciudadanía
+                            </option>
+
+                            <option value="CE">
+                                Cédula de extranjería
+                            </option>
+
+                            <option value="Pasaporte">
+                                Pasaporte
+                            </option>
+
+                            <option value="TI">
+                                Tarjeta de identidad
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Número de documento
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pasajeros_documento[]"
+                            class="form-control"
+                            placeholder="Número de documento"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            name="pasajeros_telefono[]"
+                            class="form-control"
+                            placeholder="Número de teléfono"
+                            required>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            pasajerosContainer.appendChild(pasajero);
+
+        }
+
+
+        for (let i = 1; i <= ninos; i++) {
+
+            const pasajero =
+                document.createElement("div");
+
+            pasajero.className =
+                "pasajero-card";
+
+
+            pasajero.innerHTML = `
+
+                <div class="pasajero-header">
+
+                    <div class="pasajero-icon nino">
+
+                        <i class="bi bi-person"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Niño ${i}
+                        </h4>
+
+                        <span>
+                            Viajero ${adultos + i}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row g-3">
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Nombre completo
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pasajeros_nombre[]"
+                            class="form-control"
+                            placeholder="Nombre completo del niño ${i}"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Tipo de documento
+                        </label>
+
+                        <select
+                            name="pasajeros_tipo_documento[]"
+                            class="form-select"
+                            required>
+
+                            <option value="TI">
+                                Tarjeta de identidad
+                            </option>
+
+                            <option value="Registro Civil">
+                                Registro civil
+                            </option>
+
+                            <option value="Pasaporte">
+                                Pasaporte
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Número de documento
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pasajeros_documento[]"
+                            class="form-control"
+                            placeholder="Número de documento"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            name="pasajeros_telefono[]"
+                            class="form-control"
+                            placeholder="Teléfono del acudiente"
+                            required>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            pasajerosContainer.appendChild(pasajero);
+
+        }
+
+
+        resumenAdultos.textContent =
+            adultos;
+
+        resumenNinos.textContent =
+            ninos;
+
+
+        actualizarTotal();
+
+    }
+
+
+    function actualizarTotal() {
+
+        const adultos =
+            parseInt(adultosInput.value) || 0;
+
+        const ninos =
+            parseInt(ninosInput.value) || 0;
+
+
+        const total =
+            (adultos * PRECIO_ADULTO) +
+            (ninos * PRECIO_NINO);
+
+
+        totalElement.textContent =
+            "$" +
+            total.toLocaleString(
+                "es-CO",
+                {
+                    maximumFractionDigits: 0
+                }
+            );
+
+    }
+
+
+    adultosInput.addEventListener(
+        "input",
+        generarPasajeros
+    );
+
+
+    ninosInput.addEventListener(
+        "input",
+        generarPasajeros
+    );
+
+
+    generarPasajeros();
+
+</script>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>
+¿

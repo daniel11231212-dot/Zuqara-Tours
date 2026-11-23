@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zuqara Tours | Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/principal.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/componentes.css') }}">
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+{% include "components/boton_volver.html" %}
+
+
+<div class="contenedor-dashboard">
+
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <img src="{{ url_for('static', filename='img/Log.png') }}"
+                 class="logo"
+                 alt="Logo">
+
+            <h3 class="nombre-app">
+                Zuqara Tours
+            </h3>
+
+        </div>
+
+        <nav class="menu">
+
+            <a href="{{ url_for('principal') }}" class="activo">
+                <i class="bi bi-grid"></i>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('tours') }}">
+                <i class="bi bi-airplane"></i>
+                Tours
+            </a>
+
+            <a href="{{ url_for('reservas') }}">
+                <i class="bi bi-calendar-check"></i>
+                Mis Reservas
+            </a>
+
+            <a href="{{ url_for('favoritos') }}">
+                <i class="bi bi-heart"></i>
+                Favoritos
+            </a>
+
+            <a href="{{ url_for('itinerarios') }}">
+                <i class="bi bi-map"></i>
+                Itinerarios
+            </a>
+
+            <a href="{{ url_for('perfil') }}">
+                <i class="bi bi-person"></i>
+                Mi Perfil
+            </a>
+
+        </nav>
+
+        <a href="{{ url_for('logout') }}"
+           class="cerrar-sesion">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Cerrar sesión
+
+        </a>
+
+    </aside>
+
+
+    <main class="contenido-principal">
+
+        <header class="encabezado">
+
+            <input
+                type="text"
+                class="form-control buscador"
+                placeholder="Buscar un tour...">
+
+            <button class="btn boton-buscar">
+
+                Buscar
+
+            </button>
+
+            <div class="usuario">
+
+                <img src="{{ url_for('static', filename=usuario_actual.foto) if usuario_actual and usuario_actual.foto else url_for('static', filename='img/perfil.png') }}"
+                     class="foto-usuario">
+
+                <div>
+
+                    <strong>
+
+                        {{ session["usuario_nombre"] }}
+
+                    </strong>
+
+                    <p>Usuario</p>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="bienvenida">
+
+            <h1>
+
+                ¡Hola {{ session["usuario_nombre"] }}!
+
+            </h1>
+
+            <p>
+
+                Descubre nuevos lugares y vive experiencias inolvidables con Zuqara Tours.
+
+            </p>
+
+        </section>
+
+
+        <section class="estadisticas">
+
+            <div class="tarjeta-estadistica">
+
+                <h2>{{ total_tours }}</h2>
+
+                <span>Tours Disponibles</span>
+
+            </div>
+
+        </section>
+
+        {% include "components/recomendacion_perfil.html" %}
+
+        <section class="mt-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h3>
+
+                    Tours recomendados
+
+                </h3>
+
+                <a href="{{ url_for('tours') }}"
+                   class="btn btn-primary">
+
+                    Ver todos
+
+                </a>
+
+            </div>
+
+            <div class="row g-4">
+
+                {% for tour in tours %}
+
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="card tarjeta-tour h-100">
+
+                        <img src="{{ url_for('static', filename=tour.imagen) }}"
+                             class="card-img-top"
+                             alt="{{ tour.nombre }}">
+
+                        <div class="card-body">
+
+                            <h5>
+
+                                {{ tour.nombre }}
+
+                            </h5>
+
+                            <p class="text-muted mb-1">
+
+                                <i class="bi bi-geo-alt-fill"></i>
+
+                                {{ tour.ciudad }}
+
+                            </p>
+
+                            <p class="calificacion-tour">
+                                {% if tour.promedio_calificacion %}
+                                    ⭐ {{ tour.promedio_calificacion }} ({{ tour.total_calificaciones }})
+                                {% else %}
+                                    <span class="text-muted">Sin calificaciones aún</span>
+                                {% endif %}
+                            </p>
+
+                            <h4 class="text-success">
+
+                                ${{ "{:,.0f}".format(tour.precio) }}
+
+                            </h4>
+
+                            <a href="{{ url_for('detalle_tour', id=tour.id) }}"
+                               class="btn boton-tour w-100">
+
+                                Ver detalles
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <aside class="panel-derecho">
+
+        <h4>
+
+            Mis Calificaciones
+
+        </h4>
+
+        {% if mis_calificaciones %}
+
+            {% for calificacion in mis_calificaciones %}
+
+            <div class="reserva">
+
+                <h6>
+
+                    {{ calificacion.tour.nombre }}
+
+                </h6>
+
+                <div class="estrellas-calificacion">
+                    {% for i in range(1, 6) %}
+                        {% if i <= calificacion.calificacion %}
+                            <i class="bi bi-star-fill"></i>
+                        {% else %}
+                            <i class="bi bi-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                    <span class="valor-calificacion">{{ calificacion.calificacion }}.0</span>
+                </div>
+
+                <small>
+
+                    {{ calificacion.fecha.strftime("%d %B %Y") }}
+
+                </small>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p class="text-muted small">
+                Aún no has calificado ningún tour. Cuando termines un viaje, podrás calificarlo desde "Mis Reservas".
+            </p>
+
+        {% endif %}
+
+    </aside>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

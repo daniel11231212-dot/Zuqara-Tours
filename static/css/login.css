@@ -1,0 +1,361 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+    linear-gradient(rgba(11,79,108,.70),rgba(11,79,108,.70)),
+    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+.contenedor-principal{
+
+    width:100%;
+    padding:40px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.tarjeta-login{
+
+    width:1250px;
+    max-width:95%;
+
+    min-height:700px;
+
+    background:white;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    box-shadow:
+    0 30px 80px rgba(0,0,0,.35);
+
+    animation:subir .8s;
+}
+
+.panel-login{
+
+    width:42%;
+
+    padding:60px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    background:white;
+}
+
+.logo-proyecto{
+
+    width:95px;
+
+    margin:0 auto 25px;
+}
+
+.titulo-login{
+
+    text-align:center;
+
+    color:#0B4F6C;
+
+    font-size:36px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+}
+
+.subtitulo-login{
+
+    text-align:center;
+
+    color:#7F8C8D;
+
+    margin-bottom:35px;
+
+    font-size:16px;
+}
+
+.form-label{
+
+    font-weight:600;
+
+    color:#2C3E50;
+
+    margin-bottom:8px;
+}
+
+.form-control{
+
+    height:55px;
+
+    border-radius:14px;
+
+    border:2px solid #ECF0F1;
+
+    transition:.3s;
+
+    font-size:15px;
+
+    padding-left:18px;
+
+    box-shadow:none;
+}
+
+.form-control:focus{
+
+    border-color:#16A085;
+
+    box-shadow:0 0 0 4px rgba(22,160,133,.15);
+}
+
+.boton-login{
+
+    width:100%;
+
+    height:55px;
+
+    border:none;
+
+    border-radius:15px;
+
+    margin-top:10px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:white;
+
+    background:linear-gradient(135deg,#16A085,#1ABC9C);
+
+    transition:.35s;
+}
+
+.boton-login:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 15px 30px rgba(26,188,156,.35);
+
+    background:linear-gradient(135deg,#16A085,#1ABC9C);
+}
+
+.links{
+
+    margin-top:20px;
+
+    text-align:center;
+}
+
+.links a{
+
+    color:#0B4F6C;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.links a:hover{
+
+    color:#16A085;
+}
+
+.panel-imagen{
+
+    width:58%;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.imagen-fondo{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    transition:1s;
+}
+
+.tarjeta-login:hover .imagen-fondo{
+
+    transform:scale(1.05);
+}
+
+.panel-imagen::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+    rgba(11,79,108,.25),
+    rgba(11,79,108,.45)
+    );
+}
+
+.recuadro-info{
+
+    position:absolute;
+
+    left:45px;
+    bottom:45px;
+
+    max-width:360px;
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    color:white;
+
+    padding:28px;
+
+    border-radius:22px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.logo-recuadro{
+
+    width:70px;
+
+    margin-bottom:15px;
+}
+
+.recuadro-info h3{
+
+    font-size:28px;
+
+    margin-bottom:15px;
+
+    font-weight:700;
+}
+
+.recuadro-info p{
+
+    font-size:15px;
+
+    line-height:1.7;
+}
+
+.alert{
+
+    border:none;
+
+    border-radius:12px;
+
+    font-weight:600;
+}
+
+@keyframes subir{
+
+    from{
+
+        opacity:0;
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+@media(max-width:992px){
+
+.tarjeta-login{
+
+    flex-direction:column;
+
+    width:96%;
+
+    min-height:auto;
+}
+
+.panel-login{
+
+    width:100%;
+    padding:45px;
+}
+
+.panel-imagen{
+
+    width:100%;
+    height:350px;
+}
+
+.recuadro-info{
+
+    left:25px;
+    right:25px;
+    bottom:25px;
+
+    max-width:none;
+}
+
+}
+
+@media(max-width:576px){
+
+.contenedor-principal{
+
+    padding:15px;
+}
+
+.panel-login{
+
+    padding:30px;
+}
+
+.titulo-login{
+
+    font-size:28px;
+}
+
+.recuadro-info{
+
+    padding:20px;
+}
+
+.recuadro-info h3{
+
+    font-size:22px;
+}
+
+}

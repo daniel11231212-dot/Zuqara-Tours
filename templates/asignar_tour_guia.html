@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zuqara Tours | Asignar tour</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/asignar_tour_guia.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="contenedor">
+
+    <a href="{{ url_for('guias_empresa') }}" class="volver">
+        <i class="bi bi-arrow-left"></i>
+        Volver a mis guías
+    </a>
+
+    <div class="cabecera">
+
+        <div class="icono-guia">
+            <i class="bi bi-person-badge-fill"></i>
+        </div>
+
+        <div>
+
+            <span>Asignación de tour</span>
+
+            <h1>{{ guia.nombre_completo }}</h1>
+
+            <p>
+                Selecciona uno de tus tours para asignárselo a este guía.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-titulo">
+
+            <div>
+                <h2>Seleccionar tour</h2>
+                <p>Tours activos disponibles de tu empresa.</p>
+            </div>
+
+            <span class="cantidad">
+                {{ tours|length }} tours
+            </span>
+
+        </div>
+
+        {% if tours %}
+
+        <form
+            method="POST"
+            action="{{ url_for('guardar_asignacion_tour', id_guia=guia.id_usuario) }}"
+        >
+
+            <div class="lista-tours">
+
+                {% for tour in tours %}
+
+                <label
+                    class="tour-opcion {% if tour.id_tour in tours_asignados %}asignado{% endif %}"
+                >
+
+                    <input
+                        type="radio"
+                        name="id_tour"
+                        value="{{ tour.id_tour }}"
+                        {% if tour.id_tour in tours_asignados %}
+                            disabled
+                        {% endif %}
+                        required
+                    >
+
+                    <div class="tour-icono">
+                        <i class="bi bi-map-fill"></i>
+                    </div>
+
+                    <div class="tour-info">
+
+                        <h3>{{ tour.titulo }}</h3>
+
+                        <div class="datos">
+
+                            <span>
+                                <i class="bi bi-geo-alt-fill"></i>
+                                {{ tour.ciudad }}
+                            </span>
+
+                            <span>
+                                <i class="bi bi-cash-stack"></i>
+                                ${{ "{:,.0f}".format(tour.precio or 0) }}
+                            </span>
+
+                            <span>
+                                <i class="bi bi-people-fill"></i>
+                                {{ tour.cupo_disponible }} cupos
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% if tour.id_tour in tours_asignados %}
+
+                    <span class="ya-asignado">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Ya asignado
+                    </span>
+
+                    {% else %}
+
+                    <span class="seleccionar">
+                        Seleccionar
+                    </span>
+
+                    {% endif %}
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn-asignar"
+            >
+                <i class="bi bi-calendar-plus"></i>
+                Asignar tour al guía
+            </button>
+
+        </form>
+
+        {% else %}
+
+        <div class="vacio">
+
+            <i class="bi bi-map"></i>
+
+            <h2>No tienes tours disponibles</h2>
+
+            <p>
+                Crea un tour activo antes de asignarlo a un guía.
+            </p>
+
+            <a href="{{ url_for('crear_tour') }}">
+                Crear tour
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

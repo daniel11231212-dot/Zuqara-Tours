@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tours | Zuqara Admin</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('admin_dashboard') %}
+
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>Zuqara Admin</h2>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ url_for('admin_usuarios') }}">
+            <i class="bi bi-people-fill"></i>
+            <span>Usuarios</span>
+        </a>
+
+        <a href="{{ url_for('admin_empresas') }}">
+            <i class="bi bi-buildings-fill"></i>
+            <span>Empresas</span>
+        </a>
+
+        <a
+            href="{{ url_for('admin_tours') }}"
+            class="activo"
+        >
+            <i class="bi bi-airplane-fill"></i>
+            <span>Tours</span>
+        </a>
+
+        <a href="{{ url_for('admin_comentarios') }}">
+            <i class="bi bi-chat-square-text-fill"></i>
+            <span>Comentarios</span>
+        </a>
+
+        <a href="{{ url_for('admin_parametros') }}">
+            <i class="bi bi-gear-fill"></i>
+            <span>Parámetros</span>
+        </a>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout"
+        >
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar sesión</span>
+        </a>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="encabezado-admin">
+
+            <div>
+
+                <h1>
+                    Administración de Tours
+                </h1>
+
+                <p>
+                    Revisa y aprueba los tours registrados.
+                </p>
+
+            </div>
+
+            <div class="perfil-admin-top">
+
+                <i class="bi bi-airplane-fill"></i>
+
+                <div>
+
+                    <strong>
+                        Tours
+                    </strong>
+
+                    <small>
+                        Revisión de publicaciones
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel-admin">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h4>
+                        Tours registrados
+                    </h4>
+
+                    <p>
+                        Verifica cada tour antes de aprobarlo.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-striped table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>
+                                <i class="bi bi-airplane"></i>
+                                Tour
+                            </th>
+
+                            <th>
+                                <i class="bi bi-geo-alt-fill"></i>
+                                Ciudad
+                            </th>
+
+                            <th>
+                                <i class="bi bi-building"></i>
+                                Empresa
+                            </th>
+
+                            <th>Precio</th>
+
+                            <th>Cupos</th>
+
+                            <th>Dificultad</th>
+
+                            <th>Estado</th>
+
+                            <th>Acción</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for tour in tours %}
+
+                        <tr>
+
+                            <td>
+                                {{ tour.id_tour }}
+                            </td>
+
+                            <td>
+
+                                <i class="bi bi-airplane text-primary me-2"></i>
+
+                                <strong>
+                                    {{ tour.titulo }}
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <i class="bi bi-geo-alt text-muted me-1"></i>
+
+                                {{ tour.ciudad }}
+
+                            </td>
+
+                            <td>
+
+                                {% if tour.operador %}
+
+                                    {{ tour.operador.nombre_completo }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Sin operador
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                ${{ "{:,.0f}".format(tour.precio) }}
+                            </td>
+
+                            <td>
+                                {{ tour.cupo_disponible }}
+                                /
+                                {{ tour.cupo_maximo }}
+                            </td>
+
+                            <td>
+                                {{ tour.dificultad or "No especificada" }}
+                            </td>
+
+                            <td>
+
+                                {% if tour.estado == "activo" %}
+
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Aprobado
+                                    </span>
+
+                                {% elif tour.estado == "rechazado" %}
+
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                        Rechazado
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-clock-fill"></i>
+                                        Pendiente
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <div class="d-flex gap-2 flex-wrap">
+
+                                    <a
+                                        href="{{ url_for('detalle_tour', id=tour.id_tour) }}"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        <i class="bi bi-eye-fill"></i>
+                                        Revisar
+                                    </a>
+
+                                    {% if tour.estado != "activo" %}
+
+                                        <form
+                                            action="{{ url_for('aprobar_tour', id=tour.id_tour) }}"
+                                            method="POST"
+                                            class="d-inline"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success btn-sm"
+                                            >
+                                                <i class="bi bi-check-circle-fill"></i>
+                                                Aprobar
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="9"
+                                class="text-center py-5"
+                            >
+
+                                <i
+                                    class="bi bi-airplane"
+                                    style="font-size: 2.5rem;"
+                                ></i>
+
+                                <p class="mt-3 mb-0 text-muted">
+                                    No hay tours registrados.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar Tour | Zuqara Empresa</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard_empresa.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/editar_tour.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('mis_tours') %}
+
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>Zuqara Empresa</h2>
+
+        <a href="{{ url_for('dashboard_empresa') }}">
+            <i class="bi bi-grid-fill"></i>
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('mis_tours') }}" class="activo">
+            <i class="bi bi-airplane-fill"></i>
+            Mis Tours
+        </a>
+
+        <a href="{{ url_for('crear_tour') }}">
+            <i class="bi bi-plus-circle-fill"></i>
+            Crear Tour
+        </a>
+
+        <a href="{{ url_for('reservas_empresa') }}">
+            <i class="bi bi-calendar-check-fill"></i>
+            Reservas
+        </a>
+
+        <a href="{{ url_for('solicitudes_guias') }}">
+            <i class="bi bi-person-badge-fill"></i>
+            Guías turísticos
+        </a>
+
+        <a href="{{ url_for('chats_empresa') }}">
+            <i class="bi bi-chat-dots-fill"></i>
+            Chats
+        </a>
+
+        <a href="{{ url_for('notificaciones_empresa') }}">
+
+            <i class="bi bi-bell-fill"></i>
+
+            Notificaciones
+
+            {% if notificaciones_sin_leer is defined and notificaciones_sin_leer > 0 %}
+
+                <span class="badge bg-danger">
+                    {{ notificaciones_sin_leer }}
+                </span>
+
+            {% endif %}
+
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Cerrar sesión
+
+        </a>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="editar-tour">
+
+            <div class="container mt-5">
+
+                <h2>Editar Tour</h2>
+
+                <form
+                    action="{{ url_for('actualizar_tour', id=tour.id_tour) }}"
+                    method="POST"
+                >
+
+                    <div class="mb-3">
+
+                        <label for="titulo">
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            name="titulo"
+                            id="titulo"
+                            class="form-control"
+                            value="{{ tour.titulo }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="descripcion">
+                            Descripción
+                        </label>
+
+                        <textarea
+                            name="descripcion"
+                            id="descripcion"
+                            class="form-control"
+                            rows="5"
+                            required
+                        >{{ tour.descripcion }}</textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="ciudad">
+                            Ciudad
+                        </label>
+
+                        <input
+                            type="text"
+                            name="ciudad"
+                            id="ciudad"
+                            class="form-control"
+                            value="{{ tour.ciudad }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="precio">
+                            Precio
+                        </label>
+
+                        <input
+                            type="number"
+                            name="precio"
+                            id="precio"
+                            class="form-control"
+                            value="{{ tour.precio }}"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="cupos">
+                            Cupos
+                        </label>
+
+                        <input
+                            type="number"
+                            name="cupos"
+                            id="cupos"
+                            class="form-control"
+                            value="{{ tour.cupo_maximo }}"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+
+                            <label for="guia_id">
+                                <i class="bi bi-person-badge-fill"></i>
+                                Guía turístico
+                            </label>
+
+                            <select
+                                name="guia_id"
+                                id="guia_id"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Selecciona un guía
+                                </option>
+
+                                {% for guia in guias %}
+
+                                    <option
+                                        value="{{ guia.id_usuario }}"
+                                        {% if guia_asignado and guia_asignado.id_usuario == guia.id_usuario %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        {{ guia.nombre_completo }}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                            {% if not guias %}
+
+                                <small class="text-danger d-block mt-2">
+
+                                    No tienes guías aprobados disponibles.
+
+                                </small>
+
+                            {% else %}
+
+                                <small class="text-muted d-block mt-2">
+
+                                    Puedes cambiar el guía encargado
+                                    de este tour.
+
+                                </small>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label for="categoria_id">
+                                Categoría
+                            </label>
+
+                            <select
+                                name="categoria_id"
+                                id="categoria_id"
+                                class="form-select"
+                            >
+
+                                <option value="">
+                                    Sin categoría
+                                </option>
+
+                                {% for cat in categorias %}
+
+                                    <option
+                                        value="{{ cat.id }}"
+                                        {% if tour.id_categoria == cat.id %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ cat.nombre }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label for="dificultad">
+                                Dificultad
+                            </label>
+
+                            <select
+                                name="dificultad"
+                                id="dificultad"
+                                class="form-select"
+                            >
+
+                                <option
+                                    value="Fácil"
+                                    {% if tour.dificultad == "Fácil" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Fácil
+                                </option>
+
+                                <option
+                                    value="Moderado"
+                                    {% if tour.dificultad == "Moderado" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Moderado
+                                </option>
+
+                                <option
+                                    value="Difícil"
+                                    {% if tour.dificultad == "Difícil" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Difícil
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3 form-check">
+
+                        <input
+                            type="checkbox"
+                            name="apto_movilidad_reducida"
+                            class="form-check-input"
+                            id="aptoMovilidadEdit"
+                            {% if tour.acceso_rampa %}
+                                checked
+                            {% endif %}
+                        >
+
+                        <label
+                            class="form-check-label"
+                            for="aptoMovilidadEdit"
+                        >
+                            Apto para movilidad reducida
+                        </label>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-check-circle-fill"></i>
+                        Guardar cambios
+                    </button>
+
+                    <a
+                        href="{{ url_for('mis_tours') }}"
+                        class="btn btn-secondary"
+                    >
+                        <i class="bi bi-x-circle-fill"></i>
+                        Cancelar
+                    </a>
+
+                </form>
+
+                <hr class="my-5">
+
+                <h4>Galería de fotos</h4>
+
+                <p class="text-muted">
+                    Estas fotos se ven en la ficha de detalle del tour,
+                    además de la imagen de portada.
+                </p>
+
+                {% if tour.imagenes %}
+
+                    <div class="row mb-3">
+
+                        {% for img in tour.imagenes %}
+
+                            <div class="col-md-3 col-6 mb-3">
+
+                                <div class="card">
+
+                                    <img
+                                        src="{{ url_for('static', filename=img.url) }}"
+                                        class="card-img-top"
+                                        style="height:120px; object-fit:cover;"
+                                    >
+
+                                    <div class="card-body p-2 text-center">
+
+                                        <a
+                                            href="{{ url_for('eliminar_imagen_tour', id=img.id) }}"
+                                            class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('¿Quitar esta foto de la galería?')"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                            Quitar
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <p>
+                        <em>
+                            Todavía no has agregado fotos a la galería.
+                        </em>
+                    </p>
+
+                {% endif %}
+
+                <form
+                    action="{{ url_for('agregar_imagenes_tour', id=tour.id_tour) }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="mb-5"
+                >
+
+                    <div class="input-group">
+
+                        <input
+                            type="file"
+                            name="galeria"
+                            class="form-control"
+                            accept=".jpg,.jpeg,.png,.webp"
+                            multiple
+                        >
+
+                        <button
+                            class="btn btn-outline-primary"
+                            type="submit"
+                        >
+                            <i class="bi bi-images"></i>
+                            Agregar fotos
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <hr class="my-5">
+
+                <h4>Itinerario día a día</h4>
+
+                <p class="text-muted">
+                    Cuéntales a los viajeros qué van a hacer cada día del tour.
+                </p>
+
+                {% if tour.itinerario_dias %}
+
+                    <ul class="list-group mb-3">
+
+                        {% for dia in tour.itinerario_dias %}
+
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+
+                                <div>
+
+                                    <strong>
+                                        Día {{ dia.numero_dia }}:
+                                        {{ dia.titulo }}
+                                    </strong>
+
+                                    {% if dia.descripcion %}
+
+                                        <br>
+
+                                        <span class="text-muted">
+                                            {{ dia.descripcion }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                <a
+                                    href="{{ url_for('eliminar_dia_tour', id=dia.id) }}"
+                                    class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('¿Quitar este día del itinerario?')"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p>
+                        <em>
+                            Todavía no has agregado ningún día al itinerario.
+                        </em>
+                    </p>
+
+                {% endif %}
+
+                <form
+                    action="{{ url_for('agregar_dia_tour', id=tour.id_tour) }}"
+                    method="POST"
+                    class="row g-2 mb-5"
+                >
+
+                    <div class="col-md-2">
+
+                        <input
+                            type="number"
+                            name="numero_dia"
+                            class="form-control"
+                            placeholder="Día #"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <input
+                            type="text"
+                            name="titulo"
+                            class="form-control"
+                            placeholder="Título (ej. Llegada y city tour)"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <input
+                            type="text"
+                            name="descripcion"
+                            class="form-control"
+                            placeholder="Descripción (opcional)"
+                        >
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button
+                            class="btn btn-outline-primary w-100"
+                            type="submit"
+                        >
+                            <i class="bi bi-plus-circle"></i>
+                            Agregar día
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Administrador | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('admin_dashboard') %}
+
+{% include "components/boton_volver.html" %}
+
+
+<div class="contenedor">
+
+
+    <aside class="sidebar">
+
+        <h2 class="text-center mb-4">
+            Zuqara Admin
+        </h2>
+
+
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="activo"
+        >
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('admin_usuarios') }}">
+
+            <i class="bi bi-people"></i>
+
+            Usuarios
+
+        </a>
+
+
+        <a href="{{ url_for('admin_empresas') }}">
+
+            <i class="bi bi-buildings"></i>
+
+            Empresas
+
+        </a>
+
+
+        <a href="{{ url_for('admin_tours') }}">
+
+            <i class="bi bi-airplane"></i>
+
+            Tours
+
+        </a>
+
+
+        <a href="{{ url_for('admin_comentarios') }}">
+
+            <i class="bi bi-chat-square-text"></i>
+
+            Comentarios
+
+        </a>
+
+
+        <a href="{{ url_for('admin_parametros') }}">
+
+            <i class="bi bi-gear-fill"></i>
+
+            Parámetros
+
+        </a>
+
+
+        <a href="{{ url_for('admin_cambiar_password') }}">
+
+            <i class="bi bi-key-fill"></i>
+
+            Cambiar contraseña
+
+        </a>
+
+
+        <a href="{{ url_for('logout') }}">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Cerrar sesión
+
+        </a>
+
+    </aside>
+
+
+    <main class="contenido">
+
+
+        <div class="encabezado-admin">
+
+            <div>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Bienvenido al panel administrativo de Zuqara Tours.
+                </p>
+
+            </div>
+
+
+            <div class="perfil-admin-top">
+
+                <i class="bi bi-person-circle"></i>
+
+                <div>
+
+                    <strong>
+                        Administrador
+                    </strong>
+
+                    <small>
+                        Zuqara Tours
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4 mt-2">
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="tarjeta-dashboard usuarios">
+
+                    <div>
+
+                        <small>
+                            Usuarios
+                        </small>
+
+                        <h2>
+                            {{ total_usuarios }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-people"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="tarjeta-dashboard empresas">
+
+                    <div>
+
+                        <small>
+                            Empresas
+                        </small>
+
+                        <h2>
+                            {{ total_empresas }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-buildings"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="tarjeta-dashboard tours">
+
+                    <div>
+
+                        <small>
+                            Tours
+                        </small>
+
+                        <h2>
+                            {{ total_tours }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-airplane"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="tarjeta-dashboard reservas">
+
+                    <div>
+
+                        <small>
+                            Reservas
+                        </small>
+
+                        <h2>
+                            {{ total_reservas }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-calendar-check"></i>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="row mt-5">
+
+
+            <div class="col-lg-8">
+
+                <div class="panel-admin">
+
+
+                    <div class="panel-header">
+
+                        <h4>
+                            Resumen General
+                        </h4>
+
+                        <span class="badge bg-success">
+                            Sistema activo
+                        </span>
+
+                    </div>
+
+
+                    <table class="table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Información
+                                </th>
+
+                                <th>
+                                    Cantidad
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            <tr>
+
+                                <td>
+                                    Usuarios registrados
+                                </td>
+
+                                <td>
+                                    {{ total_usuarios }}
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    Empresas registradas
+                                </td>
+
+                                <td>
+                                    {{ total_empresas }}
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    Tours registrados
+                                </td>
+
+                                <td>
+                                    {{ total_tours }}
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    Reservas realizadas
+                                </td>
+
+                                <td>
+                                    {{ total_reservas }}
+                                </td>
+
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="panel-admin">
+
+
+                    <h4>
+                        Accesos rápidos
+                    </h4>
+
+
+                    <a
+                        href="{{ url_for('admin_usuarios') }}"
+                        class="btn btn-primary w-100 mb-3"
+                    >
+
+                        <i class="bi bi-people"></i>
+
+                        Usuarios
+
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('admin_empresas') }}"
+                        class="btn btn-success w-100 mb-3"
+                    >
+
+                        <i class="bi bi-buildings"></i>
+
+                        Empresas
+
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('admin_tours') }}"
+                        class="btn btn-warning w-100 mb-3"
+                    >
+
+                        <i class="bi bi-airplane"></i>
+
+                        Tours
+
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('admin_cambiar_password') }}"
+                        class="btn btn-dark w-100"
+                    >
+
+                        <i class="bi bi-key-fill"></i>
+
+                        Cambiar contraseña
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+
+</html>

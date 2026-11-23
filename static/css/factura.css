@@ -1,0 +1,107 @@
+body{
+    background: #F4F8FB;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 30px 0;
+}
+
+.barra-acciones{
+    max-width: 800px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hoja-factura{
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    color: #333;
+}
+
+.encabezado-factura{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.logo-factura{
+    width: 60px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.encabezado-factura h4{
+    color: #0B4F6C;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.datos-factura{
+    text-align: right;
+}
+
+.datos-factura h3{
+    color: #0B4F6C;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.datos-factura p{
+    margin-bottom: 2px;
+    font-size: 14px;
+}
+
+.resumen-pago{
+    max-width: 350px;
+    margin-left: auto;
+    margin-top: 20px;
+}
+
+.fila-resumen{
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.fila-resumen.total{
+    font-weight: bold;
+    font-size: 20px;
+    color: #0B4F6C;
+    border-bottom: none;
+    border-top: 2px solid #0B4F6C;
+    margin-top: 6px;
+    padding-top: 10px;
+}
+
+.pie-factura{
+    margin-top: 40px;
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    border-top: 1px dashed #ccc;
+    padding-top: 15px;
+}
+
+
+@media print{
+
+    body{
+        background: white;
+        padding: 0;
+    }
+
+    .no-imprimir{
+        display: none !important;
+    }
+
+    .hoja-factura{
+        box-shadow: none;
+        padding: 0;
+    }
+
+}

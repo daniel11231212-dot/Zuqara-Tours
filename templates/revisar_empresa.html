@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Revisar empresa | Zuqara Admin</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/revisar_empresa.css') }}"
+    >
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('admin_empresas') %}
+
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>
+            Zuqara Admin
+        </h2>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a
+            class="activo"
+            href="{{ url_for('admin_empresas') }}"
+        >
+            <i class="bi bi-buildings-fill"></i>
+            <span>Empresas</span>
+        </a>
+
+        <a href="{{ url_for('admin_usuarios') }}">
+            <i class="bi bi-people-fill"></i>
+            <span>Usuarios</span>
+        </a>
+
+        <a href="{{ url_for('admin_tours') }}">
+            <i class="bi bi-airplane-fill"></i>
+            <span>Tours</span>
+        </a>
+
+        <a href="{{ url_for('admin_comentarios') }}">
+            <i class="bi bi-chat-square-text-fill"></i>
+            <span>Comentarios</span>
+        </a>
+
+        <a href="{{ url_for('admin_parametros') }}">
+            <i class="bi bi-gear-fill"></i>
+            <span>Parámetros</span>
+        </a>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout"
+        >
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar sesión</span>
+        </a>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="revision-container">
+
+            <div class="revision-header">
+
+                <h2>
+                    <i class="bi bi-shield-check"></i>
+                    Revisión de empresa
+                </h2>
+
+                <p>
+                    Verifica cuidadosamente la información antes de autorizar esta empresa.
+                </p>
+
+                <div class="estado-actual">
+
+                    {% if empresa.estado_verificacion == "verificada" %}
+
+                        <i class="bi bi-patch-check-fill"></i>
+                        Empresa verificada
+
+                    {% elif empresa.estado_verificacion == "en_revision" %}
+
+                        <i class="bi bi-search"></i>
+                        En revisión
+
+                    {% elif empresa.estado_verificacion == "requiere_correcciones" %}
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Requiere correcciones
+
+                    {% elif empresa.estado_verificacion == "rechazada" %}
+
+                        <i class="bi bi-x-circle-fill"></i>
+                        Rechazada
+
+                    {% else %}
+
+                        <i class="bi bi-clock-fill"></i>
+                        Pendiente de revisión
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="revision-card">
+
+                <h4>
+                    <i class="bi bi-building"></i>
+                    Información de la empresa
+                </h4>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <div class="dato">
+
+                            <small>
+                                Nombre de la empresa
+                            </small>
+
+                            <strong>
+                                {{ empresa.nombre }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="dato">
+
+                            <small>
+                                NIT
+                            </small>
+
+                            <strong>
+                                {{ empresa.nit }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="dato">
+
+                            <small>
+                                Correo electrónico
+                            </small>
+
+                            <strong>
+                                {{ empresa.correo }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="dato">
+
+                            <small>
+                                Teléfono
+                            </small>
+
+                            <strong>
+                                {{ empresa.telefono }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="dato">
+
+                            <small>
+                                Dirección
+                            </small>
+
+                            <strong>
+                                {{ empresa.direccion }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <form
+                method="POST"
+                action="{{ url_for('revisar_empresa', id=empresa.id) }}"
+                id="formRevision"
+            >
+
+                <div class="revision-card">
+
+                    <h4>
+                        <i class="bi bi-clipboard-check"></i>
+                        Lista de verificación
+                    </h4>
+
+                    <p class="text-muted">
+                        Marca cada requisito únicamente después de haberlo comprobado.
+                    </p>
+
+                    <label
+                        class="check-item {% if empresa.datos_verificados %}checked{% endif %}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="datos_verificados"
+                            value="1"
+                            {% if empresa.datos_verificados %}checked{% endif %}
+                        >
+
+                        <div class="check-item-content">
+
+                            <div class="check-item-title">
+                                Datos de la empresa verificados
+                            </div>
+
+                            <div class="check-item-description">
+                                La información registrada de la empresa es completa y coherente.
+                            </div>
+
+                        </div>
+
+                        <i class="bi bi-check-circle-fill text-success"></i>
+
+                    </label>
+
+                    <label
+                        class="check-item {% if empresa.nit_verificado %}checked{% endif %}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="nit_verificado"
+                            value="1"
+                            {% if empresa.nit_verificado %}checked{% endif %}
+                        >
+
+                        <div class="check-item-content">
+
+                            <div class="check-item-title">
+                                NIT verificado
+                            </div>
+
+                            <div class="check-item-description">
+                                El NIT suministrado fue revisado y corresponde a la empresa registrada.
+                            </div>
+
+                        </div>
+
+                        <i class="bi bi-check-circle-fill text-success"></i>
+
+                    </label>
+
+                    <label
+                        class="check-item {% if empresa.contacto_verificado %}checked{% endif %}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="contacto_verificado"
+                            value="1"
+                            {% if empresa.contacto_verificado %}checked{% endif %}
+                        >
+
+                        <div class="check-item-content">
+
+                            <div class="check-item-title">
+                                Contacto verificado
+                            </div>
+
+                            <div class="check-item-description">
+                                El correo electrónico y teléfono proporcionados fueron comprobados.
+                            </div>
+
+                        </div>
+
+                        <i class="bi bi-check-circle-fill text-success"></i>
+
+                    </label>
+
+                    <label
+                        class="check-item {% if empresa.documentacion_verificada %}checked{% endif %}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="documentacion_verificada"
+                            value="1"
+                            {% if empresa.documentacion_verificada %}checked{% endif %}
+                        >
+
+                        <div class="check-item-content">
+
+                            <div class="check-item-title">
+                                Documentación verificada
+                            </div>
+
+                            <div class="check-item-description">
+                                La documentación requerida fue revisada y no presenta inconsistencias.
+                            </div>
+
+                        </div>
+
+                        <i class="bi bi-check-circle-fill text-success"></i>
+
+                    </label>
+
+                    <label
+                        class="check-item {% if empresa.representante_verificado %}checked{% endif %}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="representante_verificado"
+                            value="1"
+                            {% if empresa.representante_verificado %}checked{% endif %}
+                        >
+
+                        <div class="check-item-content">
+
+                            <div class="check-item-title">
+                                Representante verificado
+                            </div>
+
+                            <div class="check-item-description">
+                                Se verificó la información de la persona responsable de la empresa.
+                            </div>
+
+                        </div>
+
+                        <i class="bi bi-check-circle-fill text-success"></i>
+
+                    </label>
+
+                    <label
+                        class="check-item {% if empresa.requisitos_verificados %}checked{% endif %}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="requisitos_verificados"
+                            value="1"
+                            {% if empresa.requisitos_verificados %}checked{% endif %}
+                        >
+
+                        <div class="check-item-content">
+
+                            <div class="check-item-title">
+                                Requisitos de Zuqara verificados
+                            </div>
+
+                            <div class="check-item-description">
+                                La empresa cumple las condiciones necesarias para operar dentro de la plataforma.
+                            </div>
+
+                        </div>
+
+                        <i class="bi bi-check-circle-fill text-success"></i>
+
+                    </label>
+
+                    <div class="progreso">
+
+                        <div class="progreso-top">
+
+                            <span>
+                                Progreso de verificación
+                            </span>
+
+                            <span id="contador">
+                                0 de 6
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+
+                            <div
+                                id="barraProgreso"
+                                class="progress-bar"
+                                role="progressbar"
+                                style="width: 0%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="alertaAprobacion"
+                        class="alert alert-success alerta-aprobacion"
+                    >
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Todos los requisitos están verificados.
+                        La empresa puede ser aprobada.
+
+                    </div>
+
+                    <div class="acciones">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            <i class="bi bi-save"></i>
+                            Guardar revisión
+
+                        </button>
+
+                        <button
+                            type="button"
+                            id="btnAprobar"
+                            class="btn btn-success"
+                            disabled
+                            onclick="aprobarEmpresa()"
+                        >
+
+                            <i class="bi bi-patch-check-fill"></i>
+                            Aprobar empresa
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            onclick="mostrarCorrecciones()"
+                        >
+
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Solicitar correcciones
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="correccionesBox"
+                    class="revision-card motivo-box"
+                    style="display: none;"
+                >
+
+                    <h4>
+
+                        <i class="bi bi-pencil-square"></i>
+                        Solicitar correcciones
+
+                    </h4>
+
+                    <p class="text-muted">
+                        Indica a la empresa qué información debe corregir antes de poder ser verificada.
+                    </p>
+
+                    <textarea
+                        id="motivo"
+                        name="motivo_revision"
+                        class="form-control"
+                        placeholder="Ejemplo: Debe corregir la información del NIT y actualizar el número telefónico..."
+                    >{{ empresa.motivo_revision or '' }}</textarea>
+
+                    <div class="acciones">
+
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            onclick="solicitarCorrecciones()"
+                        >
+
+                            <i class="bi bi-send"></i>
+                            Enviar solicitud
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+<form
+    id="formAprobar"
+    method="POST"
+    action="{{ url_for('aprobar_empresa', id=empresa.id) }}"
+    style="display: none;"
+>
+</form>
+
+<form
+    id="formCorrecciones"
+    method="POST"
+    action="{{ url_for('revisar_empresa', id=empresa.id) }}"
+    style="display: none;"
+>
+
+    <input
+        type="hidden"
+        name="solicitar_correcciones"
+        value="1"
+    >
+
+    <input
+        type="hidden"
+        name="motivo_revision"
+        id="motivoHidden"
+    >
+
+</form>
+
+<div
+    class="modal fade"
+    id="modalAprobarEmpresa"
+    tabindex="-1"
+    aria-labelledby="modalAprobarEmpresaLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow-lg">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalAprobarEmpresaLabel"
+                >
+
+                    <i class="bi bi-shield-check text-success me-2"></i>
+                    Verificar aprobación
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar"
+                ></button>
+
+            </div>
+
+            <div class="modal-body text-center px-4 py-4">
+
+                <div class="mb-3">
+
+                    <div
+                        class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center"
+                        style="width: 72px; height: 72px;"
+                    >
+
+                        <i
+                            class="bi bi-building-check text-success"
+                            style="font-size: 34px;"
+                        ></i>
+
+                    </div>
+
+                </div>
+
+                <h5 class="fw-bold mb-2">
+                    ¿Aprobar esta empresa?
+                </h5>
+
+                <p class="mb-3 text-muted">
+                    Estás a punto de aprobar a:
+                </p>
+
+                <div class="bg-light rounded-3 p-3 mb-3">
+
+                    <strong class="d-block fs-5">
+                        {{ empresa.nombre }}
+                    </strong>
+
+                    <small class="text-muted">
+                        NIT: {{ empresa.nit }}
+                    </small>
+
+                </div>
+
+                <div class="alert alert-success text-start mb-0">
+
+                    <div class="d-flex gap-2">
+
+                        <i class="bi bi-check-circle-fill mt-1"></i>
+
+                        <div>
+
+                            <strong>Verificación completada</strong>
+
+                            <div class="small mt-1">
+                                Todos los requisitos de verificación fueron completados correctamente.
+                                Al aprobarla, esta empresa podrá operar dentro de Zuqara Tours.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer justify-content-center gap-2">
+
+                <button
+                    type="button"
+                    class="btn btn-light border px-4"
+                    data-bs-dismiss="modal"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-success px-4"
+                    onclick="confirmarAprobacion()"
+                >
+
+                    <i class="bi bi-patch-check-fill me-1"></i>
+                    Aprobar empresa
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div
+    class="modal fade"
+    id="modalAlertaRevision"
+    tabindex="-1"
+    aria-labelledby="modalAlertaRevisionLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow-lg">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalAlertaRevisionLabel"
+                >
+
+                    <i class="bi bi-exclamation-circle-fill text-warning me-2"></i>
+                    Revisión incompleta
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar"
+                ></button>
+
+            </div>
+
+            <div class="modal-body text-center px-4 py-4">
+
+                <div class="mb-3">
+
+                    <i
+                        class="bi bi-clipboard-x text-warning"
+                        style="font-size: 52px;"
+                    ></i>
+
+                </div>
+
+                <h5 class="fw-bold">
+                    Faltan requisitos por verificar
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Debes completar los 6 requisitos de verificación antes de aprobar esta empresa.
+                </p>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+
+                <button
+                    type="button"
+                    class="btn btn-warning px-4"
+                    data-bs-dismiss="modal"
+                >
+                    Entendido
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div
+    class="modal fade"
+    id="modalMotivo"
+    tabindex="-1"
+    aria-labelledby="modalMotivoLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow-lg">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalMotivoLabel"
+                >
+
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                    Información requerida
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar"
+                ></button>
+
+            </div>
+
+            <div class="modal-body text-center px-4 py-4">
+
+                <p class="mb-0">
+                    Debes indicar qué información debe corregir la empresa antes de enviar la solicitud.
+                </p>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+
+                <button
+                    type="button"
+                    class="btn btn-warning px-4"
+                    data-bs-dismiss="modal"
+                >
+                    Entendido
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    const checks = document.querySelectorAll(
+        '#formRevision input[type="checkbox"]'
+    );
+
+    const contador = document.getElementById("contador");
+
+    const barraProgreso = document.getElementById("barraProgreso");
+
+    const btnAprobar = document.getElementById("btnAprobar");
+
+    const alertaAprobacion = document.getElementById("alertaAprobacion");
+
+    function actualizarRevision() {
+
+        const marcados = Array.from(checks).filter(
+            check => check.checked
+        ).length;
+
+        const total = checks.length;
+
+        const porcentaje = (marcados / total) * 100;
+
+        contador.textContent = marcados + " de " + total;
+
+        barraProgreso.style.width = porcentaje + "%";
+
+        if (marcados === total) {
+
+            btnAprobar.disabled = false;
+
+            alertaAprobacion.style.display = "block";
+
+        } else {
+
+            btnAprobar.disabled = true;
+
+            alertaAprobacion.style.display = "none";
+
+        }
+
+        checks.forEach(function(check) {
+
+            const item = check.closest(".check-item");
+
+            if (check.checked) {
+
+                item.classList.add("checked");
+
+            } else {
+
+                item.classList.remove("checked");
+
+            }
+
+        });
+
+    }
+
+    checks.forEach(function(check) {
+
+        check.addEventListener(
+            "change",
+            actualizarRevision
+        );
+
+    });
+
+    function aprobarEmpresa() {
+
+        const todos = Array.from(checks).every(
+            check => check.checked
+        );
+
+        if (!todos) {
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("modalAlertaRevision")
+            );
+
+            modal.show();
+
+            return;
+
+        }
+
+        const modal = new bootstrap.Modal(
+            document.getElementById("modalAprobarEmpresa")
+        );
+
+        modal.show();
+
+    }
+
+    function confirmarAprobacion() {
+
+        document.getElementById("formAprobar").submit();
+
+    }
+
+    function mostrarCorrecciones() {
+
+        const box = document.getElementById("correccionesBox");
+
+        box.style.display = "block";
+
+        document.getElementById("motivo").focus();
+
+        box.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    }
+
+    function solicitarCorrecciones() {
+
+        const motivo = document.getElementById("motivo").value.trim();
+
+        if (!motivo) {
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("modalMotivo")
+            );
+
+            modal.show();
+
+            return;
+
+        }
+
+        document.getElementById("motivoHidden").value = motivo;
+
+        document.getElementById("formCorrecciones").submit();
+
+    }
+
+    actualizarRevision();
+
+</script>
+
+</body>
+
+</html>

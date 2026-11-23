@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Solicitudes de Guías | Zuqara Tours</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/solicitudes_guias.css') }}">
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="contenedor-solicitudes">
+
+    <div class="encabezado-solicitudes">
+
+        <div>
+            <h1>
+                <i class="bi bi-person-badge"></i>
+                Solicitudes de Guías
+            </h1>
+
+            <p>
+                Revisa las solicitudes de personas que quieren pertenecer a tu empresa como guías turísticos.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('dashboard_empresa') }}"
+            class="btn-volver"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
+
+    </div>
+
+    {% if solicitudes %}
+
+        <div class="contador-solicitudes">
+            <i class="bi bi-hourglass-split"></i>
+            {{ solicitudes|length }}
+            {% if solicitudes|length == 1 %}
+                solicitud pendiente
+            {% else %}
+                solicitudes pendientes
+            {% endif %}
+        </div>
+
+        {% for solicitud in solicitudes %}
+
+            <div class="solicitud-card">
+
+                <div class="informacion-guia">
+
+                    <div class="avatar-guia">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <div class="datos-guia">
+
+                        <h2>
+                            {{ solicitud.guia.nombre_completo }}
+                        </h2>
+
+                        {% if solicitud.perfil_guia and solicitud.perfil_guia.especialidad %}
+
+                            <span class="especialidad">
+                                <i class="bi bi-star-fill"></i>
+                                {{ solicitud.perfil_guia.especialidad }}
+                            </span>
+
+                        {% endif %}
+
+                        <div class="datos-contacto">
+
+                            <div>
+                                <i class="bi bi-envelope"></i>
+                                <span>{{ solicitud.guia.correo }}</span>
+                            </div>
+
+                            <div>
+                                <i class="bi bi-telephone"></i>
+                                <span>{{ solicitud.guia.telefono }}</span>
+                            </div>
+
+                            {% if solicitud.perfil_guia %}
+
+                                <div>
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>{{ solicitud.perfil_guia.ciudad_base }}</span>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% if solicitud.perfil_guia %}
+
+                    <div class="perfil-guia">
+
+                        <div class="dato-perfil">
+
+                            <div class="icono-dato">
+                                <i class="bi bi-briefcase"></i>
+                            </div>
+
+                            <div>
+                                <span class="titulo-dato">
+                                    Experiencia
+                                </span>
+
+                                <span class="valor-dato">
+                                    {{ solicitud.perfil_guia.experiencia }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="descripcion-guia">
+
+                            <span class="titulo-dato">
+                                Sobre el guía
+                            </span>
+
+                            <p>
+                                {{ solicitud.perfil_guia.descripcion }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+                <div class="fecha-solicitud">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    Solicitud recibida:
+                    {{ solicitud.fecha_solicitud.strftime('%d/%m/%Y %H:%M') if solicitud.fecha_solicitud else 'Sin fecha' }}
+
+                </div>
+
+                <div class="acciones-guia">
+
+                    <form
+                        action="{{ url_for('aprobar_guia', id_solicitud=solicitud.id_solicitud) }}"
+                        method="POST"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn-aprobar"
+                            onclick="return confirm('¿Quieres aprobar a este guía?')"
+                        >
+                            <i class="bi bi-check-circle-fill"></i>
+                            Aprobar guía
+                        </button>
+
+                    </form>
+
+                    <button
+                        type="button"
+                        class="btn-rechazar"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalRechazo{{ solicitud.id_solicitud }}"
+                    >
+                        <i class="bi bi-x-circle-fill"></i>
+                        Rechazar
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div
+                class="modal fade"
+                id="modalRechazo{{ solicitud.id_solicitud }}"
+                tabindex="-1"
+                aria-hidden="true"
+            >
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content modal-rechazo">
+
+                        <form
+                            action="{{ url_for('rechazar_guia', id_solicitud=solicitud.id_solicitud) }}"
+                            method="POST"
+                        >
+
+                            <div class="modal-header">
+
+                                <div class="titulo-modal">
+
+                                    <div class="icono-modal">
+                                        <i class="bi bi-person-x-fill"></i>
+                                    </div>
+
+                                    <div>
+                                        <h5>
+                                            Rechazar solicitud
+                                        </h5>
+
+                                        <p>
+                                            {{ solicitud.guia.nombre_completo }}
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Cerrar"
+                                ></button>
+
+                            </div>
+
+                            <div class="modal-body">
+
+                                <label
+                                    for="motivo{{ solicitud.id_solicitud }}"
+                                    class="form-label"
+                                >
+                                    Motivo del rechazo
+                                </label>
+
+                                <textarea
+                                    id="motivo{{ solicitud.id_solicitud }}"
+                                    name="motivo_rechazo"
+                                    class="form-control"
+                                    rows="5"
+                                    placeholder="Escribe el motivo del rechazo..."
+                                ></textarea>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button
+                                    type="button"
+                                    class="btn-cancelar"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Cancelar
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="btn-confirmar-rechazo"
+                                >
+                                    <i class="bi bi-x-circle"></i>
+                                    Confirmar rechazo
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="sin-solicitudes">
+
+            <div class="icono-sin-solicitudes">
+                <i class="bi bi-person-check"></i>
+            </div>
+
+            <h2>
+                No hay solicitudes pendientes
+            </h2>
+
+            <p>
+                Cuando un guía solicite pertenecer a tu empresa, aparecerá aquí.
+            </p>
+
+            <a
+                href="{{ url_for('dashboard_empresa') }}"
+                class="btn-volver-principal"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Volver al panel
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Crear Tour | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/crear_tour.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard_empresa.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('mis_tours') %}
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>Zuqara Empresa</h2>
+
+        <a href="{{ url_for('dashboard_empresa') }}">
+            <i class="bi bi-grid-fill"></i>
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('mis_tours') }}">
+            <i class="bi bi-airplane-fill"></i>
+            Mis Tours
+        </a>
+
+        <a
+            href="{{ url_for('crear_tour') }}"
+            class="activo">
+            <i class="bi bi-plus-circle-fill"></i>
+            Crear Tour
+        </a>
+
+        <a href="{{ url_for('reservas_empresa') }}">
+            <i class="bi bi-calendar-check-fill"></i>
+            Reservas
+        </a>
+
+        <a href="{{ url_for('solicitudes_guias') }}">
+            <i class="bi bi-person-badge-fill"></i>
+            Guías turísticos
+
+            {% if solicitudes_guias is defined and solicitudes_guias > 0 %}
+
+                <span class="badge bg-danger ms-auto">
+                    {{ solicitudes_guias }}
+                </span>
+
+            {% endif %}
+
+        </a>
+
+        <a href="{{ url_for('chats_empresa') }}">
+            <i class="bi bi-chat-dots-fill"></i>
+            Chats
+        </a>
+
+        <a href="{{ url_for('notificaciones_empresa') }}">
+
+            <i class="bi bi-bell-fill"></i>
+
+            Notificaciones
+
+            {% if notificaciones_sin_leer is defined and notificaciones_sin_leer > 0 %}
+
+                <span class="badge bg-danger">
+                    {{ notificaciones_sin_leer }}
+                </span>
+
+            {% endif %}
+
+        </a>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout">
+
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar sesión
+
+        </a>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="contenedor-crear">
+
+            <div class="tarjeta-crear">
+
+                <div class="encabezado-crear">
+
+                    <h1>
+
+                        <i class="bi bi-airplane-fill"></i>
+
+                        Publicar un nuevo Tour
+
+                    </h1>
+
+                    <p>
+
+                        Completa la información para que miles de viajeros
+                        puedan reservar tu experiencia.
+
+                    </p>
+
+                </div>
+
+                <div class="formulario">
+
+                    <form
+                        action="{{ url_for('guardar_tour') }}"
+                        method="POST"
+                        enctype="multipart/form-data">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Nombre del Tour
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="titulo"
+                                    class="form-control"
+                                    placeholder="Ej. Tour Guatapé Premium"
+                                    required>
+
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Ciudad
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="ciudad"
+                                    class="form-control"
+                                    placeholder="Ej. Medellín"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Descripción
+                            </label>
+
+                            <textarea
+                                name="descripcion"
+                                rows="5"
+                                class="form-control"
+                                placeholder="Describe el recorrido, lugares incluidos, transporte, alimentación, duración..."
+                                required></textarea>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+
+                                <i class="bi bi-check2-circle"></i>
+
+                                ¿Qué incluye el tour?
+
+                            </label>
+
+                            <p class="text-muted">
+
+                                Marca las opciones que están incluidas
+                                en el tour.
+
+                            </p>
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Transporte"
+                                            class="form-check-input"
+                                            id="incluyeTransporte">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeTransporte">
+
+                                            <i class="bi bi-bus-front"></i>
+                                            Transporte
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Alimentación"
+                                            class="form-check-input"
+                                            id="incluyeAlimentacion">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeAlimentacion">
+
+                                            <i class="bi bi-egg-fried"></i>
+                                            Alimentación
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Entradas"
+                                            class="form-check-input"
+                                            id="incluyeEntradas">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeEntradas">
+
+                                            <i class="bi bi-ticket-perforated"></i>
+                                            Entradas
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Seguro de viaje"
+                                            class="form-check-input"
+                                            id="incluyeSeguro">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeSeguro">
+
+                                            <i class="bi bi-shield-check"></i>
+                                            Seguro de viaje
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Alojamiento"
+                                            class="form-check-input"
+                                            id="incluyeAlojamiento">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeAlojamiento">
+
+                                            <i class="bi bi-house"></i>
+                                            Alojamiento
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Acompañamiento"
+                                            class="form-check-input"
+                                            id="incluyeAcompanamiento">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeAcompanamiento">
+
+                                            <i class="bi bi-people"></i>
+                                            Acompañamiento
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input
+                                            type="checkbox"
+                                            name="incluye"
+                                            value="Refrigerio"
+                                            class="form-check-input"
+                                            id="incluyeRefrigerio">
+
+                                        <label
+                                            class="form-check-label"
+                                            for="incluyeRefrigerio">
+
+                                            <i class="bi bi-cup-hot"></i>
+                                            Refrigerio
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Puedes seleccionar varias opciones.
+
+                            </small>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+                                    Precio
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        $
+                                    </span>
+
+                                    <input
+                                        type="number"
+                                        name="precio"
+                                        class="form-control"
+                                        placeholder="120000"
+                                        min="0"
+                                        required>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+                                    Cupos
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="cupos"
+                                    class="form-control"
+                                    placeholder="20"
+                                    min="1"
+                                    required>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+                                    Duración
+                                </label>
+
+                                <select
+                                    name="duracion"
+                                    class="form-select">
+
+                                    <option value="Medio día">
+                                        Medio día
+                                    </option>
+
+                                    <option value="Día completo">
+                                        Día completo
+                                    </option>
+
+                                    <option value="2 días">
+                                        2 días
+                                    </option>
+
+                                    <option value="3 días o más">
+                                        3 días o más
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+
+                                    <i class="bi bi-person-badge-fill"></i>
+
+                                    Guía turístico
+
+                                </label>
+
+                                <select
+                                    name="guia_id"
+                                    class="form-select"
+                                    required>
+
+                                    <option value="">
+                                        Selecciona un guía
+                                    </option>
+
+                                    {% for guia in guias %}
+
+                                        <option
+                                            value="{{ guia.id_usuario }}">
+
+                                            {{ guia.nombre_completo }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                                {% if not guias %}
+
+                                    <small class="text-danger d-block mt-2">
+
+                                        No tienes guías aprobados disponibles.
+                                        Primero debes aprobar una solicitud
+                                        de guía.
+
+                                    </small>
+
+                                {% else %}
+
+                                    <small class="text-muted d-block mt-2">
+
+                                        Selecciona el guía encargado de este tour.
+
+                                    </small>
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+                                    Categoría
+                                </label>
+
+                                <select
+                                    name="categoria_id"
+                                    class="form-select">
+
+                                    <option value="">
+                                        Sin categoría
+                                    </option>
+
+                                    {% for cat in categorias %}
+
+                                        <option value="{{ cat.id }}">
+                                            {{ cat.nombre }}
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+                                    Dificultad
+                                </label>
+
+                                <select
+                                    name="dificultad"
+                                    class="form-select">
+
+                                    <option value="Fácil">
+                                        Fácil
+                                    </option>
+
+                                    <option value="Moderado">
+                                        Moderado
+                                    </option>
+
+                                    <option value="Difícil">
+                                        Difícil
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label">
+                                    Idioma del guía
+                                </label>
+
+                                <select
+                                    name="idioma_guia"
+                                    class="form-select">
+
+                                    <option value="Español">
+                                        Español
+                                    </option>
+
+                                    <option value="Inglés">
+                                        Inglés
+                                    </option>
+
+                                    <option value="Español e Inglés">
+                                        Español e Inglés
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-4 mb-4 d-flex align-items-end">
+
+                                <div class="form-check">
+
+                                    <input
+                                        type="checkbox"
+                                        name="apto_movilidad_reducida"
+                                        class="form-check-input"
+                                        id="aptoMovilidad">
+
+                                    <label
+                                        class="form-check-label"
+                                        for="aptoMovilidad">
+
+                                        Apto para movilidad reducida
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Imagen del Tour (portada)
+                            </label>
+
+                            <input
+                                type="file"
+                                name="imagen"
+                                class="form-control"
+                                accept=".jpg,.jpeg,.png,.webp"
+                                required>
+
+                            <small class="text-muted">
+
+                                Selecciona una imagen desde tu computador.
+
+                            </small>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Galería de fotos (opcional)
+                            </label>
+
+                            <input
+                                type="file"
+                                name="galeria"
+                                class="form-control"
+                                accept=".jpg,.jpeg,.png,.webp"
+                                multiple>
+
+                            <small class="text-muted">
+
+                                Puedes seleccionar varias fotos a la vez
+                                (mantén Ctrl o Shift presionado).
+                                Se muestran en la ficha de detalle del tour.
+                                También puedes agregar más después desde
+                                "Editar".
+
+                            </small>
+
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-5">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-lg">
+
+                                <i class="bi bi-cloud-upload-fill"></i>
+
+                                Publicar Tour
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

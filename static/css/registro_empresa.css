@@ -1,0 +1,333 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+    linear-gradient(rgba(11,79,108,.70),rgba(11,79,108,.70)),
+    url("../img/fondo3.png") center center no-repeat;
+
+    background-size:cover;
+}
+
+.contenedor-registro{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px;
+}
+
+.tarjeta-registro{
+
+    width:1200px;
+
+    max-width:95%;
+
+    min-height:700px;
+
+    display:flex;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    background:white;
+
+    box-shadow:0 30px 70px rgba(0,0,0,.30);
+}
+
+.panel-formulario{
+
+    width:45%;
+
+    background:white;
+
+    padding:55px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.logo-proyecto{
+
+    width:90px;
+
+    margin:0 auto 25px;
+
+    transition:.35s;
+}
+
+.logo-proyecto:hover{
+
+    transform:scale(1.08);
+}
+
+.titulo{
+
+    text-align:center;
+
+    color:#0B4F6C;
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+}
+
+.subtitulo{
+
+    text-align:center;
+
+    color:#7F8C8D;
+
+    margin-bottom:35px;
+
+    line-height:1.6;
+}
+
+.form-label{
+
+    color:#2C3E50;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+}
+
+.form-control{
+
+    height:52px;
+
+    border-radius:14px;
+
+    border:1px solid #ECF0F1;
+
+    transition:.3s;
+
+    padding:12px 16px;
+}
+
+.form-control:focus{
+
+    border-color:#16A085;
+
+    box-shadow:0 0 0 .2rem rgba(26,188,156,.18);
+}
+
+.boton-registrar{
+
+    height:55px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(135deg,#16A085,#1ABC9C);
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:17px;
+
+    transition:.35s;
+}
+
+.boton-registrar:hover{
+
+    transform:translateY(-3px);
+
+    background:linear-gradient(135deg,#16A085,#1ABC9C);
+
+    color:white;
+
+    box-shadow:0 15px 30px rgba(26,188,156,.35);
+}
+
+a{
+
+    color:#0B4F6C;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+a:hover{
+
+    color:#16A085;
+}
+
+.volver{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#16A085;
+}
+
+.panel-imagen{
+
+    width:55%;
+
+    position:relative;
+
+    background:
+    linear-gradient(rgba(0,0,0,.20),rgba(0,0,0,.45)),
+    url("../img/palmera.jpg");
+
+    background-size:cover;
+
+    background-position:center;
+
+    display:flex;
+
+    align-items:flex-end;
+}
+
+.informacion{
+
+    width:100%;
+
+    padding:45px;
+
+    color:white;
+}
+
+.informacion h2{
+
+    font-size:40px;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+}
+
+.informacion p{
+
+    font-size:17px;
+
+    line-height:1.8;
+
+    opacity:.95;
+
+    margin-bottom:35px;
+}
+
+.estadisticas{
+
+    display:flex;
+
+    gap:20px;
+}
+
+.estadisticas div{
+
+    flex:1;
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:18px;
+
+    text-align:center;
+
+    padding:20px;
+}
+
+.estadisticas h3{
+
+    font-size:30px;
+
+    margin-bottom:5px;
+
+    font-weight:700;
+}
+
+.estadisticas span{
+
+    font-size:15px;
+}
+
+@media(max-width:992px){
+
+.tarjeta-registro{
+
+    flex-direction:column;
+}
+
+.panel-formulario,
+.panel-imagen{
+
+    width:100%;
+}
+
+.panel-imagen{
+
+    min-height:320px;
+}
+
+}
+
+@media(max-width:768px){
+
+.contenedor-registro{
+
+    padding:20px;
+}
+
+.panel-formulario{
+
+    padding:35px 25px;
+}
+
+.titulo{
+
+    font-size:28px;
+}
+
+.subtitulo{
+
+    font-size:15px;
+}
+
+.estadisticas{
+
+    flex-direction:column;
+}
+
+.informacion{
+
+    padding:30px;
+}
+
+.informacion h2{
+
+    font-size:28px;
+}
+
+}

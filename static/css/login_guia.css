@@ -1,0 +1,543 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --verde: #16735d;
+    --verde-oscuro: #0d493c;
+    --verde-profundo: #083b31;
+    --verde-claro: #dff2eb;
+    --blanco: #ffffff;
+    --texto: #173b33;
+    --gris: #71817b;
+    --borde: #dce9e4;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef7f3;
+    color: var(--texto);
+}
+
+.login-guia-container {
+    min-height: 100vh;
+    padding: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(
+            circle at 10% 15%,
+            rgba(53, 151, 122, 0.12),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 90% 85%,
+            rgba(22, 115, 93, 0.10),
+            transparent 25%
+        ),
+        #eef7f3;
+}
+
+.login-guia-card {
+    position: relative;
+    width: 100%;
+    max-width: 1080px;
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    background: var(--blanco);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow:
+        0 30px 80px rgba(8, 59, 49, 0.16),
+        0 8px 25px rgba(8, 59, 49, 0.07);
+    animation: entrada 0.6s ease;
+}
+
+@keyframes entrada {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-guia-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 52%;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5, 48, 40, 0.18),
+            rgba(5, 48, 40, 0.82)
+        ),
+        url("../img/guia-turistico.jpg") center center / cover no-repeat;
+    z-index: 1;
+}
+
+.login-guia-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 52%;
+    background: linear-gradient(
+        90deg,
+        rgba(5, 48, 40, 0.30),
+        transparent
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+.logo-container {
+    position: absolute;
+    top: 32px;
+    left: 38px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+}
+
+.logo-container img {
+    display: block;
+    width: 125px;
+    height: auto;
+    max-height: 70px;
+    object-fit: contain;
+}
+
+.viaje-info {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: end;
+    position: relative;
+    z-index: 5;
+    padding: 0 60px 55px;
+    color: var(--blanco);
+}
+
+.viaje-info .etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(8px);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.viaje-info .etiqueta i {
+    font-size: 13px;
+}
+
+.viaje-info h2 {
+    margin: 18px 0 13px;
+    max-width: 450px;
+    font-size: 40px;
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.viaje-info p {
+    max-width: 420px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.explorar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 28px;
+}
+
+.explorar span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 13px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(7px);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.explorar span i {
+    font-size: 13px;
+}
+
+.login-guia-formulario {
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+    z-index: 5;
+    min-height: 650px;
+    padding: 65px 65px 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+}
+
+.icono-guia {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 22px;
+    border-radius: 18px;
+    background: var(--verde-claro);
+    color: var(--verde);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 29px;
+    box-shadow: 0 8px 20px rgba(22, 115, 93, 0.08);
+}
+
+.login-guia-formulario h1 {
+    margin: 0;
+    color: var(--verde-profundo);
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.subtitulo {
+    max-width: 390px;
+    margin: 11px 0 30px;
+    color: var(--gris);
+    font-size: 13.5px;
+    line-height: 1.65;
+}
+
+.campo {
+    margin-bottom: 19px;
+}
+
+.campo label {
+    display: block;
+    margin: 0 0 8px 2px;
+    color: #345149;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-container i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    color: #78948b;
+    font-size: 17px;
+    transition: 0.2s ease;
+}
+
+.input-container input {
+    width: 100%;
+    height: 53px;
+    padding: 0 16px 0 46px;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    outline: none;
+    background: #fbfdfc;
+    color: #24453c;
+    font-size: 14px;
+    transition: 0.25s ease;
+}
+
+.input-container input::placeholder {
+    color: #a3afab;
+}
+
+.input-container input:hover {
+    border-color: #b7d5cb;
+}
+
+.input-container input:focus {
+    border-color: var(--verde);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(22, 115, 93, 0.08);
+}
+
+.input-container:focus-within i {
+    color: var(--verde);
+}
+
+.btn-ingresar {
+    position: relative;
+    width: 100%;
+    height: 54px;
+    margin-top: 4px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        var(--verde-oscuro),
+        var(--verde)
+    );
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 9px 20px rgba(22, 115, 93, 0.20);
+    transition: 0.25s ease;
+}
+
+.btn-ingresar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    transform: skewX(-20deg);
+    background: rgba(255, 255, 255, 0.14);
+    transition: 0.55s;
+}
+
+.btn-ingresar:hover::before {
+    left: 130%;
+}
+
+.btn-ingresar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 13px 28px rgba(22, 115, 93, 0.27);
+}
+
+.btn-ingresar:active {
+    transform: translateY(0);
+}
+
+.btn-ingresar i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.separador {
+    width: 100%;
+    height: 1px;
+    margin: 27px 0 20px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--borde),
+        transparent
+    );
+}
+
+.registro-guia {
+    text-align: center;
+}
+
+.registro-guia p {
+    margin: 0 0 9px;
+    color: #7b8985;
+    font-size: 12.5px;
+}
+
+.registro-guia a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 17px;
+    border: 1px solid #c9e3da;
+    border-radius: 30px;
+    background: var(--verde-claro);
+    color: var(--verde-oscuro);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.registro-guia a:hover {
+    background: #d2ebe3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(22, 115, 93, 0.08);
+}
+
+.volver {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 19px;
+    color: #7b8985;
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.volver:hover {
+    color: var(--verde);
+}
+
+.volver i {
+    transition: 0.2s ease;
+}
+
+.volver:hover i {
+    transform: translateX(-3px);
+}
+
+@media (max-width: 950px) {
+
+    .login-guia-container {
+        padding: 20px;
+    }
+
+    .login-guia-card {
+        max-width: 900px;
+        grid-template-columns: 0.9fr 1.1fr;
+    }
+
+    .login-guia-card::before,
+    .login-guia-card::after {
+        width: 45%;
+    }
+
+    .viaje-info {
+        padding: 0 38px 45px;
+    }
+
+    .viaje-info h2 {
+        font-size: 32px;
+    }
+
+    .login-guia-formulario {
+        padding: 50px 45px;
+    }
+
+    .logo-container {
+        left: 35px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .login-guia-container {
+        padding: 15px;
+    }
+
+    .login-guia-card {
+        display: block;
+        max-width: 520px;
+        min-height: auto;
+    }
+
+    .login-guia-card::before,
+    .login-guia-card::after {
+        display: none;
+    }
+
+    .logo-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        padding: 24px;
+        background: var(--verde-profundo);
+        text-align: center;
+    }
+
+    .logo-container img {
+        width: 110px;
+        max-height: none;
+    }
+
+    .viaje-info {
+        display: none;
+    }
+
+    .login-guia-formulario {
+        min-height: auto;
+        padding: 40px 35px 35px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .login-guia-container {
+        padding: 8px;
+    }
+
+    .login-guia-card {
+        border-radius: 20px;
+    }
+
+    .logo-container {
+        padding: 22px;
+    }
+
+    .logo-container img {
+        width: 100px;
+    }
+
+    .login-guia-formulario {
+        padding: 32px 22px 28px;
+    }
+
+    .icono-guia {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 18px;
+        border-radius: 16px;
+        font-size: 25px;
+    }
+
+    .login-guia-formulario h1 {
+        font-size: 25px;
+    }
+
+    .subtitulo {
+        margin-bottom: 25px;
+        font-size: 13px;
+    }
+
+    .input-container input {
+        height: 50px;
+    }
+
+    .btn-ingresar {
+        height: 51px;
+    }
+
+    .registro-guia a {
+        font-size: 11.5px;
+        padding: 8px 13px;
+    }
+
+    .volver {
+        font-size: 12px;
+    }
+}

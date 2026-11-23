@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Chat con cliente | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/chat_empresa.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+
+<div class="empresa-chat-page">
+
+    <div class="empresa-chat-wrapper">
+
+
+        <div class="topbar">
+
+            <div class="marca">
+
+                <div class="marca-icono">
+
+                    <i class="bi bi-compass"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        ZUQARA TOURS
+                    </span>
+
+                    <small>
+                        Centro de comunicación
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('chats_empresa') }}"
+                class="volver-btn">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver a chats
+
+            </a>
+
+        </div>
+
+
+        <div class="contexto-tour">
+
+            <div class="contexto-icono">
+
+                <i class="bi bi-chat-square-text"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    CONVERSACIÓN CON CLIENTE
+                </span>
+
+                <strong>
+                    {{ conversacion.tour.titulo }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="chat-card">
+
+
+            <div class="chat-header">
+
+                <div class="cliente-avatar">
+
+                    <i class="bi bi-person"></i>
+
+                </div>
+
+                <div class="cliente-info">
+
+                    <h1>
+                        {{ conversacion.usuario.nombre }}
+                    </h1>
+
+                    <p>
+
+                        <span class="estado"></span>
+
+                        Cliente interesado en el tour
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="mensajes">
+
+                {% if mensajes %}
+
+                    <div class="separador">
+
+                        <span>
+                            Conversación
+                        </span>
+
+                    </div>
+
+
+                    {% for mensaje in mensajes %}
+
+                        {% if mensaje.remitente == "empresa" %}
+
+                            <div class="mensaje empresa">
+
+                                <div class="burbuja">
+
+                                    {{ mensaje.mensaje }}
+
+                                </div>
+
+                                <div class="hora">
+
+                                    Tú · {{ mensaje.fecha.strftime("%H:%M") }}
+
+                                </div>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="mensaje usuario">
+
+                                <div class="burbuja">
+
+                                    {{ mensaje.mensaje }}
+
+                                </div>
+
+                                <div class="hora">
+
+                                    {{ conversacion.usuario.nombre }}
+                                    · {{ mensaje.fecha.strftime("%H:%M") }}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="sin-mensajes">
+
+                        <div class="sin-mensajes-icono">
+
+                            <i class="bi bi-chat-square-text"></i>
+
+                        </div>
+
+                        <h2>
+                            Aún no hay mensajes
+                        </h2>
+
+                        <p>
+                            Cuando el cliente escriba, la conversación aparecerá aquí.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <form
+                method="POST"
+                class="formulario-mensaje">
+
+                <div class="campo-mensaje">
+
+                    <i class="bi bi-chat-left-text"></i>
+
+                    <input
+                        type="text"
+                        name="mensaje"
+                        placeholder="Escribe una respuesta al cliente..."
+                        autocomplete="off"
+                        required>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-enviar">
+
+                    <i class="bi bi-send-fill"></i>
+
+                    <span>
+                        Enviar
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <div class="chat-footer">
+
+                <i class="bi bi-shield-check"></i>
+
+                Responde las consultas del cliente sobre su experiencia en Zuqara Tours.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

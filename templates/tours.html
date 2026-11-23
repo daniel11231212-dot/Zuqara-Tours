@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Zuqara Tours | Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/tours.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor-dashboard">
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <img
+                src="{{ url_for('static', filename='img/Log.png') }}"
+                class="logo"
+                alt="Logo"
+            >
+
+            <h3 class="nombre-app">
+                Zuqara Tours
+            </h3>
+
+        </div>
+
+        <nav class="menu">
+
+            <a href="{{ url_for('principal') }}">
+
+                <i class="bi bi-grid"></i>
+
+                Dashboard
+
+            </a>
+
+            <a
+                href="{{ url_for('tours') }}"
+                class="activo"
+            >
+
+                <i class="bi bi-airplane"></i>
+
+                Tours
+
+            </a>
+
+            <a href="{{ url_for('reservas') }}">
+
+                <i class="bi bi-calendar-check"></i>
+
+                Mis Reservas
+
+            </a>
+
+            <a href="{{ url_for('favoritos') }}">
+
+                <i class="bi bi-heart"></i>
+
+                Favoritos
+
+            </a>
+
+            <a href="{{ url_for('itinerarios') }}">
+
+                <i class="bi bi-map"></i>
+
+                Itinerarios
+
+            </a>
+
+            <a href="{{ url_for('perfil') }}">
+
+                <i class="bi bi-person"></i>
+
+                Perfil
+
+            </a>
+
+        </nav>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="cerrar-sesion"
+        >
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Cerrar sesión
+
+        </a>
+
+    </aside>
+
+    <main class="contenido-principal">
+
+        <div class="cabecera d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1>
+                    Explora Nuestros Tours
+                </h1>
+
+                <p>
+                    Encuentra los mejores destinos turísticos de Colombia.
+                </p>
+
+            </div>
+
+            {% if session.get("empresa_id") and not session.get("usuario_id") %}
+
+            <a
+                href="{{ url_for('crear_tour') }}"
+                class="btn btn-success"
+            >
+
+                <i class="bi bi-plus-circle"></i>
+
+                Crear Tour
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        {% include "components/recomendacion_perfil.html" %}
+
+        <form
+            action="{{ url_for('tours') }}"
+            method="GET"
+        >
+
+            <div class="busqueda">
+
+                <input
+                    type="text"
+                    name="buscar"
+                    class="form-control"
+                    placeholder="Buscar destino, tour o palabra clave..."
+                    value="{{ buscar }}"
+                >
+
+                <button
+                    type="submit"
+                    class="btn boton-buscar"
+                >
+
+                    <i class="bi bi-search"></i>
+
+                </button>
+
+            </div>
+
+            <div class="fila-filtros">
+
+                <select
+                    name="ciudad"
+                    class="form-select"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        Todas las ciudades
+                    </option>
+
+                    {% for c in ciudades %}
+
+                    <option
+                        value="{{ c }}"
+                        {% if ciudad == c %}
+                        selected
+                        {% endif %}
+                    >
+
+                        {{ c }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <select
+                    name="categoria_id"
+                    class="form-select"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        Todas las categorías
+                    </option>
+
+                    {% for cat in categorias %}
+
+                    <option
+                        value="{{ cat.id }}"
+                        {% if categoria_id|string == cat.id|string %}
+                        selected
+                        {% endif %}
+                    >
+
+                        {{ cat.nombre }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <select
+                    name="dificultad"
+                    class="form-select"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        Cualquier dificultad
+                    </option>
+
+                    <option
+                        value="Fácil"
+                        {% if dificultad == "Fácil" %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Fácil
+
+                    </option>
+
+                    <option
+                        value="Moderado"
+                        {% if dificultad == "Moderado" %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Moderado
+
+                    </option>
+
+                    <option
+                        value="Difícil"
+                        {% if dificultad == "Difícil" %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Difícil
+
+                    </option>
+
+                </select>
+
+                <input
+                    type="number"
+                    name="precio_min"
+                    class="form-control"
+                    placeholder="Precio mínimo"
+                    value="{{ precio_min }}"
+                    onchange="this.form.submit()"
+                >
+
+                <input
+                    type="number"
+                    name="precio_max"
+                    class="form-control"
+                    placeholder="Precio máximo"
+                    value="{{ precio_max }}"
+                    onchange="this.form.submit()"
+                >
+
+                <input
+                    type="number"
+                    name="cupos_min"
+                    class="form-control"
+                    placeholder="Cupos mínimos"
+                    value="{{ cupos_min }}"
+                    onchange="this.form.submit()"
+                >
+
+                <select
+                    name="orden"
+                    class="form-select"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        Ordenar por
+                    </option>
+
+                    <option
+                        value="precio_asc"
+                        {% if orden == "precio_asc" %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Precio: menor a mayor
+
+                    </option>
+
+                    <option
+                        value="precio_desc"
+                        {% if orden == "precio_desc" %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Precio: mayor a menor
+
+                    </option>
+
+                    <option
+                        value="nombre"
+                        {% if orden == "nombre" %}
+                        selected
+                        {% endif %}
+                    >
+
+                        Nombre A-Z
+
+                    </option>
+
+                </select>
+
+                <div class="form-check form-switch d-flex align-items-center">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="accesibilidad"
+                        name="accesibilidad"
+                        value="1"
+                        onchange="this.form.submit()"
+                        {% if accesibilidad %}
+                        checked
+                        {% endif %}
+                    >
+
+                    <label
+                        class="form-check-label ms-2"
+                        for="accesibilidad"
+                    >
+
+                        Apto movilidad reducida
+
+                    </label>
+
+                </div>
+
+                {% if buscar
+                    or ciudad
+                    or categoria_id
+                    or dificultad
+                    or precio_min
+                    or precio_max
+                    or accesibilidad
+                    or cupos_min
+                    or orden
+                %}
+
+                <a
+                    href="{{ url_for('tours') }}"
+                    class="btn btn-outline-secondary btn-sm"
+                >
+
+                    Limpiar filtros
+
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </form>
+
+        <div class="row mt-4">
+
+            {% if tours %}
+
+                {% for tour in tours %}
+
+                <div class="col-lg-3 col-md-6 mb-4">
+
+                    <div class="card tarjeta-tour h-100">
+
+                        {% if tour.imagenes and tour.imagenes|length > 0 %}
+
+                        <img
+                            src="{{ url_for('static', filename=tour.imagenes[0].url) }}"
+                            class="card-img-top"
+                            alt="{{ tour.titulo }}"
+                        >
+
+                        {% else %}
+
+                        <div class="text-center p-5 border rounded">
+
+                            <i class="bi bi-image fs-1 text-muted"></i>
+
+                            <p class="text-muted mt-2 mb-0">
+                                Sin imagen
+                            </p>
+
+                        </div>
+
+                        {% endif %}
+
+                        <div class="card-body">
+
+                            <span class="calificacion">
+
+                                {% if tour.promedio_calificacion %}
+
+                                    ⭐ {{ tour.promedio_calificacion }}
+
+                                    ({{ tour.total_calificaciones }})
+
+                                {% else %}
+
+                                    Sin calificaciones
+
+                                {% endif %}
+
+                            </span>
+
+                            {% if tour.categoria %}
+
+                            <span class="badge-categoria">
+
+                                <i class="bi {{ tour.categoria.icono }}"></i>
+
+                                {{ tour.categoria.nombre }}
+
+                            </span>
+
+                            {% endif %}
+
+                            <h5 class="mt-3">
+
+                                {{ tour.titulo }}
+
+                            </h5>
+
+                            <p>
+
+                                {{ tour.descripcion }}
+
+                            </p>
+
+                            <p>
+
+                                <strong>
+
+                                    {{ tour.ciudad }}
+
+                                </strong>
+
+                            </p>
+
+                            {% if tour.dificultad %}
+
+                            <p class="meta-tour">
+
+                                <span>
+
+                                    <i class="bi bi-bar-chart"></i>
+
+                                    {{ tour.dificultad }}
+
+                                </span>
+
+                            </p>
+
+                            {% endif %}
+
+                            <h4>
+
+                                ${{ "{:,.0f}".format(tour.precio) }}
+
+                            </h4>
+
+                            <p>
+
+                                Cupos disponibles:
+
+                                {{ tour.cupo_disponible }}
+
+                            </p>
+
+                            <div class="d-flex gap-2">
+
+                                <a
+                                    href="{{ url_for('detalle_tour', id=tour.id_tour) }}"
+                                    class="btn boton-tour flex-fill"
+                                >
+
+                                    Ver detalles
+
+                                </a>
+
+                                {% if session.get("usuario_id") %}
+
+                                <a
+                                    href="{{ url_for('agregar_favorito', tour_id=tour.id_tour) }}"
+                                    class="btn btn-outline-danger"
+                                    title="Agregar a favoritos"
+                                >
+
+                                    <i class="bi bi-heart"></i>
+
+                                </a>
+
+                                <form
+                                    action="{{ url_for('guardar_tour_usuario', tour_id=tour.id_tour) }}"
+                                    method="POST"
+                                    class="d-inline"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-primary"
+                                        title="Guardar para más tarde"
+                                    >
+
+                                        <i class="bi bi-bookmark"></i>
+
+                                    </button>
+
+                                </form>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="col-12">
+
+                    <div class="alert alert-warning text-center">
+
+                        <h4>
+                            No se encontraron tours
+                        </h4>
+
+                        <p>
+                            Intenta buscar otro destino.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

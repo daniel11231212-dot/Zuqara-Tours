@@ -1,0 +1,57 @@
+.contenido .editar-tour h2{
+    color:#0B4F6C;
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.contenido .editar-tour form{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    margin-bottom:30px;
+}
+
+.contenido .editar-tour label{
+    font-weight:600;
+    color:#0B4F6C;
+}
+
+.contenido .editar-tour .form-control,
+.contenido .editar-tour .form-select{
+    border-radius:10px;
+    border:1px solid #ECF0F1;
+}
+
+.contenido .editar-tour .btn-primary{
+    background:#0B4F6C;
+    border:none;
+    border-radius:10px;
+    padding:10px 22px;
+}
+
+.contenido .editar-tour .btn-primary:hover{
+    background:#0B4F6C;
+}
+
+.contenido .editar-tour hr{
+    margin:35px 0;
+    border-color:#ECF0F1;
+}
+
+.contenido .editar-tour h4{
+    color:#0B4F6C;
+    font-weight:700;
+}
+
+.contenido .editar-tour .card{
+    border:none;
+    border-radius:15px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.contenido .editar-tour .list-group-item{
+    border-radius:10px !important;
+    margin-bottom:8px;
+    border:1px solid #F4F8FB;
+}

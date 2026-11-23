@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis Tours | Zuqara Tours</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/mis_tours.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_empresa.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/componentes.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('dashboard_empresa') %}
+
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>Zuqara Empresa</h2>
+
+        <a href="{{ url_for('dashboard_empresa') }}">
+            <i class="bi bi-grid-fill"></i>
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('mis_tours') }}" class="activo">
+            <i class="bi bi-airplane-fill"></i>
+            Mis Tours
+        </a>
+
+        <a href="{{ url_for('crear_tour') }}">
+            <i class="bi bi-plus-circle-fill"></i>
+            Crear Tour
+        </a>
+
+        <a href="{{ url_for('reservas_empresa') }}">
+            <i class="bi bi-calendar-check-fill"></i>
+            Reservas
+        </a>
+
+        <a href="{{ url_for('chats_empresa') }}">
+            <i class="bi bi-chat-dots-fill"></i>
+            Chats
+        </a>
+
+        <a href="{{ url_for('notificaciones_empresa') }}">
+            <i class="bi bi-bell-fill"></i>
+            Notificaciones
+
+            {% if notificaciones_sin_leer %}
+                <span class="badge bg-danger">
+                    {{ notificaciones_sin_leer }}
+                </span>
+            {% endif %}
+
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar sesión
+        </a>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="contenedor-mis-tours">
+
+            <div class="encabezado">
+
+                <div>
+
+                    <h1>
+                        <i class="bi bi-airplane-fill"></i>
+                        Mis Tours
+                    </h1>
+
+                    <p>
+                        Administra todos los tours publicados por tu empresa.
+                    </p>
+
+                </div>
+
+                <a href="{{ url_for('crear_tour') }}"
+                   class="btn btn-crear">
+
+                    <i class="bi bi-plus-circle-fill"></i>
+                    Crear Tour
+
+                </a>
+
+            </div>
+
+            <div class="tabla-contenedor">
+
+                <table class="table tabla-tours align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Tour</th>
+
+                            <th>Ciudad</th>
+
+                            <th>Precio</th>
+
+                            <th>Cupos</th>
+
+                            <th>Estado</th>
+
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for tour in tours %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="tour-info">
+
+                                    {% if tour.imagenes %}
+
+                                        <img src="{{ url_for('static', filename=tour.imagenes[0].url) }}"
+                                             class="imagen-tour"
+                                             alt="{{ tour.titulo }}">
+
+                                    {% else %}
+
+                                        <div class="imagen-tour d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-image text-muted fs-3"></i>
+                                        </div>
+
+                                    {% endif %}
+
+                                    <div>
+
+                                        <h6>{{ tour.titulo }}</h6>
+
+                                        <small>
+                                            Experiencia turística
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                <i class="bi bi-geo-alt-fill text-danger"></i>
+
+                                {{ tour.ciudad }}
+
+                            </td>
+
+                            <td>
+
+                                ${{ "{:,.0f}".format(tour.precio) }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-success">
+
+                                    {{ tour.cupo_disponible }} / {{ tour.cupo_maximo }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {% if tour.estado == "aprobado" %}
+
+                                    <span class="badge bg-success">
+                                        Aprobado
+                                    </span>
+
+                                {% elif tour.estado == "pendiente" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        Pendiente
+                                    </span>
+
+                                {% elif tour.estado == "pausado" %}
+
+                                    <span class="badge bg-secondary">
+                                        Pausado
+                                    </span>
+
+                                {% elif tour.estado == "activo" %}
+
+                                    <span class="badge bg-primary">
+                                        Activo
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ tour.estado }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a href="{{ url_for('editar_tour', id=tour.id_tour) }}"
+                                   class="btn btn-warning btn-sm">
+
+                                    <i class="bi bi-pencil-fill"></i>
+
+                                </a>
+
+                                <a href="{{ url_for('cambiar_estado_tour', tour_id=tour.id_tour) }}"
+                                   class="btn btn-secondary btn-sm"
+                                   title="Cambiar estado">
+
+                                    <i class="bi bi-arrow-repeat"></i>
+
+                                </a>
+
+                                <a class="btn btn-danger btn-sm"
+                                   href="{{ url_for('eliminar_tour', tour_id=tour.id_tour) }}">
+
+                                    <i class="bi bi-trash-fill"></i>
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="6" class="text-center">
+
+                                No tienes tours registrados.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

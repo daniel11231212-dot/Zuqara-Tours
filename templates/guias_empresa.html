@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zuqara Tours | Guías turísticos</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/guias_empresa.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="empresa-layout">
+
+    <aside class="sidebar">
+
+        <div class="logo-sidebar">
+
+            <img
+                src="{{ url_for('static', filename='img/Log.png') }}"
+                alt="Zuqara Tours"
+            >
+
+        </div>
+
+        <div class="menu-sidebar">
+
+            <a href="{{ url_for('dashboard_empresa') }}">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('mis_tours') }}">
+                <i class="bi bi-map-fill"></i>
+                <span>Mis Tours</span>
+            </a>
+
+            <a href="{{ url_for('crear_tour') }}">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Crear Tour</span>
+            </a>
+
+            <a href="{{ url_for('solicitudes_guias') }}">
+                <i class="bi bi-person-badge-fill"></i>
+                <span>Solicitudes de guías</span>
+            </a>
+
+            <a href="{{ url_for('guias_empresa') }}" class="activo">
+                <i class="bi bi-people-fill"></i>
+                <span>Mis guías</span>
+            </a>
+
+        </div>
+
+        <div class="cerrar-sidebar">
+
+            <a href="{{ url_for('logout') }}">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Cerrar sesión</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="encabezado">
+
+            <div>
+
+                <span class="etiqueta">
+                    <i class="bi bi-person-badge-fill"></i>
+                    Equipo de trabajo
+                </span>
+
+                <h1>Mis guías</h1>
+
+                <p>
+                    Administra los guías aprobados y asígnales los tours de tu empresa.
+                </p>
+
+            </div>
+
+            <div class="contador">
+
+                <strong>{{ guias|length }}</strong>
+
+                <span>Guías activos</span>
+
+            </div>
+
+        </div>
+
+        {% if guias %}
+
+        <div class="guias-grid">
+
+            {% for guia in guias %}
+
+            <div class="guia-card">
+
+                <div class="guia-superior">
+
+                    <div class="avatar">
+
+                        <i class="bi bi-person-badge-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>{{ guia.nombre_completo }}</h2>
+
+                        <span class="estado">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Activo
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="datos">
+
+                    <div>
+                        <i class="bi bi-envelope-fill"></i>
+                        <span>{{ guia.correo }}</span>
+                    </div>
+
+                    <div>
+                        <i class="bi bi-telephone-fill"></i>
+                        <span>{{ guia.telefono or "Sin teléfono" }}</span>
+                    </div>
+
+                </div>
+
+                {% set perfil = perfiles[guia.id_usuario|string] if guia.id_usuario|string in perfiles else None %}
+
+                {% if perfil %}
+
+                <div class="perfil-info">
+
+                    <div>
+                        <small>Especialidad</small>
+                        <strong>{{ perfil.especialidad or "No especificada" }}</strong>
+                    </div>
+
+                    <div>
+                        <small>Ciudad base</small>
+                        <strong>{{ perfil.ciudad_base or "No especificada" }}</strong>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                <a
+                    href="{{ url_for('asignar_tour_guia', id_guia=guia.id_usuario) }}"
+                    class="btn-asignar"
+                >
+                    <i class="bi bi-calendar-plus"></i>
+                    Asignar tour
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="vacio">
+
+            <div class="icono-vacio">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <h2>No tienes guías activos</h2>
+
+            <p>
+                Cuando apruebes una solicitud de guía, aparecerá aquí para que puedas asignarle tours.
+            </p>
+
+            <a href="{{ url_for('solicitudes_guias') }}">
+                <i class="bi bi-person-badge"></i>
+                Ver solicitudes
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+</html>

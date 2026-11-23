@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zuqara Tours | Mis Itinerarios</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tours.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/itinerarios.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/componentes.css') }}">
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+{% set volver_fallback = url_for('principal') %}
+{% include "components/boton_volver.html" %}
+
+
+<div class="contenedor-dashboard">
+
+    <aside class="barra-lateral">
+
+        <div>
+
+            <img src="{{ url_for('static', filename='img/Log.png') }}" class="logo" alt="Logo">
+
+            <h3 class="nombre-app">
+                Zuqara Tours
+            </h3>
+
+        </div>
+
+        <nav class="menu">
+
+            <a href="{{ url_for('principal') }}">
+                <i class="bi bi-grid"></i>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('tours') }}">
+                <i class="bi bi-airplane"></i>
+                Tours
+            </a>
+
+            <a href="{{ url_for('reservas') }}">
+                <i class="bi bi-calendar-check"></i>
+                Mis Reservas
+            </a>
+
+            <a href="{{ url_for('favoritos') }}">
+                <i class="bi bi-heart"></i>
+                Favoritos
+            </a>
+
+            <a href="{{ url_for('itinerarios') }}" class="activo">
+                <i class="bi bi-map"></i>
+                Itinerarios
+            </a>
+
+            <a href="{{ url_for('perfil') }}">
+                <i class="bi bi-person"></i>
+                Perfil
+            </a>
+
+        </nav>
+
+        <a href="{{ url_for('logout') }}" class="cerrar-sesion">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar sesión
+        </a>
+
+    </aside>
+
+    <main class="contenido-principal">
+
+        <h1 class="mb-4">
+            <i class="bi bi-map"></i>
+            Mis Itinerarios
+        </h1>
+
+        <div class="tarjeta-nuevo-itinerario mb-5">
+
+            <h5>Crear un nuevo itinerario</h5>
+
+            <form action="{{ url_for('crear_itinerario') }}" method="POST">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-5">
+                        <label class="form-label">Nombre del viaje</label>
+                        <input
+                            type="text"
+                            name="nombre"
+                            class="form-control"
+                            placeholder="Ej. Vacaciones de diciembre"
+                            required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Desde</label>
+                        <input type="date" name="fecha_inicio" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Hasta</label>
+                        <input type="date" name="fecha_fin" class="form-control">
+                    </div>
+
+                    <div class="col-md-1">
+                        <button type="submit" class="btn boton-tour w-100">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        {% if itinerarios %}
+
+        <div class="row">
+
+            {% for it in itinerarios %}
+
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <div class="card tarjeta-itinerario h-100">
+
+                    <div class="card-body">
+
+                        <h5>{{ it.nombre }}</h5>
+
+                        {% if it.fecha_inicio or it.fecha_fin %}
+                        <p class="fechas-itinerario">
+                            <i class="bi bi-calendar-range"></i>
+                            {% if it.fecha_inicio %}{{ it.fecha_inicio.strftime("%d/%m/%Y") }}{% endif %}
+                            {% if it.fecha_fin %} — {{ it.fecha_fin.strftime("%d/%m/%Y") }}{% endif %}
+                        </p>
+                        {% endif %}
+
+                        <p class="contador-tours">
+                            <i class="bi bi-airplane"></i>
+                            {{ it.tours_incluidos|length }} tour{{ "s" if it.tours_incluidos|length != 1 else "" }} agregado{{ "s" if it.tours_incluidos|length != 1 else "" }}
+                        </p>
+
+                        <div class="d-flex gap-2 mt-3">
+
+                            <a href="{{ url_for('itinerario_detalle', id=it.id) }}"
+                               class="btn boton-tour flex-fill">
+                                Ver itinerario
+                            </a>
+
+                            <a href="{{ url_for('eliminar_itinerario', id=it.id) }}"
+                               class="btn btn-outline-danger"
+                               onclick="return confirm('¿Eliminar este itinerario? Esta acción no se puede deshacer.')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-info text-center">
+            <h4>Aún no tienes itinerarios.</h4>
+            <p>Crea uno arriba y luego agrégale tours desde la ficha de cada destino.</p>
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

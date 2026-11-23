@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuqara Tours | Iniciar Sesión</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/componentes.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+{% set volver_fallback = url_for('index') %}
+{% include "components/boton_volver.html" %}
+
+
+    <div class="contenedor-principal">
+
+        <div class="tarjeta-login">
+
+            <div class="panel-login">
+
+                <img src="{{ url_for('static', filename='img/Log.png') }}"
+                class="logo-proyecto"
+                alt="Logo">
+
+                <h2 class="titulo-login">
+                    Iniciar Sesión
+                </h2>
+
+                <p class="subtitulo-login">
+                    Bienvenido a Zuqara Tours
+                </p>
+
+                <form action="{{ url_for('login_usuario_post') }}" method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            type="email"
+                            name="correo"
+                            class="form-control"
+                            placeholder="correo@ejemplo.com"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Contraseña
+                        </label>
+
+                        <div class="campo-password-wrapper">
+                            <input
+                                type="password"
+                                id="password_login_usuario"
+                                name="password"
+                                class="form-control"
+                                placeholder="********"
+                                required>
+                            <i id="icono_password_login_usuario" class="bi bi-eye icono-alternar-password" onclick="zuqaraAlternarPassword('password_login_usuario', 'icono_password_login_usuario')"></i>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn boton-login w-100">
+
+                        Ingresar
+
+                    </button>
+
+                </form>
+
+                <div class="mt-4 text-center">
+
+                    <p>
+                        ¿No tienes cuenta?
+
+                        <a href="{{ url_for('registro') }}">
+                            Regístrate
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="panel-imagen">
+
+                <img
+                    src="{{ url_for('static', filename='img/palmera.jpg') }}"
+                    alt="Turismo"
+                    class="imagen-fondo">
+
+                <div class="recuadro-info">
+
+                    <h3>
+                        Explora nuevos destinos
+                    </h3>
+
+                    <p>
+                        Encuentra experiencias únicas y reserva los mejores tours
+                        para tus próximas aventuras.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+{% include "components/alternar_password.html" %}
+
+</body>
+
+</html>

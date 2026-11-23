@@ -1,0 +1,61 @@
+.tarjeta-nuevo-itinerario{
+    background:white;
+    border-radius:18px;
+    padding:25px 30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.tarjeta-nuevo-itinerario h5{
+    color:#0B4F6C;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+
+.tarjeta-itinerario{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.tarjeta-itinerario:hover{
+    transform:translateY(-6px);
+    box-shadow:0 16px 30px rgba(0,0,0,.15);
+}
+
+.tarjeta-itinerario h5{
+    color:#0B4F6C;
+    font-weight:bold;
+    font-size:22px;
+}
+
+.fechas-itinerario,
+.contador-tours{
+    color:#666;
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+.cabecera-itinerario h1{
+    color:#0B4F6C;
+    font-weight:bold;
+}
+
+.cabecera-itinerario p{
+    color:#666;
+    font-size:16px;
+}
+
+.fecha-programada{
+    color:#1ABC9C;
+    font-weight:bold;
+    font-size:14px;
+}
+
+@media(max-width:768px){
+
+    .tarjeta-nuevo-itinerario{
+        padding:20px;
+    }
+
+}

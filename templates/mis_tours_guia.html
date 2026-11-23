@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mis Tours | Guía | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/mis_tours_guia.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="dashboard-guia">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="bi bi-compass-fill"></i>
+
+            <span>
+                Zuqara Tours
+            </span>
+
+        </div>
+
+
+        <div class="perfil-sidebar">
+
+            <div class="avatar">
+
+                <i class="bi bi-person-fill"></i>
+
+            </div>
+
+            <h3>
+                {{ usuario.nombre_completo }}
+            </h3>
+
+            <span>
+                Guía turístico
+            </span>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="{{ url_for('dashboard_guia') }}">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+
+                <span>
+                    Panel principal
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('perfil_guia') }}">
+
+                <i class="bi bi-person-vcard"></i>
+
+                <span>
+                    Mi perfil
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('mis_tours_guia') }}"
+                class="activo"
+            >
+
+                <i class="bi bi-map"></i>
+
+                <span>
+                    Mis tours
+                </span>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="bi bi-calendar3"></i>
+
+                <span>
+                    Mi agenda
+                </span>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="bi bi-people"></i>
+
+                <span>
+                    Viajeros
+                </span>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="bi bi-bell"></i>
+
+                <span>
+                    Notificaciones
+                </span>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="bi bi-star"></i>
+
+                <span>
+                    Calificaciones
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="cerrar-sesion">
+
+            <a href="{{ url_for('logout') }}">
+
+                <i class="bi bi-box-arrow-left"></i>
+
+                Cerrar sesión
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="contenido">
+
+        <header class="encabezado">
+
+            <div>
+
+                <span class="etiqueta">
+                    MIS TOURS
+                </span>
+
+                <h1>
+                    Mis tours asignados
+                </h1>
+
+                <p>
+                    Aquí encontrarás los tours que tu empresa te ha asignado.
+                </p>
+
+            </div>
+
+
+            <div class="contador">
+
+                <div class="contador-icono">
+
+                    <i class="bi bi-map-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ asignaciones|length }}
+                    </strong>
+
+                    <span>
+                        Tour{% if asignaciones|length != 1 %}s{% endif %}
+                        asignado{% if asignaciones|length != 1 %}s{% endif %}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        {% if asignaciones %}
+
+        <section class="tours-grid">
+
+            {% for asignacion in asignaciones %}
+
+            <article class="tour-card">
+
+
+                <div class="tour-imagen">
+
+                    {% if asignacion.tour.imagenes and asignacion.tour.imagenes|length > 0 %}
+
+                        <img
+                            src="{{ url_for('static', filename=asignacion.tour.imagenes[0].url) }}"
+                            alt="{{ asignacion.tour.titulo }}"
+                        >
+
+                    {% else %}
+
+                        <div class="imagen-placeholder">
+
+                            <i class="bi bi-image"></i>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <span class="estado">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Asignado
+
+                    </span>
+
+                </div>
+
+
+                <div class="tour-contenido">
+
+
+                    <span class="categoria">
+
+                        <i class="bi bi-compass-fill"></i>
+
+                        Tour asignado
+
+                    </span>
+
+
+                    <h2>
+                        {{ asignacion.tour.titulo }}
+                    </h2>
+
+
+                    {% if asignacion.tour.ciudad %}
+
+                    <div class="dato-tour">
+
+                        <i class="bi bi-geo-alt-fill"></i>
+
+                        <span>
+                            {{ asignacion.tour.ciudad }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if asignacion.tour.duracion %}
+
+                    <div class="dato-tour">
+
+                        <i class="bi bi-clock-fill"></i>
+
+                        <span>
+                            {{ asignacion.tour.duracion }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if asignacion.tour.precio is not none %}
+
+                    <div class="dato-tour">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                        <span>
+                            ${{ "{:,.0f}".format(asignacion.tour.precio) }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <div class="tour-footer">
+
+                        <span>
+
+                            <i class="bi bi-calendar-check"></i>
+
+                            Asignado el
+
+                            {{ asignacion.fecha_asignacion.strftime("%d/%m/%Y") }}
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </section>
+
+
+        {% else %}
+
+        <section class="sin-tours">
+
+            <div class="sin-tours-icono">
+
+                <i class="bi bi-map"></i>
+
+            </div>
+
+
+            <h2>
+                Todavía no tienes tours asignados
+            </h2>
+
+
+            <p>
+                Cuando tu empresa te asigne un tour,
+                aparecerá automáticamente en esta sección.
+            </p>
+
+
+            <a href="{{ url_for('dashboard_guia') }}">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver al panel
+
+            </a>
+
+        </section>
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

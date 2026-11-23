@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zuqara Tours | Perfil</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/perfil.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}">
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+<div class="perfil-layout">
+
+    <aside class="perfil-sidebar">
+
+        <div>
+
+            <div class="marca">
+
+                <img
+                    src="{{ url_for('static', filename='img/Log.png') }}"
+                    class="logo"
+                    alt="Zuqara Tours">
+
+                <span>Zuqara Tours</span>
+
+            </div>
+
+            <nav class="perfil-menu">
+
+                {% if usuario %}
+
+                <a href="{{ url_for('principal') }}">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span>Inicio</span>
+                </a>
+
+                <a href="{{ url_for('tours') }}">
+                    <i class="bi bi-compass-fill"></i>
+                    <span>Explorar tours</span>
+                </a>
+
+                <a href="{{ url_for('itinerarios') }}">
+                    <i class="bi bi-map-fill"></i>
+                    <span>Itinerarios</span>
+                </a>
+
+                <a href="{{ url_for('asistente') }}">
+                    <i class="bi bi-robot"></i>
+                    <span>Asistente IA</span>
+                </a>
+
+                <a href="{{ url_for('perfil') }}" class="menu-activo">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Mi perfil</span>
+                </a>
+
+                {% elif empresa %}
+
+                <a href="{{ url_for('dashboard_empresa') }}">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('mis_tours') }}">
+                    <i class="bi bi-airplane-fill"></i>
+                    <span>Mis tours</span>
+                </a>
+
+                <a href="{{ url_for('perfil') }}" class="menu-activo">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Mi perfil</span>
+                </a>
+
+                {% endif %}
+
+            </nav>
+
+        </div>
+
+        {% if usuario or empresa %}
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="cerrar-sesion">
+
+            <i class="bi bi-box-arrow-left"></i>
+
+            <span>Cerrar sesión</span>
+
+        </a>
+
+        {% endif %}
+
+    </aside>
+
+    <main class="perfil-contenido">
+
+        <div class="perfil-topbar">
+
+            <div>
+
+                <span class="eyebrow">
+                    CUENTA
+                </span>
+
+                <h1>
+                    Mi perfil
+                </h1>
+
+                <p>
+                    Administra tu información y personaliza tu experiencia en Zuqara.
+                </p>
+
+            </div>
+
+            <a
+                href="{% if usuario %}{{ url_for('principal') }}{% elif empresa %}{{ url_for('dashboard_empresa') }}{% endif %}"
+                class="volver">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver
+
+            </a>
+
+        </div>
+
+        {% if usuario %}
+
+        <section class="perfil-hero">
+
+            <div class="hero-fondo"></div>
+
+            <div class="hero-contenido">
+
+                <div class="foto-contenedor">
+
+                    {% if usuario.foto %}
+
+                    <img
+                        src="{{ url_for('static', filename=usuario.foto) }}"
+                        class="foto-perfil"
+                        alt="Foto de perfil">
+
+                    {% else %}
+
+                    <img
+                        src="{{ url_for('static', filename='img/perfil.png') }}"
+                        class="foto-perfil"
+                        alt="Foto de perfil">
+
+                    {% endif %}
+
+                    <label
+                        for="input_foto_perfil"
+                        class="cambiar-foto"
+                        title="Cambiar foto">
+
+                        <i class="bi bi-camera-fill"></i>
+
+                    </label>
+
+                </div>
+
+                <div class="datos-hero">
+
+                    <span class="tipo-cuenta">
+                        <i class="bi bi-person-check-fill"></i>
+                        Usuario viajero
+                    </span>
+
+                    <h2>
+                        {{ usuario.nombre }}
+                    </h2>
+
+                    <p>
+                        {{ usuario.correo }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <form
+            id="form_foto_perfil"
+            action="{{ url_for('subir_foto_perfil') }}"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <input
+                type="file"
+                id="input_foto_perfil"
+                name="foto"
+                accept="image/*"
+                class="d-none"
+                onchange="document.getElementById('form_foto_perfil').submit()">
+
+        </form>
+
+        <div class="perfil-grid">
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-icon">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>Información personal</h3>
+
+                        <p>
+                            Actualiza tus datos básicos.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form
+                    action="{{ url_for('editar_perfil') }}"
+                    method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="campo">
+
+                            <label>
+                                Nombre completo
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-person"></i>
+
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value="{{ usuario.nombre }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                Correo electrónico
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    name="correo"
+                                    value="{{ usuario.correo }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="boton-principal">
+
+                        <i class="bi bi-check2-circle"></i>
+
+                        Guardar cambios
+
+                    </button>
+
+                </form>
+
+            </section>
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>Seguridad</h3>
+
+                        <p>
+                            Mantén protegida tu cuenta.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form
+                    action="{{ url_for('cambiar_password') }}"
+                    method="POST">
+
+                    <div class="campo">
+
+                        <label>
+                            Contraseña actual
+                        </label>
+
+                        <div class="input-icon">
+
+                            <i class="bi bi-lock"></i>
+
+                            <input
+                                type="password"
+                                name="actual"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="campo">
+
+                            <label>
+                                Nueva contraseña
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-key"></i>
+
+                                <input
+                                    type="password"
+                                    name="nueva"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                Confirmar contraseña
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-key-fill"></i>
+
+                                <input
+                                    type="password"
+                                    name="confirmar"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="boton-secundario">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        Cambiar contraseña
+
+                    </button>
+
+                </form>
+
+            </section>
+
+        </div>
+
+        <section class="panel viajero-panel">
+
+            <div class="panel-header">
+
+                <div class="panel-icon viajero-icon">
+                    <i class="bi bi-compass-fill"></i>
+                </div>
+
+                <div>
+
+                    <h3>Mi perfil de viajero</h3>
+
+                    <p>
+                        Personaliza tus preferencias para encontrar tours que se adapten mejor a ti.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form
+                action="{{ url_for('guardar_perfil_viajero') }}"
+                method="POST">
+
+                <div class="preferencias-grid">
+
+                    <div class="preferencia">
+
+                        <label>
+                            <i class="bi bi-lightning-charge-fill"></i>
+                            Nivel de actividad
+                        </label>
+
+                        <select name="nivel_actividad">
+
+                            <option value="Bajo" {% if usuario.perfil_viajero and usuario.perfil_viajero.nivel_actividad == "Bajo" %}selected{% endif %}>
+                                Bajo · Relajado
+                            </option>
+
+                            <option value="Moderado" {% if not usuario.perfil_viajero or usuario.perfil_viajero.nivel_actividad == "Moderado" %}selected{% endif %}>
+                                Moderado
+                            </option>
+
+                            <option value="Alto" {% if usuario.perfil_viajero and usuario.perfil_viajero.nivel_actividad == "Alto" %}selected{% endif %}>
+                                Alto · Aventura
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="preferencia">
+
+                        <label>
+                            <i class="bi bi-people-fill"></i>
+                            ¿Con quién viajas?
+                        </label>
+
+                        <select name="viaja_con">
+
+                            <option value="">
+                                Prefiero no decir
+                            </option>
+
+                            <option value="Solo" {% if usuario.perfil_viajero and usuario.perfil_viajero.viaja_con == "Solo" %}selected{% endif %}>
+                                Solo
+                            </option>
+
+                            <option value="Pareja" {% if usuario.perfil_viajero and usuario.perfil_viajero.viaja_con == "Pareja" %}selected{% endif %}>
+                                Pareja
+                            </option>
+
+                            <option value="Familia" {% if usuario.perfil_viajero and usuario.perfil_viajero.viaja_con == "Familia" %}selected{% endif %}>
+                                Familia
+                            </option>
+
+                            <option value="Amigos" {% if usuario.perfil_viajero and usuario.perfil_viajero.viaja_con == "Amigos" %}selected{% endif %}>
+                                Amigos
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="preferencia">
+
+                        <label>
+                            <i class="bi bi-wallet2"></i>
+                            Presupuesto promedio
+                        </label>
+
+                        <div class="input-icon">
+
+                            <i class="bi bi-currency-dollar"></i>
+
+                            <input
+                                type="number"
+                                name="presupuesto_promedio"
+                                placeholder="Ej. 500000"
+                                value="{{ usuario.perfil_viajero.presupuesto_promedio|int if usuario.perfil_viajero and usuario.perfil_viajero.presupuesto_promedio else '' }}">
+
+                        </div>
+
+                    </div>
+
+                    <div class="preferencia">
+
+                        <label>
+                            <i class="bi bi-universal-access"></i>
+                            Accesibilidad
+                        </label>
+
+                        <label class="check-card">
+
+                            <input
+                                type="checkbox"
+                                name="requiere_accesibilidad"
+                                {% if usuario.perfil_viajero and usuario.perfil_viajero.requiere_accesibilidad %}checked{% endif %}>
+
+                            <span class="check-box">
+                                <i class="bi bi-check"></i>
+                            </span>
+
+                            <span>
+                                Necesito tours aptos para movilidad reducida
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <div class="preferencia ancho-completo">
+
+                        <label>
+                            <i class="bi bi-egg-fried"></i>
+                            Restricciones alimenticias
+                        </label>
+
+                        <input
+                            type="text"
+                            name="restricciones_alimenticias"
+                            placeholder="Ej. Vegetariano, sin gluten..."
+                            value="{{ usuario.perfil_viajero.restricciones_alimenticias if usuario.perfil_viajero else '' }}">
+
+                    </div>
+
+                    <div class="preferencia ancho-completo">
+
+                        <label>
+                            <i class="bi bi-chat-left-text-fill"></i>
+                            Notas adicionales
+                        </label>
+
+                        <textarea
+                            name="notas"
+                            rows="3"
+                            placeholder="Cuéntanos algo que debamos tener en cuenta para recomendarte mejor.">{{ usuario.perfil_viajero.notas if usuario.perfil_viajero else '' }}</textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="acciones-viajero">
+
+                    <button
+                        type="submit"
+                        class="boton-principal">
+
+                        <i class="bi bi-compass"></i>
+
+                        {% if usuario.perfil_viajero %}
+                            Guardar preferencias
+                        {% else %}
+                            Crear mi perfil de viajero
+                        {% endif %}
+
+                    </button>
+
+                    {% if usuario.perfil_viajero %}
+
+                    <a
+                        href="{{ url_for('eliminar_perfil_viajero') }}"
+                        class="boton-eliminar"
+                        onclick="return confirm('¿Eliminar tu perfil de viajero? Esta acción no se puede deshacer.')">
+
+                        <i class="bi bi-trash3"></i>
+
+                        Eliminar perfil
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </section>
+
+        {% elif empresa %}
+
+        <section class="perfil-hero empresa-hero">
+
+            <div class="hero-fondo"></div>
+
+            <div class="hero-contenido">
+
+                <div class="foto-contenedor">
+
+                    {% if empresa.foto %}
+
+                    <img
+                        src="{{ url_for('static', filename=empresa.foto) }}"
+                        class="foto-perfil"
+                        alt="Logo de empresa">
+
+                    {% else %}
+
+                    <img
+                        src="{{ url_for('static', filename='img/perfil.png') }}"
+                        class="foto-perfil"
+                        alt="Perfil de empresa">
+
+                    {% endif %}
+
+                    <label
+                        for="input_foto_perfil"
+                        class="cambiar-foto">
+
+                        <i class="bi bi-camera-fill"></i>
+
+                    </label>
+
+                </div>
+
+                <div class="datos-hero">
+
+                    <span class="tipo-cuenta empresa-tipo">
+                        <i class="bi bi-building-fill"></i>
+                        Empresa turística
+                    </span>
+
+                    <h2>
+                        {{ empresa.nombre }}
+                    </h2>
+
+                    <p>
+                        {{ empresa.correo }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <form
+            id="form_foto_perfil"
+            action="{{ url_for('subir_foto_perfil') }}"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <input
+                type="file"
+                id="input_foto_perfil"
+                name="foto"
+                accept="image/*"
+                class="d-none"
+                onchange="document.getElementById('form_foto_perfil').submit()">
+
+        </form>
+
+        <div class="perfil-grid">
+
+            <section class="panel panel-completo">
+
+                <div class="panel-header">
+
+                    <div class="panel-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>Información de la empresa</h3>
+
+                        <p>
+                            Administra los datos públicos de tu empresa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form
+                    action="{{ url_for('editar_perfil') }}"
+                    method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="campo">
+
+                            <label>
+                                Nombre de la empresa
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-building"></i>
+
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value="{{ empresa.nombre }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                Correo electrónico
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    name="correo"
+                                    value="{{ empresa.correo }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                Teléfono
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-telephone"></i>
+
+                                <input
+                                    type="text"
+                                    name="telefono"
+                                    value="{{ empresa.telefono }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                Dirección
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                <input
+                                    type="text"
+                                    name="direccion"
+                                    value="{{ empresa.direccion }}"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                NIT
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-card-text"></i>
+
+                                <input
+                                    type="text"
+                                    value="{{ empresa.nit }}"
+                                    readonly>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="boton-principal">
+
+                        <i class="bi bi-check2-circle"></i>
+
+                        Guardar cambios
+
+                    </button>
+
+                </form>
+
+            </section>
+
+            <section class="panel panel-completo">
+
+                <div class="panel-header">
+
+                    <div class="panel-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>Seguridad</h3>
+
+                        <p>
+                            Cambia la contraseña de acceso de tu empresa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form
+                    action="{{ url_for('cambiar_password') }}"
+                    method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="campo">
+
+                            <label>
+                                Contraseña actual
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-lock"></i>
+
+                                <input
+                                    type="password"
+                                    name="actual"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo">
+
+                            <label>
+                                Nueva contraseña
+                            </label>
+
+                            <div class="input-icon">
+
+                                <i class="bi bi-key"></i>
+
+                                <input
+                                    type="password"
+                                    name="nueva"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Confirmar nueva contraseña
+                        </label>
+
+                        <div class="input-icon">
+
+                            <i class="bi bi-key-fill"></i>
+
+                            <input
+                                type="password"
+                                name="confirmar"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="boton-secundario">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        Cambiar contraseña
+
+                    </button>
+
+                </form>
+
+            </section>
+
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>
+

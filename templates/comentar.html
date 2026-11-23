@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calificar Tour | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/calificar.css') }}"
+    >
+
+</head>
+
+<body>
+
+    {% include "partials/flash.html" %}
+
+    <main class="pagina-calificar">
+
+        <section class="card-calificar">
+
+            <div class="hero-tour">
+
+                {% if reserva.tour.imagenes and reserva.tour.imagenes|length > 0 %}
+
+                    <img
+                        src="{{ url_for('static', filename=reserva.tour.imagenes[0].url) }}"
+                        alt="{{ reserva.tour.titulo }}"
+                    >
+
+                {% else %}
+
+                    <div class="imagen-sin-tour">
+                        <i class="bi bi-image"></i>
+                    </div>
+
+                {% endif %}
+
+                <div class="hero-overlay"></div>
+
+                <div class="hero-top">
+
+                    <span class="marca-tour">
+                        <i class="bi bi-compass-fill"></i>
+                        Zuqara Tours
+                    </span>
+
+                    <span class="etiqueta-experiencia">
+                        Tu experiencia
+                    </span>
+
+                </div>
+
+                <div class="hero-info">
+
+                    <div class="ubicacion-tour">
+
+                        <i class="bi bi-geo-alt-fill"></i>
+
+                        {{ reserva.tour.ciudad }}
+
+                    </div>
+
+                    <h1>
+                        {{ reserva.tour.titulo }}
+                    </h1>
+
+                    <p>
+                        Cuéntanos cómo fue tu aventura
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="contenido-calificar">
+
+                <div class="encabezado-calificacion">
+
+                    <div class="icono-calificacion">
+
+                        <i class="bi bi-star-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span class="pequeno-titulo">
+                            Comparte tu experiencia
+                        </span>
+
+                        <h2>
+                            ¿Cómo estuvo tu viaje?
+                        </h2>
+
+                        <p>
+                            Tu opinión ayuda a otros viajeros
+                            a elegir su próxima aventura.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form method="POST">
+
+                    <div class="bloque-estrellas">
+
+                        <div class="titulo-bloque">
+
+                            <span>
+                                Tu calificación
+                            </span>
+
+                            <small>
+                                Selecciona de 1 a 5 estrellas
+                            </small>
+
+                        </div>
+
+                        <div class="estrellas">
+
+                            <input
+                                type="radio"
+                                id="estrella5"
+                                name="calificacion"
+                                value="5"
+                                required
+                            >
+
+                            <label
+                                for="estrella5"
+                                title="Excelente"
+                            >
+                                ★
+                            </label>
+
+                            <input
+                                type="radio"
+                                id="estrella4"
+                                name="calificacion"
+                                value="4"
+                            >
+
+                            <label
+                                for="estrella4"
+                                title="Muy bueno"
+                            >
+                                ★
+                            </label>
+
+                            <input
+                                type="radio"
+                                id="estrella3"
+                                name="calificacion"
+                                value="3"
+                            >
+
+                            <label
+                                for="estrella3"
+                                title="Bueno"
+                            >
+                                ★
+                            </label>
+
+                            <input
+                                type="radio"
+                                id="estrella2"
+                                name="calificacion"
+                                value="2"
+                            >
+
+                            <label
+                                for="estrella2"
+                                title="Regular"
+                            >
+                                ★
+                            </label>
+
+                            <input
+                                type="radio"
+                                id="estrella1"
+                                name="calificacion"
+                                value="1"
+                            >
+
+                            <label
+                                for="estrella1"
+                                title="Malo"
+                            >
+                                ★
+                            </label>
+
+                        </div>
+
+                        <div
+                            class="texto-estrellas"
+                            id="textoEstrellas"
+                        >
+                            Selecciona una calificación
+                        </div>
+
+                    </div>
+
+                    <div class="bloque-comentario">
+
+                        <div class="titulo-bloque">
+
+                            <span>
+
+                                <i class="bi bi-chat-square-text"></i>
+
+                                Cuéntanos tu experiencia
+
+                            </span>
+
+                            <small>
+                                Máximo 500 caracteres
+                            </small>
+
+                        </div>
+
+                        <div class="campo-comentario">
+
+                            <textarea
+                                id="comentario"
+                                name="comentario"
+                                maxlength="500"
+                                required
+                                placeholder="Escribe qué fue lo que más te gustó del tour, qué lugares disfrutaste o qué podríamos mejorar..."
+                            ></textarea>
+
+                            <div class="contador-caracteres">
+
+                                <span id="contador">
+                                    0
+                                </span>
+
+                                / 500
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="acciones">
+
+                        <a
+                            href="{{ url_for('reservas') }}"
+                            class="btn-volver"
+                        >
+
+                            <i class="bi bi-arrow-left"></i>
+
+                            Mis reservas
+
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn-enviar"
+                        >
+
+                            Publicar experiencia
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <div class="privacidad">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    <span>
+                        Tu opinión será revisada antes de ser publicada.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const estrellas = document.querySelectorAll(
+            'input[name="calificacion"]'
+        );
+
+        const textoEstrellas =
+            document.getElementById("textoEstrellas");
+
+        const mensajes = {
+            1: "😕 No fue una buena experiencia",
+            2: "😐 Puede mejorar",
+            3: "🙂 Fue una buena experiencia",
+            4: "😃 ¡Una gran experiencia!",
+            5: "🤩 ¡Una experiencia increíble!"
+        };
+
+        estrellas.forEach(function(estrella) {
+
+            estrella.addEventListener("change", function() {
+
+                textoEstrellas.textContent =
+                    mensajes[this.value];
+
+            });
+
+        });
+
+        const comentario =
+            document.getElementById("comentario");
+
+        const contador =
+            document.getElementById("contador");
+
+        comentario.addEventListener("input", function() {
+
+            contador.textContent =
+                this.value.length;
+
+        });
+
+        const formulario =
+            document.querySelector("form");
+
+        formulario.addEventListener("submit", function(event) {
+
+            const calificacion =
+                document.querySelector(
+                    'input[name="calificacion"]:checked'
+                );
+
+            if (!calificacion) {
+
+                event.preventDefault();
+
+                textoEstrellas.textContent =
+                    "Selecciona una calificación";
+
+                return;
+
+            }
+
+            if (comentario.value.trim().length < 5) {
+
+                event.preventDefault();
+
+                comentario.focus();
+
+                alert(
+                    "Escribe un comentario un poco más completo."
+                );
+
+            }
+
+        });
+
+    </script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+</body>
+
+</html>
+

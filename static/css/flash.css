@@ -1,0 +1,35 @@
+
+
+.contenedor-flash{
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    width: 100%;
+    max-width: 500px;
+    padding: 0 15px;
+}
+
+.alert-flash{
+    background-color: #0B4F6C;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.2);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.alert-flash .btn-close{
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+@media (max-width: 576px){
+
+    .contenedor-flash{
+        max-width: none;
+        top: 10px;
+    }
+
+}

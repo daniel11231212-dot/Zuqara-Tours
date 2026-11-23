@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel Empresa | Zuqara Tours</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard_empresa.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/flash.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/componentes.css') }}"
+    >
+
+</head>
+
+<body>
+
+{% include "partials/flash.html" %}
+
+{% set volver_fallback = url_for('dashboard_empresa') %}
+
+{% include "components/boton_volver.html" %}
+
+<div class="contenedor">
+
+    <aside class="sidebar">
+
+        <h2>Zuqara Empresa</h2>
+
+        <a
+            href="{{ url_for('dashboard_empresa') }}"
+            class="activo"
+        >
+            <i class="bi bi-grid-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ url_for('mis_tours') }}">
+            <i class="bi bi-airplane-fill"></i>
+            <span>Mis Tours</span>
+        </a>
+
+        <a href="{{ url_for('crear_tour') }}">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span>Crear Tour</span>
+        </a>
+
+        <a href="{{ url_for('reservas_empresa') }}">
+            <i class="bi bi-calendar-check-fill"></i>
+            <span>Reservas</span>
+        </a>
+
+        <a href="{{ url_for('solicitudes_guias') }}">
+            <i class="bi bi-person-badge-fill"></i>
+            <span>Guías turísticos</span>
+
+            {% if solicitudes_guias > 0 %}
+                <span class="badge bg-danger ms-auto">
+                    {{ solicitudes_guias }}
+                </span>
+            {% endif %}
+        </a>
+
+        <a href="{{ url_for('chats_empresa') }}">
+            <i class="bi bi-chat-dots-fill"></i>
+            <span>Chats</span>
+        </a>
+
+        <a href="{{ url_for('notificaciones_empresa') }}">
+            <i class="bi bi-bell-fill"></i>
+            <span>Notificaciones</span>
+
+            {% if notificaciones_sin_leer > 0 %}
+                <span class="badge bg-danger ms-auto">
+                    {{ notificaciones_sin_leer }}
+                </span>
+            {% endif %}
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar sesión</span>
+        </a>
+
+    </aside>
+
+    <main class="contenido">
+
+        <div class="encabezado">
+
+            <div>
+                <h1>Bienvenido</h1>
+
+                <p>
+                    {{ empresa.nombre }}
+                </p>
+            </div>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+
+                <div class="tarjeta">
+
+                    <i class="bi bi-airplane-fill"></i>
+
+                    <h2>
+                        {{ total_tours }}
+                    </h2>
+
+                    <p>
+                        Mis Tours
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="tarjeta">
+
+                    <i class="bi bi-calendar-check-fill"></i>
+
+                    <h2>
+                        {{ total_reservas }}
+                    </h2>
+
+                    <p>
+                        Reservas
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="tarjeta">
+
+                    <i class="bi bi-person-badge-fill"></i>
+
+                    <h2>
+                        {{ solicitudes_guias }}
+                    </h2>
+
+                    <p>
+                        Solicitudes de guías
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="tarjeta">
+
+                    <i class="bi bi-building-check"></i>
+
+                    <h2>
+
+                        {% if empresa.aprobado %}
+                            Aprobada
+                        {% else %}
+                            Pendiente
+                        {% endif %}
+
+                    </h2>
+
+                    <p>
+                        Estado de la empresa
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel mt-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+
+                    <h3>
+                        Mis Tours
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Tours creados por tu empresa.
+                    </p>
+
+                </div>
+
+                <a
+                    href="{{ url_for('mis_tours') }}"
+                    class="btn btn-success"
+                >
+                    <i class="bi bi-airplane-fill me-1"></i>
+                    Ver Tours
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Nombre
+                            </th>
+
+                            <th>
+                                Ciudad
+                            </th>
+
+                            <th>
+                                Precio
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for tour in tours %}
+
+                        <tr>
+
+                            <td>
+                                {{ tour.titulo }}
+                            </td>
+
+                            <td>
+                                {{ tour.ciudad }}
+                            </td>
+
+                            <td>
+                                ${{ "{:,.0f}".format(tour.precio) }}
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="3"
+                                class="text-center py-4"
+                            >
+                                <i class="bi bi-airplane fs-3 d-block mb-2"></i>
+                                No tienes tours creados todavía.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="panel mt-4">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h3>
+
+                        <i class="bi bi-person-badge-fill me-2"></i>
+
+                        Guías turísticos
+
+                    </h3>
+
+                    <p class="text-muted mb-0">
+
+                        Revisa y gestiona las solicitudes de guías
+                        que quieren pertenecer a tu empresa.
+
+                    </p>
+
+                </div>
+
+                <a
+                    href="{{ url_for('solicitudes_guias') }}"
+                    class="btn btn-success"
+                >
+                    <i class="bi bi-people-fill me-1"></i>
+                    Gestionar guías
+                </a>
+
+            </div>
+
+            {% if solicitudes_guias > 0 %}
+
+                <div class="alert alert-warning mt-4 mb-0 d-flex align-items-center">
+
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+
+                    <span>
+
+                        Tienes
+
+                        <strong>
+                            {{ solicitudes_guias }}
+                        </strong>
+
+                        solicitud{% if solicitudes_guias != 1 %}es{% endif %}
+
+                        pendiente{% if solicitudes_guias != 1 %}s{% endif %}
+
+                        de revisión.
+
+                    </span>
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-4">
+
+                    <i
+                        class="bi bi-person-check-fill"
+                        style="font-size: 38px;"
+                    ></i>
+
+                    <h5 class="mt-2">
+                        No hay solicitudes pendientes
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Cuando un guía solicite pertenecer a tu empresa,
+                        aparecerá aquí.
+
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+></script>
+
+</body>
+
+</html>
