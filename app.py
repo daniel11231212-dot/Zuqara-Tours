@@ -24,13 +24,26 @@ if not secret_key:
 
 app.config["SECRET_KEY"] = secret_key
 
+
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["SESSION_COOKIE_SECURE"] = False
-
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql://postgres:123@localhost:5432/zuqara_tours"
+app.config["SESSION_COOKIE_SECURE"] = (
+    os.environ.get("COOKIE_SECURE", "false").lower() == "true"
 )
+
+database_url = os.environ.get("DATABASE_URL")
+
+if not database_url:
+    raise RuntimeError("DATABASE_URL no está configurada")
+
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace(
+        "postgres://", "postgresql://", 1
+    )
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
