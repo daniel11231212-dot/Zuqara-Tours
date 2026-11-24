@@ -1,1058 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Pagar Reserva | Zuqara Tours</title>
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/pagar_reserva.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/flash.css') }}"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago simulado | Zuqara Tours</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagar_reserva.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        .demo-banner{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;border:1px solid #f0d88b;background:#fff9e8;border-radius:16px;color:#765b13;margin-bottom:22px}
+        .demo-banner i{font-size:22px}.demo-banner p{margin:3px 0 0;font-size:13px}
+        .opcion-pago{display:flex;align-items:center;gap:13px;padding:16px;border:1px solid #e1e9ec;border-radius:15px;margin-bottom:12px;cursor:pointer;transition:.2s}
+        .opcion-pago:has(input:checked){border-color:#16a085;background:#effaf6;box-shadow:0 0 0 2px #16a0851a}
+        .opcion-pago input{accent-color:#16a085;width:18px;height:18px}
+        .opcion-pago .icono{width:44px;height:44px;display:grid;place-items:center;border-radius:13px;background:#e8f7f2;color:#0b806b;font-size:21px}
+        .opcion-pago small{display:block;color:#68777d;margin-top:3px}
+        .resultado-demo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+        .resultado-demo label{display:block;border:1px solid #e1e9ec;border-radius:14px;padding:15px;cursor:pointer}
+        .resultado-demo label:has(input:checked){border-color:#16a085;background:#effaf6}
+        .resultado-demo input{margin-right:7px;accent-color:#16a085}
+        .referencia-demo{font-family:monospace;font-size:12px;color:#66757a;overflow-wrap:anywhere}
+        @media(max-width:575px){.resultado-demo{grid-template-columns:1fr}.panel-pago{padding:22px!important}}
+    </style>
 </head>
-
 <body>
-
 {% include "partials/flash.html" %}
-
 <div class="pagina-pago">
-
-    <div class="container py-4 py-lg-5">
-
-        <div class="barra-superior">
-
-            <a
-                href="{{ url_for('reservas') }}"
-                class="volver"
-            >
-
-                <span class="volver-icono">
-                    <i class="bi bi-arrow-left"></i>
-                </span>
-
-                <span>
-                    Volver a mis reservas
-                </span>
-
-            </a>
-
-            <div class="seguridad">
-
-                <i class="bi bi-shield-lock-fill"></i>
-
-                <span>
-                    Pago seguro
-                </span>
-
-            </div>
-
-        </div>
-
-        <div class="encabezado-pago">
-
-            <div>
-
-                <span class="etiqueta-pago">
-                    FINALIZAR RESERVA
-                </span>
-
-                <h1>
-                    Completa tu pago
-                </h1>
-
-                <p>
-                    Confirma los datos de tu reserva y selecciona
-                    el método de pago.
-                </p>
-
-            </div>
-
-            <div class="estado-simulado">
-
-                <i class="bi bi-info-circle-fill"></i>
-
-            </div>
-
-        </div>
-
-        <div class="row g-4 align-items-start">
-
-            <div class="col-lg-7">
-
-                <div class="panel-pago">
-
-                    <div class="panel-titulo">
-
-                        <div class="icono-seccion">
-
-                            <i class="bi bi-credit-card-2-front-fill"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h2>
-                                Método de pago
-                            </h2>
-
-                            <p>
-                                Selecciona cómo quieres realizar el pago
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <form
-                        method="POST"
-                        id="form-pago"
-                    >
-
-                        <div class="metodos">
-
-                            <label class="metodo activo">
-
-                                <input
-                                    type="radio"
-                                    name="metodo_pago"
-                                    value="Tarjeta de crédito"
-                                    checked
-                                >
-
-                                <span class="metodo-contenido">
-
-                                    <span class="metodo-icono tarjeta-icono">
-
-                                        <i class="bi bi-credit-card-fill"></i>
-
-                                    </span>
-
-                                    <span class="metodo-texto">
-
-                                        <strong>
-                                            Tarjeta de crédito
-                                        </strong>
-
-                                        <small>
-                                            Visa, Mastercard y otras
-                                        </small>
-
-                                    </span>
-
-                                    <i class="bi bi-check-circle-fill metodo-check"></i>
-
-                                </span>
-
-                            </label>
-
-                            <label class="metodo">
-
-                                <input
-                                    type="radio"
-                                    name="metodo_pago"
-                                    value="Tarjeta débito"
-                                >
-
-                                <span class="metodo-contenido">
-
-                                    <span class="metodo-icono debito-icono">
-
-                                        <i class="bi bi-credit-card"></i>
-
-                                    </span>
-
-                                    <span class="metodo-texto">
-
-                                        <strong>
-                                            Tarjeta débito
-                                        </strong>
-
-                                        <small>
-                                            Paga directamente con tu tarjeta
-                                        </small>
-
-                                    </span>
-
-                                    <i class="bi bi-check-circle-fill metodo-check"></i>
-
-                                </span>
-
-                            </label>
-
-                            <label class="metodo">
-
-                                <input
-                                    type="radio"
-                                    name="metodo_pago"
-                                    value="PSE"
-                                >
-
-                                <span class="metodo-contenido">
-
-                                    <span class="metodo-icono pse-icono">
-
-                                        <i class="bi bi-bank2"></i>
-
-                                    </span>
-
-                                    <span class="metodo-texto">
-
-                                        <strong>
-                                            PSE
-                                        </strong>
-
-                                        <small>
-                                            Pago desde tu cuenta bancaria
-                                        </small>
-
-                                    </span>
-
-                                    <i class="bi bi-check-circle-fill metodo-check"></i>
-
-                                </span>
-
-                            </label>
-
-                        </div>
-
-                        <div
-                            id="campos-tarjeta"
-                            class="datos-tarjeta"
-                        >
-
-                            <div class="tarjeta-visual">
-
-                                <div class="tarjeta-superior">
-
-                                    <i class="bi bi-wifi tarjeta-contactless"></i>
-
-                                </div>
-
-                                <div class="chip">
-
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-
-                                </div>
-
-                                <div
-                                    class="numero-visual"
-                                    id="numero-visual"
-                                >
-                                    0000 0000 0000 0000
-                                </div>
-
-                                <div class="tarjeta-inferior">
-
-                                    <div>
-
-                                        <small>
-                                            TITULAR
-                                        </small>
-
-                                        <strong id="nombre-visual">
-                                            {% if usuario is defined and usuario %}
-                                                {{ usuario.nombre }}
-                                            {% else %}
-                                                NOMBRE DEL TITULAR
-                                            {% endif %}
-                                        </strong>
-
-                                    </div>
-
-                                    <div>
-
-                                        <small>
-                                            VENCE
-                                        </small>
-
-                                        <strong id="vencimiento-visual">
-                                            MM/AA
-                                        </strong>
-
-                                    </div>
-
-                                    <div>
-
-                                        <small>
-                                            CVV
-                                        </small>
-
-                                        <strong id="cvv-visual">
-                                            •••
-                                        </strong>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="campos-formulario">
-
-                                <div class="campo-completo">
-
-                                    <label class="form-label">
-                                        Número de tarjeta
-                                    </label>
-
-                                    <div class="input-con-icono">
-
-                                        <i class="bi bi-credit-card"></i>
-
-                                        <input
-                                            type="text"
-                                            name="numero_tarjeta"
-                                            id="numero_tarjeta"
-                                            class="form-control"
-                                            placeholder="4242 4242 4242 4242"
-                                            maxlength="19"
-                                            inputmode="numeric"
-                                            autocomplete="cc-number"
-                                            required
-                                        >
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row g-3">
-
-                                    <div class="col-md-6">
-
-                                        <label class="form-label">
-                                            Vencimiento
-                                        </label>
-
-                                        <div class="input-con-icono">
-
-                                            <i class="bi bi-calendar3"></i>
-
-                                            <input
-                                                type="text"
-                                                name="vencimiento"
-                                                id="vencimiento"
-                                                class="form-control"
-                                                placeholder="MM/AA"
-                                                maxlength="5"
-                                                inputmode="numeric"
-                                                autocomplete="cc-exp"
-                                                required
-                                            >
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-md-6">
-
-                                        <label class="form-label">
-                                            CVV
-                                        </label>
-
-                                        <div class="input-con-icono">
-
-                                            <i class="bi bi-lock-fill"></i>
-
-                                            <input
-                                                type="password"
-                                                name="cvv"
-                                                id="cvv"
-                                                class="form-control"
-                                                placeholder="•••"
-                                                maxlength="3"
-                                                inputmode="numeric"
-                                                autocomplete="cc-csc"
-                                                required
-                                            >
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="campo-completo">
-
-                                    <label class="form-label">
-                                        Nombre en la tarjeta
-                                    </label>
-
-                                    <div class="input-con-icono">
-
-                                        <i class="bi bi-person-fill"></i>
-
-                                        <input
-                                            type="text"
-                                            name="nombre_tarjeta"
-                                            id="nombre_tarjeta"
-                                            class="form-control"
-                                            placeholder="Nombre completo"
-                                            maxlength="60"
-                                            autocomplete="cc-name"
-                                            value="{% if usuario is defined and usuario %}{{ usuario.nombre }}{% endif %}"
-                                            required
-                                        >
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div
-                            id="mensaje-pse"
-                            class="mensaje-pse"
-                            style="display:none;"
-                        >
-
-                            <div class="pse-grande">
-
-                                <i class="bi bi-bank2"></i>
-
-                            </div>
-
-                            <div>
-
-                                <h4>
-                                    Pago mediante PSE
-                                </h4>
-
-                                <p>
-                                    En el proyecto, este pago será simulado.
-                                    No se realizará ningún cobro real.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="proteccion">
-
-                            <div class="proteccion-icono">
-
-                                <i class="bi bi-shield-check"></i>
-
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Información protegida
-                                </strong>
-
-                                <span>
-                                    Tus datos se utilizan únicamente
-                                    para la simulación del pago.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="boton-pagar"
-                        >
-
-                            <span>
-
-                                <i class="bi bi-lock-fill"></i>
-
-                                Confirmar y pagar
-
-                            </span>
-
-                            <strong>
-                                ${{ "{:,.0f}".format(reserva.total_pago) }}
-                            </strong>
-
-                        </button>
-
-                        <a
-                            href="{{ url_for('reservas') }}"
-                            class="pagar-despues"
-                        >
-                            Pagar más tarde
-                        </a>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-5">
-
-                <div class="resumen-reserva">
-
-                    <div class="resumen-cabecera">
-
-                        <div>
-
-                            <span>
-                                TU RESERVA
-                            </span>
-
-                            <h2>
-                                Resumen del viaje
-                            </h2>
-
-                        </div>
-
-                        <div class="reserva-check">
-
-                            <i class="bi bi-check-lg"></i>
-
-                        </div>
-
-                    </div>
-
-                    <div class="tour-destino">
-
-                        <div class="destino-icono">
-
-                            <i class="bi bi-compass-fill"></i>
-
-                        </div>
-
-                        <div>
-
-                            <span>
-                                DESTINO
-                            </span>
-
-                            <h3>
-                                {{ reserva.tour.titulo }}
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-                    <div class="datos-reserva">
-
-                        <div class="dato">
-
-                            <div class="dato-icono">
-
-                                <i class="bi bi-geo-alt-fill"></i>
-
-                            </div>
-
-                            <div>
-
-                                <span>
-                                    Destino
-                                </span>
-
-                                <strong>
-                                    {{ reserva.tour.ciudad }}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <div class="dato-icono">
-
-                                <i class="bi bi-calendar-event-fill"></i>
-
-                            </div>
-
-                            <div>
-
-                                <span>
-                                    Fecha del viaje
-                                </span>
-
-                                <strong>
-                                    {{ reserva.fecha_reserva.strftime("%d/%m/%Y") }}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <div class="dato-icono">
-
-                                <i class="bi bi-people-fill"></i>
-
-                            </div>
-
-                            <div>
-
-                                <span>
-                                    Viajeros
-                                </span>
-
-                                <strong>
-                                    {{ reserva.cantidad_personas }}
-                                    persona{{ "s" if reserva.cantidad_personas != 1 else "" }}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="linea"></div>
-
-                    <div class="precio-resumen">
-
-                        <span>
-                            Total de la reserva
-                        </span>
-
-                        <strong>
-                            ${{ "{:,.0f}".format(reserva.total_pago) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="confirmacion">
-
-                        <i class="bi bi-check-circle-fill"></i>
-
-                        <span>
-                            Reserva lista para confirmar
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="ayuda-pago">
-
-                    <div class="ayuda-icono">
-
-                        <i class="bi bi-headset"></i>
-
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            ¿Necesitas ayuda?
-                        </strong>
-
-                        <p>
-                            Si tienes algún inconveniente con tu reserva,
-                            puedes volver a tus reservas.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="pie-pago">
-
-            <i class="bi bi-shield-lock-fill"></i>
-
-            <span>
-                Zuqara Tours · Entorno de demostración
-            </span>
-
-        </div>
-
+  <div class="container py-4 py-lg-5">
+    <div class="barra-superior">
+      <a href="{{ url_for('reservas') }}" class="volver"><span class="volver-icono"><i class="bi bi-arrow-left"></i></span><span>Volver a mis reservas</span></a>
+      <div class="seguridad"><i class="bi bi-shield-check"></i><span>Entorno de demostración</span></div>
     </div>
 
+    <div class="encabezado-pago">
+      <div>
+        <span class="etiqueta-pago">FINALIZAR RESERVA</span>
+        <h1>Simula tu pago</h1>
+        <p>Selecciona un medio de pago y el resultado que deseas probar.</p>
+      </div>
+      <div class="estado-simulado"><i class="bi bi-info-circle-fill"></i> Pago ficticio</div>
+    </div>
+
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-7">
+        <div class="panel-pago">
+          <div class="panel-titulo">
+            <div class="icono-seccion"><i class="bi bi-wallet2"></i></div>
+            <div><h2>Método de pago</h2><p>Elige cómo quieres simular la operación</p></div>
+          </div>
+
+          <div class="demo-banner">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div><strong>Esta página es una simulación académica.</strong><p>No ingreses números de tarjeta, claves bancarias ni información financiera real. No se realiza ningún cobro.</p></div>
+          </div>
+
+          <form method="POST" id="form-pago">
+            <label class="opcion-pago">
+              <input type="radio" name="metodo_pago" value="Tarjeta simulada" required checked>
+              <span class="icono"><i class="bi bi-credit-card-2-front-fill"></i></span>
+              <span><strong>Tarjeta</strong><small>Tarjeta de crédito o débito ficticia</small></span>
+            </label>
+            <label class="opcion-pago">
+              <input type="radio" name="metodo_pago" value="Transferencia simulada" required>
+              <span class="icono"><i class="bi bi-bank"></i></span>
+              <span><strong>Transferencia bancaria</strong><small>Transferencia de demostración</small></span>
+            </label>
+            <label class="opcion-pago">
+              <input type="radio" name="metodo_pago" value="Efectivo simulado" required>
+              <span class="icono"><i class="bi bi-cash-coin"></i></span>
+              <span><strong>Efectivo</strong><small>Pago presencial ficticio</small></span>
+            </label>
+
+            <hr class="my-4">
+            <h5 class="mb-2" style="color:#073b52;font-weight:800">Resultado de la simulación</h5>
+            <p class="text-secondary small">Puedes probar ambos escenarios. Un rechazo no confirma la reserva y permite volver a intentarlo.</p>
+            <div class="resultado-demo">
+              <label><input type="radio" name="resultado_simulado" value="aprobado" required checked><i class="bi bi-check-circle-fill text-success me-1"></i><strong>Pago aprobado</strong><small class="d-block text-secondary mt-1">Confirma la reserva.</small></label>
+              <label><input type="radio" name="resultado_simulado" value="rechazado" required><i class="bi bi-x-circle-fill text-danger me-1"></i><strong>Pago rechazado</strong><small class="d-block text-secondary mt-1">Deja la reserva pendiente.</small></label>
+            </div>
+
+            <button type="submit" class="boton-pagar mt-4">
+              <span><i class="bi bi-play-circle-fill"></i> Ejecutar simulación</span>
+              <strong>${{ "{:,.0f}".format(reserva.total_pago) }} COP</strong>
+            </button>
+            <a href="{{ url_for('reservas') }}" class="pagar-despues">Volver más tarde</a>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="resumen-reserva p-4">
+          <div class="resumen-cabecera mb-3"><div><span class="text-secondary small">TU RESERVA</span><h3 class="h5 mt-1 mb-0">{{ reserva.tour.titulo }}</h3></div><span class="badge text-bg-success">Pendiente de pago</span></div>
+          <div class="d-flex justify-content-between py-2 border-bottom"><span class="text-secondary">Código de reserva</span><strong>#{{ reserva.id_reserva }}</strong></div>
+          <div class="d-flex justify-content-between py-2 border-bottom"><span class="text-secondary">Viajeros</span><strong>{{ reserva.cantidad_personas }}</strong></div>
+          <div class="d-flex justify-content-between py-2 border-bottom"><span class="text-secondary">Cliente</span><strong>{{ usuario.nombre_completo if usuario else 'Viajero' }}</strong></div>
+          <div class="d-flex justify-content-between align-items-center pt-3"><strong>Total a simular</strong><strong class="fs-4" style="color:#0b806b">${{ "{:,.0f}".format(reserva.total_pago) }} COP</strong></div>
+          <p class="small text-secondary mt-2 mb-0">El transporte se considera incluido en el precio del tour cuando así lo haya configurado el operador.</p>
+        </div>
+
+        {% if intentos %}
+        <div class="resumen-reserva p-4 mt-4">
+          <h3 class="h6 mb-3">Intentos anteriores</h3>
+          {% for intento in intentos %}
+          <div class="d-flex justify-content-between gap-2 py-2 border-bottom">
+            <div><strong class="d-block">{{ intento.metodo_pago }}</strong><small class="text-secondary">{{ intento.fecha_intento.strftime('%d/%m/%Y %H:%M') }}</small><div class="referencia-demo">{{ intento.referencia }}</div></div>
+            {% if intento.estado == 'Aprobado' %}<span class="badge text-bg-success align-self-start">Aprobado</span>{% else %}<span class="badge text-bg-danger align-self-start">Rechazado</span>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
-
 <script>
-
-    const metodoRadios =
-        document.querySelectorAll(
-            'input[name="metodo_pago"]'
-        );
-
-    const camposTarjeta =
-        document.getElementById(
-            "campos-tarjeta"
-        );
-
-    const mensajePse =
-        document.getElementById(
-            "mensaje-pse"
-        );
-
-    const numeroTarjeta =
-        document.getElementById(
-            "numero_tarjeta"
-        );
-
-    const vencimiento =
-        document.getElementById(
-            "vencimiento"
-        );
-
-    const cvv =
-        document.getElementById(
-            "cvv"
-        );
-
-    const nombreTarjeta =
-        document.getElementById(
-            "nombre_tarjeta"
-        );
-
-    const numeroVisual =
-        document.getElementById(
-            "numero-visual"
-        );
-
-    const vencimientoVisual =
-        document.getElementById(
-            "vencimiento-visual"
-        );
-
-    const nombreVisual =
-        document.getElementById(
-            "nombre-visual"
-        );
-
-    const cvvVisual =
-        document.getElementById(
-            "cvv-visual"
-        );
-
-
-    function actualizarMetodoPago() {
-
-        const metodoSeleccionado =
-            document.querySelector(
-                'input[name="metodo_pago"]:checked'
-            );
-
-        document
-            .querySelectorAll(".metodo")
-            .forEach(function (metodo) {
-
-                const radio =
-                    metodo.querySelector(
-                        'input[type="radio"]'
-                    );
-
-                metodo.classList.toggle(
-                    "activo",
-                    radio.checked
-                );
-
-            });
-
-        if (
-            metodoSeleccionado &&
-            metodoSeleccionado.value === "PSE"
-        ) {
-
-            camposTarjeta.style.display =
-                "none";
-
-            mensajePse.style.display =
-                "flex";
-
-            numeroTarjeta.required =
-                false;
-
-            vencimiento.required =
-                false;
-
-            cvv.required =
-                false;
-
-            nombreTarjeta.required =
-                false;
-
-        } else {
-
-            camposTarjeta.style.display =
-                "block";
-
-            mensajePse.style.display =
-                "none";
-
-            numeroTarjeta.required =
-                true;
-
-            vencimiento.required =
-                true;
-
-            cvv.required =
-                true;
-
-            nombreTarjeta.required =
-                true;
-
-        }
-
-    }
-
-
-    metodoRadios.forEach(function (radio) {
-
-        radio.addEventListener(
-            "change",
-            actualizarMetodoPago
-        );
-
-    });
-
-
-    numeroTarjeta.addEventListener(
-        "input",
-        function () {
-
-            let valor =
-                this.value.replace(
-                    /\D/g,
-                    ""
-                );
-
-            valor =
-                valor.substring(
-                    0,
-                    16
-                );
-
-            this.value =
-                valor
-                    .replace(
-                        /(.{4})/g,
-                        "$1 "
-                    )
-                    .trim();
-
-            numeroVisual.textContent =
-                this.value ||
-                "0000 0000 0000 0000";
-
-        }
-    );
-
-
-    vencimiento.addEventListener(
-        "input",
-        function () {
-
-            let valor =
-                this.value.replace(
-                    /\D/g,
-                    ""
-                );
-
-            valor =
-                valor.substring(
-                    0,
-                    4
-                );
-
-            if (
-                valor.length > 2
-            ) {
-
-                valor =
-                    valor.substring(
-                        0,
-                        2
-                    )
-                    + "/"
-                    +
-                    valor.substring(
-                        2
-                    );
-
-            }
-
-            this.value =
-                valor;
-
-            vencimientoVisual.textContent =
-                this.value ||
-                "MM/AA";
-
-        }
-    );
-
-
-    cvv.addEventListener(
-        "input",
-        function () {
-
-            this.value =
-                this.value
-                    .replace(
-                        /\D/g,
-                        ""
-                    )
-                    .substring(
-                        0,
-                        3
-                    );
-
-            cvvVisual.textContent =
-                this.value
-                    ? "•".repeat(
-                        this.value.length
-                    )
-                    : "•••";
-
-        }
-    );
-
-
-    nombreTarjeta.addEventListener(
-        "input",
-        function () {
-
-            this.value =
-                this.value
-                    .replace(
-                        /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g,
-                        ""
-                    )
-                    .substring(
-                        0,
-                        60
-                    );
-
-            nombreVisual.textContent =
-                this.value
-                    ? this.value.toUpperCase()
-                    : "NOMBRE DEL TITULAR";
-
-        }
-    );
-
-
-    document
-        .getElementById("form-pago")
-        .addEventListener(
-            "submit",
-            function (event) {
-
-                const metodo =
-                    document.querySelector(
-                        'input[name="metodo_pago"]:checked'
-                    ).value;
-
-
-                if (
-                    metodo !== "PSE" &&
-                    numeroTarjeta.value
-                        .replace(
-                            /\s/g,
-                            ""
-                        )
-                        .length !== 16
-                ) {
-
-                    event.preventDefault();
-
-                    alert(
-                        "El número de tarjeta debe tener 16 dígitos."
-                    );
-
-                    return;
-
-                }
-
-
-                if (
-                    metodo !== "PSE" &&
-                    !/^(0[1-9]|1[0-2])\/\d{2}$/.test(
-                        vencimiento.value
-                    )
-                ) {
-
-                    event.preventDefault();
-
-                    alert(
-                        "El vencimiento debe tener el formato MM/AA."
-                    );
-
-                    return;
-
-                }
-
-
-                if (
-                    metodo !== "PSE" &&
-                    cvv.value.length !== 3
-                ) {
-
-                    event.preventDefault();
-
-                    alert(
-                        "El CVV debe tener 3 dígitos."
-                    );
-
-                    return;
-
-                }
-
-
-                if (
-                    metodo !== "PSE" &&
-                    nombreTarjeta.value.trim().length < 3
-                ) {
-
-                    event.preventDefault();
-
-                    alert(
-                        "Ingresa el nombre de la tarjeta."
-                    );
-
-                    return;
-
-                }
-
-            }
-        );
-
-
-    actualizarMetodoPago();
-
+  document.getElementById('form-pago').addEventListener('submit', function () {
+    const boton = this.querySelector('button[type="submit"]');
+    boton.disabled = true;
+    boton.querySelector('span').innerHTML = '<i class="bi bi-hourglass-split"></i> Procesando simulación...';
+  });
 </script>
-
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
-</script>
-
 </body>
-
 </html>

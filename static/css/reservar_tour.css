@@ -752,3 +752,33 @@ body {
     }
 
 }
+
+
+/* Transporte y selección de asientos simulados */
+.transporte-section .campo { margin-bottom: 8px; }
+.seat-panel { border: 1px solid #e5eaf0; border-radius: 18px; padding: 20px; background: #fbfcfe; }
+.seat-panel-heading { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:flex-start; margin-bottom:18px; }
+.seat-panel-heading strong { display:block; color:#172b4d; font-size:1.05rem; }
+.seat-panel-heading small { display:block; color:#718096; margin-top:4px; }
+.seat-legend { display:flex; gap:12px; flex-wrap:wrap; font-size:.8rem; color:#536273; }
+.seat-legend span { display:flex; align-items:center; gap:6px; }
+.seat-dot { width:11px; height:11px; border-radius:4px; display:inline-block; background:#fff; border:1px solid #aeb9c6; }
+.seat-dot.selected { background:#2563eb; border-color:#2563eb; }
+.seat-dot.occupied { background:#d5dbe3; border-color:#c3cbd5; }
+.seat-map { overflow-x:auto; padding:10px 4px; }
+.seat-cabin { width:max-content; min-width:290px; margin:auto; padding:18px 24px; border:2px solid #d7e0eb; border-radius:46px 46px 18px 18px; background:#fff; }
+.seat-front { text-align:center; color:#6b7c90; font-size:.72rem; font-weight:800; letter-spacing:.08em; margin-bottom:18px; }
+.seat-row { display:flex; align-items:center; justify-content:center; gap:7px; margin:8px 0; }
+.seat-button { width:36px; height:34px; border:1px solid #aab8c8; border-radius:8px 8px 5px 5px; background:#f8fafc; color:#30445c; font-size:.78rem; font-weight:700; }
+.seat-button:hover:not(:disabled) { border-color:#2563eb; background:#eaf1ff; }
+.seat-button.is-selected { color:#fff; border-color:#2563eb; background:#2563eb; }
+.seat-button.is-occupied, .seat-button:disabled { color:#8c98a7; border-color:#d1d8e0; background:#e3e7ec; cursor:not-allowed; }
+.seat-aisle { width:28px; text-align:center; color:#9aa7b5; font-size:.68rem; }
+.seat-selection-summary { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px; color:#536273; font-size:.88rem; }
+.seat-selection-summary strong { color:#1d3554; }
+#seat-count { margin-left:auto; font-weight:700; }
+#seat-count.seat-count-ok { color:#16804a; }
+.seat-empty { text-align:center; color:#78879a; padding:32px 10px; }
+.simulation-notice { margin:14px 0 0; padding:12px 14px; border-radius:10px; color:#66521a; background:#fff8df; font-size:.84rem; }
+.simulation-notice i { margin-right:6px; }
+@media(max-width:576px) { .seat-panel { padding:14px; } .seat-button { width:32px; height:31px; } .seat-cabin { padding:14px 16px; } }

@@ -43,6 +43,9 @@ from models import (
     PerfilViajero,
     Administrador,
     Pago,
+    IntentoPagoSimulado,
+    TransporteReserva,
+    AsientoTransporte,
     TourImagen,
     ItinerarioTourDia,
     Notificacion,
@@ -56,10 +59,12 @@ from models import (
 )
 
 import os
+import uuid
 
 from datetime import datetime
 
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 
 
@@ -1498,6 +1503,70 @@ def login_empresa_post():
     )
 
 
+@app.route("/api/transporte/asientos-ocupados")
+def asientos_ocupados():
+    tipo = request.args.get("tipo", "").lower()
+    origen = request.args.get("origen", "").strip()
+    destino = request.args.get("destino", "").strip()
+    fecha_txt = request.args.get("fecha", "")
+    hora = request.args.get("hora", "")
+    if tipo not in {"avion", "bus"} or not origen or not destino or not fecha_txt or not hora:
+        return jsonify({"ocupados": []})
+    try:
+        fecha = datetime.strptime(fecha_txt, "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"ocupados": []}), 400
+    ocupados = [
+        fila[0] for fila in db.session.query(AsientoTransporte.asiento).filter_by(
+            tipo_transporte=tipo, origen=origen, destino=destino,
+            fecha_viaje=fecha, hora_salida=hora
+        ).all()
+    ]
+    return jsonify({"ocupados": ocupados})
+
+
+@app.route("/tiquete/<int:reserva_id>")
+def tiquete_reserva(reserva_id):
+    if "usuario_id" not in session:
+        flash("Inicia sesión para consultar tu tiquete.")
+        return redirect(url_for("login_usuario"))
+    reserva = Reserva.query.get_or_404(reserva_id)
+    if str(reserva.id_viajero) != str(session["usuario_id"]):
+        flash("No tienes permiso para consultar este tiquete.", "error")
+        return redirect(url_for("reservas"))
+    if reserva.estado_reserva != "confirmada":
+        flash("El tiquete estará disponible cuando el pago simulado sea aprobado.", "error")
+        return redirect(url_for("reservas"))
+    transporte = TransporteReserva.query.filter_by(reserva_id=reserva.id_reserva).first_or_404()
+    return render_template("tiquete_reserva.html", reserva=reserva, transporte=transporte)
+
+
+@app.route("/tiquete/qr/<token>")
+def qr_tiquete(token):
+    from io import BytesIO
+    import qrcode
+    transporte = TransporteReserva.query.filter_by(token_verificacion=token).first_or_404()
+    url_verificacion = url_for("verificar_tiquete", token=token, _external=True)
+    imagen = qrcode.make(url_verificacion)
+    salida = BytesIO()
+    imagen.save(salida, format="PNG")
+    respuesta = make_response(salida.getvalue())
+    respuesta.headers["Content-Type"] = "image/png"
+    respuesta.headers["Cache-Control"] = "no-store"
+    return respuesta
+
+
+@app.route("/verificar-tiquete/<token>")
+def verificar_tiquete(token):
+    transporte = TransporteReserva.query.filter_by(token_verificacion=token).first_or_404()
+    reserva = db.session.get(Reserva, transporte.reserva_id)
+    return render_template(
+        "verificar_tiquete.html",
+        transporte=transporte,
+        reserva=reserva
+    )
+
+
 @app.route(
     "/reservar/<int:tour_id>",
     methods=["GET", "POST"]
@@ -1568,6 +1637,79 @@ def reservar_tour(tour_id):
 
         total_personas = adultos + ninos
 
+        try:
+
+            fecha = datetime.strptime(
+                request.form["fecha"],
+                "%Y-%m-%d"
+            ).date()
+
+        except (ValueError, KeyError):
+
+            flash(
+                "La fecha seleccionada no es válida."
+            )
+
+            return redirect(
+                url_for(
+                    "reservar_tour",
+                    tour_id=tour.id
+                )
+            )
+
+
+        tipo_transporte = request.form.get("tipo_transporte", "").strip().lower()
+        origen = " ".join(request.form.get("origen", "").strip().split()).title()
+        destino = " ".join(request.form.get("destino", "").strip().split()).title()
+        hora_salida = request.form.get("hora_salida", "").strip()
+        asientos_seleccionados = [
+            a.strip().upper()
+            for a in request.form.get("asientos_seleccionados", "").split(",")
+            if a.strip()
+        ]
+
+        if tipo_transporte not in {"avion", "bus"}:
+            flash("Selecciona avión o bus para continuar.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
+        if not origen or not destino or origen.casefold() == destino.casefold():
+            flash("Indica un origen y un destino diferentes.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
+        if hora_salida not in {"06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00"}:
+            flash("Selecciona un horario válido.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
+        patron_asientos = (
+            {f"{fila}{letra}" for fila in range(1, 7) for letra in "ABCDEF"}
+            if tipo_transporte == "avion"
+            else {f"{fila}{letra}" for fila in range(1, 11) for letra in "ABCD"}
+        )
+        if total_personas > len(patron_asientos):
+            flash(f"Este servicio tiene máximo {len(patron_asientos)} asientos.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
+        if len(asientos_seleccionados) != total_personas or len(set(asientos_seleccionados)) != total_personas:
+            flash(f"Debes seleccionar exactamente {total_personas} asientos diferentes.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
+        if any(a not in patron_asientos for a in asientos_seleccionados):
+            flash("Hay un asiento no válido en tu selección.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
+        ocupados = {
+            fila[0] for fila in db.session.query(AsientoTransporte.asiento).filter_by(
+                tipo_transporte=tipo_transporte,
+                origen=origen,
+                destino=destino,
+                fecha_viaje=fecha,
+                hora_salida=hora_salida
+            ).all()
+        }
+        if ocupados.intersection(asientos_seleccionados):
+            flash("Uno o más asientos ya fueron ocupados. Selecciónalos nuevamente.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
+
         if total_personas > tour.cupo_disponible:
 
             flash(
@@ -1617,26 +1759,6 @@ def reservar_tour(tour_id):
                 )
             )
 
-        try:
-
-            fecha = datetime.strptime(
-                request.form["fecha"],
-                "%Y-%m-%d"
-            ).date()
-
-        except (ValueError, KeyError):
-
-            flash(
-                "La fecha seleccionada no es válida."
-            )
-
-            return redirect(
-                url_for(
-                    "reservar_tour",
-                    tour_id=tour.id
-                )
-            )
-
         precio_total = (
             adultos * tour.precio
             + ninos * tour.precio * Decimal("0.5")
@@ -1653,6 +1775,29 @@ def reservar_tour(tour_id):
         db.session.add(reserva)
 
         db.session.flush()
+
+        transporte = TransporteReserva(
+            reserva_id=reserva.id_reserva,
+            tipo_transporte=tipo_transporte,
+            origen=origen,
+            destino=destino,
+            fecha_viaje=fecha,
+            hora_salida=hora_salida,
+            token_verificacion=uuid.uuid4().hex
+        )
+        db.session.add(transporte)
+        db.session.flush()
+
+        for asiento in asientos_seleccionados:
+            db.session.add(AsientoTransporte(
+                transporte_reserva_id=transporte.id,
+                tipo_transporte=tipo_transporte,
+                origen=origen,
+                destino=destino,
+                fecha_viaje=fecha,
+                hora_salida=hora_salida,
+                asiento=asiento
+            ))
 
         for i in range(total_personas):
 
@@ -1676,7 +1821,12 @@ def reservar_tour(tour_id):
             )
 
         tour.cupo_disponible -= total_personas
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash("Alguien acaba de ocupar uno de esos asientos. Vuelve a elegirlos.", "error")
+            return redirect(url_for("reservar_tour", tour_id=tour.id_tour))
 
         flash(
             "Reserva creada correctamente. "
@@ -1700,112 +1850,116 @@ def reservar_tour(tour_id):
     methods=["GET", "POST"]
 )
 def pagar_reserva(reserva_id):
-
+    """Pago académico simulado: no recibe ni almacena datos bancarios."""
     if "usuario_id" not in session:
         flash("Debes iniciar sesión.")
-        return redirect(
-            url_for("login_usuario")
-        )
+        return redirect(url_for("login_usuario"))
 
-    reserva = Reserva.query.get_or_404(
-        reserva_id
-    )
+    reserva = Reserva.query.get_or_404(reserva_id)
 
     if str(reserva.id_viajero) != str(session["usuario_id"]):
-        flash(
-            "No tienes permiso para pagar esta reserva."
-        )
-        return redirect(
-            url_for("reservas")
-        )
+        flash("No tienes permiso para pagar esta reserva.")
+        return redirect(url_for("reservas"))
+
+    if reserva.estado_reserva == "confirmada":
+        flash("Esta reserva ya está confirmada.")
+        return redirect(url_for("reservas"))
 
     if reserva.estado_reserva != "pendiente":
-        flash(
-            "Esta reserva ya fue pagada, "
-            "cancelada o finalizada."
-        )
-        return redirect(
-            url_for("reservas")
-        )
+        flash("Esta reserva no está disponible para pago.")
+        return redirect(url_for("reservas"))
 
-    usuario = Usuario.query.get(
-        reserva.id_viajero
-    )
+    usuario = Usuario.query.get(reserva.id_viajero)
 
     if request.method == "POST":
+        metodo_pago = request.form.get("metodo_pago", "").strip()
+        resultado = request.form.get("resultado_simulado", "").strip()
 
-        metodo_pago = request.form.get(
-            "metodo_pago",
-            "Tarjeta de crédito"
-        )
+        metodos_permitidos = {
+            "Tarjeta simulada",
+            "Transferencia simulada",
+            "Efectivo simulado"
+        }
+        resultados_permitidos = {"aprobado", "rechazado"}
 
-        numero_tarjeta = request.form.get(
-            "numero_tarjeta",
-            ""
-        )
+        if metodo_pago not in metodos_permitidos or resultado not in resultados_permitidos:
+            flash("Selecciona un método y un resultado de simulación válidos.", "error")
+            return redirect(url_for("pagar_reserva", reserva_id=reserva.id_reserva))
 
-        ultimos_4 = (
-            numero_tarjeta.replace(" ", "")[-4:]
-            if numero_tarjeta
-            else "0000"
-        )
+        estado_intento = "Aprobado" if resultado == "aprobado" else "Rechazado"
+        referencia = "SIM-" + uuid.uuid4().hex[:12].upper()
 
-        pago = Pago(
+        intento = IntentoPagoSimulado(
             reserva_id=reserva.id_reserva,
-            monto=reserva.total_pago,
             metodo_pago=metodo_pago,
-            referencia="**** " + ultimos_4,
-            estado="Aprobado"
+            estado=estado_intento,
+            referencia=referencia
         )
+        db.session.add(intento)
 
-        reserva.estado_reserva = "confirmada"
-
-        db.session.add(pago)
-        db.session.commit()
-
-        usuario_operador = Usuario.query.get(
-            reserva.tour.id_operador
-        )
-
-        empresa = None
-
-        if usuario_operador:
-
-            empresa = Empresa.query.filter_by(
-                correo=usuario_operador.correo
-            ).first()
-
-        if empresa:
-
-            notificacion = Notificacion(
-                empresa_id=empresa.id,
-                tour_id=reserva.id_tour,
-                tipo="reserva",
-                mensaje=(
-                    f'Nueva reserva confirmada para '
-                    f'"{reserva.tour.titulo}" '
-                    f'({reserva.cantidad_personas} persona(s)).'
+        if resultado == "aprobado":
+            # La tabla pagos actual admite un registro por reserva.
+            # Se crea solo al aprobar para que una factura nunca represente un rechazo.
+            pago = Pago.query.filter_by(reserva_id=reserva.id_reserva).first()
+            if pago is None:
+                pago = Pago(
+                    reserva_id=reserva.id_reserva,
+                    monto=float(reserva.total_pago),
+                    metodo_pago=metodo_pago,
+                    referencia=referencia,
+                    estado="Aprobado"
                 )
-            )
+                db.session.add(pago)
+            else:
+                pago.monto = float(reserva.total_pago)
+                pago.metodo_pago = metodo_pago
+                pago.referencia = referencia
+                pago.estado = "Aprobado"
+                pago.fecha_pago = datetime.utcnow()
 
-            db.session.add(
-                notificacion
-            )
+            reserva.estado_reserva = "confirmada"
+            db.session.flush()
+
+            usuario_operador = Usuario.query.get(reserva.tour.id_operador)
+            empresa = None
+            if usuario_operador:
+                empresa = Empresa.query.filter_by(correo=usuario_operador.correo).first()
+
+            if empresa:
+                notificacion = Notificacion(
+                    empresa_id=empresa.id,
+                    tour_id=reserva.id_tour,
+                    tipo="reserva",
+                    mensaje=(
+                        f'Nueva reserva confirmada para "{reserva.tour.titulo}" '
+                        f'({reserva.cantidad_personas} persona(s)).'
+                    )
+                )
+                db.session.add(notificacion)
 
             db.session.commit()
+            flash("¡Pago simulado aprobado! Tu reserva quedó confirmada.", "success")
+            if TransporteReserva.query.filter_by(reserva_id=reserva.id_reserva).first():
+                return redirect(url_for("tiquete_reserva", reserva_id=reserva.id_reserva))
+            return redirect(url_for("reservas"))
 
-        flash(
-            "¡Pago aprobado! Tu reserva quedó confirmada."
-        )
+        # Un rechazo queda en el historial, pero la reserva sigue pendiente.
+        db.session.commit()
+        flash("El pago simulado fue rechazado. Puedes intentarlo nuevamente.", "error")
+        return redirect(url_for("pagar_reserva", reserva_id=reserva.id_reserva))
 
-        return redirect(
-            url_for("reservas")
-        )
+    intentos = (
+        IntentoPagoSimulado.query
+        .filter_by(reserva_id=reserva.id_reserva)
+        .order_by(IntentoPagoSimulado.fecha_intento.desc())
+        .all()
+    )
 
     return render_template(
         "pagar_reserva.html",
         reserva=reserva,
-        usuario=usuario
+        usuario=usuario,
+        intentos=intentos
     )
 
 
@@ -3810,6 +3964,12 @@ def cancelar_reserva(reserva_id):
         )
 
     reserva.estado_reserva = "cancelada"
+
+    transporte = TransporteReserva.query.filter_by(reserva_id=reserva.id_reserva).first()
+    if transporte:
+        AsientoTransporte.query.filter_by(transporte_reserva_id=transporte.id).delete(
+            synchronize_session=False
+        )
 
     db.session.commit()
 

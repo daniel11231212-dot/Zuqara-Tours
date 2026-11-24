@@ -176,8 +176,66 @@
                                     class="form-control"
                                     required>
 
+                            <div class="form-section transporte-section">
+                            <div class="section-title">
+                                <span class="section-number">02</span>
+                                <div>
+                                    <h3>Transporte y selección de asientos</h3>
+                                    <p>El transporte está incluido en el precio del tour. Esta selección es completamente simulada.</p>
+                                </div>
                             </div>
 
+                            <div class="row g-3">
+                                <div class="col-md-6 campo">
+                                    <label for="tipo_transporte"><i class="bi bi-airplane"></i> Tipo de transporte</label>
+                                    <select class="form-select" id="tipo_transporte" name="tipo_transporte" required>
+                                        <option value="">Selecciona una opción</option>
+                                        <option value="avion">Avión · 3-3</option>
+                                        <option value="bus">Bus · 2-2</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 campo">
+                                    <label for="hora_salida"><i class="bi bi-clock"></i> Horario simulado</label>
+                                    <select class="form-select" id="hora_salida" name="hora_salida" required>
+                                        <option value="">Selecciona horario</option>
+                                        {% for hora in ["06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00"] %}
+                                        <option value="{{ hora }}">{{ hora }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6 campo">
+                                    <label for="origen">Origen</label>
+                                    <input class="form-control" id="origen" name="origen" maxlength="120" placeholder="Ej. Bogotá" required>
+                                </div>
+                                <div class="col-md-6 campo">
+                                    <label for="destino">Destino</label>
+                                    <input class="form-control" id="destino" name="destino" maxlength="120" placeholder="Ej. Medellín" required>
+                                </div>
+                            </div>
+
+                            <div class="seat-panel mt-4">
+                                <div class="seat-panel-heading">
+                                    <div>
+                                        <strong>Mapa de asientos</strong>
+                                        <small id="seat-hint">Selecciona el transporte, la fecha y la ruta para ver los asientos.</small>
+                                    </div>
+                                    <div class="seat-legend">
+                                        <span><i class="seat-dot available"></i> Libre</span>
+                                        <span><i class="seat-dot selected"></i> Elegido</span>
+                                        <span><i class="seat-dot occupied"></i> Ocupado</span>
+                                    </div>
+                                </div>
+                                <div id="seat-map" class="seat-map" aria-live="polite">
+                                    <div class="seat-empty">Primero completa los datos del transporte.</div>
+                                </div>
+                                <input type="hidden" id="asientos_seleccionados" name="asientos_seleccionados" required>
+                                <div class="seat-selection-summary">
+                                    <span>Asientos elegidos:</span>
+                                    <strong id="seat-selection-text">Ninguno</strong>
+                                    <span id="seat-count">0 seleccionados</span>
+                                </div>
+                            </div>
+                            <p class="simulation-notice"><i class="bi bi-info-circle"></i> Zuqara Tours es una plataforma de simulación. No se emiten tiquetes reales ni se realizan compras de transporte.</p>
                         </div>
 
 
@@ -186,7 +244,7 @@
                             <div class="section-title">
 
                                 <span class="section-number">
-                                    02
+                                    03
                                 </span>
 
                                 <div>
@@ -288,7 +346,7 @@
                             <div class="section-title">
 
                                 <span class="section-number">
-                                    03
+                                    04
                                 </span>
 
                                 <div>
@@ -316,7 +374,7 @@
                             <div class="section-title">
 
                                 <span class="section-number">
-                                    04
+                                    05
                                 </span>
 
                                 <div>
@@ -361,7 +419,7 @@
                             <div class="section-title">
 
                                 <span class="section-number">
-                                    05
+                                    06
                                 </span>
 
                                 <div>

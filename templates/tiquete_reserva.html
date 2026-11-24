@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiquete de demostración | Zuqara Tours</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<style>
+body{background:#f2f5f9;color:#1d2c40;font-family:Arial,sans-serif}.ticket{max-width:780px;margin:42px auto;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 40px #1d35541a}.top{padding:28px 32px;background:#122c4b;color:white}.top h1{font-size:1.65rem;margin:0}.body{padding:30px 32px}.tag{display:inline-block;background:#fff2cc;color:#805b00;padding:7px 12px;border-radius:20px;font-weight:700;font-size:.78rem}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:24px 0}.field small{display:block;color:#7b8795;text-transform:uppercase;font-size:.68rem;letter-spacing:.06em}.field strong{font-size:1rem}.qr{width:170px;height:170px;object-fit:contain}.warning{padding:14px;background:#fff4db;color:#76530b;border-radius:12px;font-size:.9rem}@media(max-width:600px){.ticket{margin:12px}.top,.body{padding:22px}.grid{grid-template-columns:1fr}.qr{width:145px;height:145px}}
+</style>
+</head>
+<body>
+<div class="ticket">
+ <div class="top d-flex justify-content-between align-items-center gap-3">
+  <div><div class="small opacity-75 mb-2">ZUQARA TOURS</div><h1>Tiquete de transporte</h1></div>
+  <i class="bi bi-ticket-perforated fs-1"></i>
+ </div>
+ <div class="body">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+   <span class="tag">DOCUMENTO DE DEMOSTRACIÓN</span>
+   <strong>Reserva #{{ reserva.id_reserva }}</strong>
+  </div>
+  <h2 class="h4 mt-4">{{ reserva.tour.titulo }}</h2>
+  <div class="grid">
+   <div class="field"><small>Transporte</small><strong>{{ "Avión" if transporte.tipo_transporte == "avion" else "Bus" }}</strong></div>
+   <div class="field"><small>Fecha</small><strong>{{ transporte.fecha_viaje.strftime("%d/%m/%Y") }}</strong></div>
+   <div class="field"><small>Origen</small><strong>{{ transporte.origen }}</strong></div>
+   <div class="field"><small>Destino</small><strong>{{ transporte.destino }}</strong></div>
+   <div class="field"><small>Hora de salida</small><strong>{{ transporte.hora_salida }}</strong></div>
+   <div class="field"><small>Asientos</small><strong>{{ transporte.asientos|map(attribute="asiento")|sort|join(", ") }}</strong></div>
+  </div>
+  <div class="d-flex align-items-center flex-wrap gap-4 my-4">
+   <img class="qr" src="{{ url_for('qr_tiquete', token=transporte.token_verificacion) }}" alt="Código QR de verificación">
+   <div><strong>Verificación en Zuqara Tours</strong><p class="text-secondary small mt-2">Escanea el código para consultar el estado de esta reserva en la plataforma.</p><a href="{{ url_for('verificar_tiquete', token=transporte.token_verificacion) }}" class="btn btn-outline-primary btn-sm">Verificar reserva</a></div>
+  </div>
+  <div class="warning"><i class="bi bi-exclamation-triangle-fill me-1"></i> Este tiquete es únicamente de simulación. No es válido para abordar aviones o buses reales y no representa una compra de transporte.</div>
+  <div class="mt-4 d-flex gap-2 flex-wrap"><button class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button><a class="btn btn-outline-secondary" href="{{ url_for('reservas') }}">Volver a mis reservas</a></div>
+ </div>
+</div>
+</body></html>
