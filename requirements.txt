@@ -5,4 +5,5 @@ Werkzeug==3.0.3
 gunicorn
 python-dotenv
 SQLAlchemy<2.1
-google-genaiqrcode[pil]==8.2
+google-genai
+qrcode==8.2git add requirements.txt
