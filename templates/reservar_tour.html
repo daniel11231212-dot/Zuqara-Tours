@@ -176,66 +176,8 @@
                                     class="form-control"
                                     required>
 
-                            <div class="form-section transporte-section">
-                            <div class="section-title">
-                                <span class="section-number">02</span>
-                                <div>
-                                    <h3>Transporte y selección de asientos</h3>
-                                    <p>El transporte está incluido en el precio del tour. Esta selección es completamente simulada.</p>
-                                </div>
                             </div>
 
-                            <div class="row g-3">
-                                <div class="col-md-6 campo">
-                                    <label for="tipo_transporte"><i class="bi bi-airplane"></i> Tipo de transporte</label>
-                                    <select class="form-select" id="tipo_transporte" name="tipo_transporte" required>
-                                        <option value="">Selecciona una opción</option>
-                                        <option value="avion">Avión · 3-3</option>
-                                        <option value="bus">Bus · 2-2</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 campo">
-                                    <label for="hora_salida"><i class="bi bi-clock"></i> Horario simulado</label>
-                                    <select class="form-select" id="hora_salida" name="hora_salida" required>
-                                        <option value="">Selecciona horario</option>
-                                        {% for hora in ["06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00"] %}
-                                        <option value="{{ hora }}">{{ hora }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-md-6 campo">
-                                    <label for="origen">Origen</label>
-                                    <input class="form-control" id="origen" name="origen" maxlength="120" placeholder="Ej. Bogotá" required>
-                                </div>
-                                <div class="col-md-6 campo">
-                                    <label for="destino">Destino</label>
-                                    <input class="form-control" id="destino" name="destino" maxlength="120" placeholder="Ej. Medellín" required>
-                                </div>
-                            </div>
-
-                            <div class="seat-panel mt-4">
-                                <div class="seat-panel-heading">
-                                    <div>
-                                        <strong>Mapa de asientos</strong>
-                                        <small id="seat-hint">Selecciona el transporte, la fecha y la ruta para ver los asientos.</small>
-                                    </div>
-                                    <div class="seat-legend">
-                                        <span><i class="seat-dot available"></i> Libre</span>
-                                        <span><i class="seat-dot selected"></i> Elegido</span>
-                                        <span><i class="seat-dot occupied"></i> Ocupado</span>
-                                    </div>
-                                </div>
-                                <div id="seat-map" class="seat-map" aria-live="polite">
-                                    <div class="seat-empty">Primero completa los datos del transporte.</div>
-                                </div>
-                                <input type="hidden" id="asientos_seleccionados" name="asientos_seleccionados" required>
-                                <div class="seat-selection-summary">
-                                    <span>Asientos elegidos:</span>
-                                    <strong id="seat-selection-text">Ninguno</strong>
-                                    <span id="seat-count">0 seleccionados</span>
-                                </div>
-                            </div>
-                            <p class="simulation-notice"><i class="bi bi-info-circle"></i> Zuqara Tours es una plataforma de simulación. No se emiten tiquetes reales ni se realizan compras de transporte.</p>
                         </div>
 
 
@@ -244,7 +186,7 @@
                             <div class="section-title">
 
                                 <span class="section-number">
-                                    03
+                                    02
                                 </span>
 
                                 <div>
@@ -338,6 +280,67 @@
 
                             </div>
 
+                        </div>
+
+
+                        <div class="form-section transporte-section">
+                            <div class="section-title">
+                                <span class="section-number">03</span>
+                                <div>
+                                    <h3>Selecciona tu transporte</h3>
+                                    <p>Elige el vehículo, la ruta, el horario y los asientos para cada pasajero. El transporte está incluido en el precio del tour.</p>
+                                </div>
+                            </div>
+
+                            <div class="tipo-transporte-grid">
+                                <label class="tipo-transporte-card">
+                                    <input type="radio" name="tipo_transporte" value="avion" required>
+                                    <span class="tipo-transporte-icon"><i class="bi bi-airplane-fill"></i></span>
+                                    <span class="tipo-transporte-copy"><strong>Avión</strong><small>Distribución 3 - 3</small></span>
+                                </label>
+                                <label class="tipo-transporte-card">
+                                    <input type="radio" name="tipo_transporte" value="bus" required>
+                                    <span class="tipo-transporte-icon"><i class="bi bi-bus-front-fill"></i></span>
+                                    <span class="tipo-transporte-copy"><strong>Bus</strong><small>Distribución 2 - 2</small></span>
+                                </label>
+                            </div>
+
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6 campo">
+                                    <label for="origen"><i class="bi bi-geo-alt"></i> Ciudad de origen</label>
+                                    <input type="text" id="origen" name="origen" class="form-control" maxlength="120" placeholder="Ej. Bogotá" required>
+                                </div>
+                                <div class="col-md-6 campo">
+                                    <label for="destino"><i class="bi bi-geo-alt-fill"></i> Ciudad de destino</label>
+                                    <input type="text" id="destino" name="destino" class="form-control" maxlength="120" placeholder="Ej. Medellín" required>
+                                </div>
+                                <div class="col-md-6 campo">
+                                    <label for="hora_salida"><i class="bi bi-clock"></i> Horario de salida</label>
+                                    <select id="hora_salida" name="hora_salida" class="form-select" required>
+                                        <option value="">Selecciona un horario</option>
+                                        <option value="07:00">07:00 a. m.</option>
+                                        <option value="09:00">09:00 a. m.</option>
+                                        <option value="13:00">01:00 p. m.</option>
+                                        <option value="16:00">04:00 p. m.</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="asientos-panel mt-4">
+                                <div class="asientos-panel-heading">
+                                    <div><strong><i class="bi bi-grid-3x3-gap-fill"></i> Selecciona los asientos</strong><small id="instruccion-asientos">Primero elige fecha y tipo de transporte.</small></div>
+                                    <span class="asientos-contador" id="contador-asientos">0 seleccionados</span>
+                                </div>
+                                <div class="asientos-leyenda">
+                                    <span><i class="asiento-muestra disponible"></i> Disponible</span>
+                                    <span><i class="asiento-muestra seleccionado"></i> Seleccionado</span>
+                                    <span><i class="asiento-muestra ocupado"></i> Ocupado</span>
+                                </div>
+                                <div id="mapa-asientos" class="mapa-asientos">
+                                    <div class="mapa-vacio"><i class="bi bi-ticket-perforated"></i><span>Selecciona avión o bus para mostrar el mapa.</span></div>
+                                </div>
+                                <div id="asientos-hidden"></div>
+                            </div>
                         </div>
 
 
@@ -710,6 +713,111 @@
     const resumenNinos =
         document.getElementById("resumen-ninos");
 
+    const fechaInput = document.getElementById("fecha");
+    const mapaAsientos = document.getElementById("mapa-asientos");
+    const asientosHidden = document.getElementById("asientos-hidden");
+    const contadorAsientos = document.getElementById("contador-asientos");
+    const instruccionAsientos = document.getElementById("instruccion-asientos");
+    const radiosTransporte = document.querySelectorAll('input[name="tipo_transporte"]');
+    let asientosSeleccionados = [];
+    let asientosOcupados = [];
+
+    const hoyLocal = new Date();
+    const fechaMinima = new Date(hoyLocal.getTime() - hoyLocal.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    fechaInput.min = fechaMinima;
+
+    function tipoTransporteActual() {
+        const seleccionado = document.querySelector('input[name="tipo_transporte"]:checked');
+        return seleccionado ? seleccionado.value : "";
+    }
+
+    function actualizarCamposAsientos() {
+        asientosHidden.innerHTML = "";
+        asientosSeleccionados.forEach(asiento => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "asientos[]";
+            input.value = asiento;
+            asientosHidden.appendChild(input);
+        });
+        contadorAsientos.textContent = `${asientosSeleccionados.length} / ${totalViajeros()} seleccionados`;
+    }
+
+    function totalViajeros() {
+        return (parseInt(adultosInput.value) || 0) + (parseInt(ninosInput.value) || 0);
+    }
+
+    function renderizarMapa() {
+        const tipo = tipoTransporteActual();
+        if (!tipo) {
+            mapaAsientos.innerHTML = '<div class="mapa-vacio">Selecciona avión o bus para mostrar el mapa.</div>';
+            return;
+        }
+        const filas = tipo === "avion" ? 12 : 10;
+        const letras = tipo === "avion" ? ["A", "B", "C", "D", "E", "F"] : ["A", "B", "C", "D"];
+        const izquierda = tipo === "avion" ? ["A", "B", "C"] : ["A", "B"];
+        const derecha = tipo === "avion" ? ["D", "E", "F"] : ["C", "D"];
+        let html = `<div class="vehiculo-frente"><i class="bi ${tipo === "avion" ? "bi-airplane-fill" : "bi-bus-front-fill"}"></i><span>${tipo === "avion" ? "FRENTE DEL AVIÓN" : "FRENTE DEL BUS"}</span></div><div class="asientos-grid ${tipo}">`;
+        for (let fila = 1; fila <= filas; fila++) {
+            html += `<span class="numero-fila">${fila}</span>`;
+            izquierda.forEach(letra => { html += crearBotonAsiento(`${fila}${letra}`); });
+            html += '<span class="pasillo" aria-hidden="true"></span>';
+            derecha.forEach(letra => { html += crearBotonAsiento(`${fila}${letra}`); });
+        }
+        html += '</div>';
+        mapaAsientos.innerHTML = html;
+        mapaAsientos.querySelectorAll(".asiento-btn:not(:disabled)").forEach(boton => {
+            boton.addEventListener("click", () => alternarAsiento(boton.dataset.asiento));
+        });
+        actualizarCamposAsientos();
+    }
+
+    function crearBotonAsiento(asiento) {
+        const ocupado = asientosOcupados.includes(asiento);
+        const elegido = asientosSeleccionados.includes(asiento);
+        const clase = ocupado ? "ocupado" : (elegido ? "seleccionado" : "disponible");
+        return `<button type="button" class="asiento-btn ${clase}" data-asiento="${asiento}" ${ocupado ? "disabled title='Asiento ocupado'" : "title='Seleccionar asiento'"}>${asiento}</button>`;
+    }
+
+    function alternarAsiento(asiento) {
+        const maximo = totalViajeros();
+        if (asientosSeleccionados.includes(asiento)) {
+            asientosSeleccionados = asientosSeleccionados.filter(item => item !== asiento);
+        } else if (asientosSeleccionados.length < maximo) {
+            asientosSeleccionados.push(asiento);
+        } else {
+            alert(`Solo debes seleccionar ${maximo} asiento(s), uno por pasajero.`);
+            return;
+        }
+        renderizarMapa();
+    }
+
+    async function cargarAsientosOcupados() {
+        const tipo = tipoTransporteActual();
+        const fecha = fechaInput.value;
+        asientosSeleccionados = [];
+        asientosOcupados = [];
+        if (!tipo || !fecha) {
+            instruccionAsientos.textContent = "Primero elige fecha y tipo de transporte.";
+            renderizarMapa();
+            return;
+        }
+        instruccionAsientos.textContent = "Consultando disponibilidad para esta fecha...";
+        try {
+            const respuesta = await fetch(`/api/transporte/{{ tour.id_tour }}/asientos?fecha=${encodeURIComponent(fecha)}&tipo=${encodeURIComponent(tipo)}`);
+            const datos = await respuesta.json();
+            if (!respuesta.ok) throw new Error(datos.error || "No fue posible consultar los asientos.");
+            asientosOcupados = datos.ocupados || [];
+            instruccionAsientos.textContent = `Mapa de ${tipo === "avion" ? "avión 3 - 3" : "bus 2 - 2"}. Selecciona un asiento por pasajero.`;
+        } catch (error) {
+            instruccionAsientos.textContent = error.message;
+        }
+        renderizarMapa();
+    }
+
+    radiosTransporte.forEach(radio => radio.addEventListener("change", cargarAsientosOcupados));
+    fechaInput.addEventListener("change", cargarAsientosOcupados);
+
 
     function generarPasajeros() {
 
@@ -1013,6 +1121,10 @@
 
 
         actualizarTotal();
+        if (tipoTransporteActual()) {
+            asientosSeleccionados = asientosSeleccionados.slice(0, totalViajeros());
+            renderizarMapa();
+        }
 
     }
 
@@ -1056,6 +1168,14 @@
 
 
     generarPasajeros();
+
+    document.querySelector("form").addEventListener("submit", function (evento) {
+        if (asientosSeleccionados.length !== totalViajeros()) {
+            evento.preventDefault();
+            alert(`Selecciona exactamente ${totalViajeros()} asiento(s) antes de confirmar la reserva.`);
+            document.querySelector(".transporte-section").scrollIntoView({ behavior: "smooth" });
+        }
+    });
 
 </script>
 

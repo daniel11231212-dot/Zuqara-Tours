@@ -218,57 +218,6 @@ class Reserva(db.Model):
         backref="reservas"
     )
 
-class TransporteReserva(db.Model):
-    """Datos del transporte ficticio asociado a una reserva."""
-    __tablename__ = "transporte_reservas"
-
-    id = db.Column(db.Integer, primary_key=True)
-    reserva_id = db.Column(
-        db.Integer, db.ForeignKey("reservas.id_reserva"),
-        nullable=False, unique=True, index=True
-    )
-    tipo_transporte = db.Column(db.String(20), nullable=False)
-    origen = db.Column(db.String(120), nullable=False)
-    destino = db.Column(db.String(120), nullable=False)
-    fecha_viaje = db.Column(db.Date, nullable=False)
-    hora_salida = db.Column(db.String(5), nullable=False)
-    token_verificacion = db.Column(db.String(64), unique=True, nullable=False, default=lambda: uuid.uuid4().hex)
-
-    reserva = db.relationship(
-        "Reserva",
-        backref=db.backref("transporte", uselist=False, cascade="all, delete-orphan")
-    )
-
-
-class AsientoTransporte(db.Model):
-    """Un asiento ficticio reservado para un servicio y horario."""
-    __tablename__ = "asientos_transporte"
-    __table_args__ = (
-        UniqueConstraint(
-            "tipo_transporte", "origen", "destino",
-            "fecha_viaje", "hora_salida", "asiento",
-            name="uq_asiento_servicio_fecha_hora"
-        ),
-    )
-
-    id = db.Column(db.Integer, primary_key=True)
-    transporte_reserva_id = db.Column(
-        db.Integer, db.ForeignKey("transporte_reservas.id"),
-        nullable=False, index=True
-    )
-    tipo_transporte = db.Column(db.String(20), nullable=False)
-    origen = db.Column(db.String(120), nullable=False)
-    destino = db.Column(db.String(120), nullable=False)
-    fecha_viaje = db.Column(db.Date, nullable=False)
-    hora_salida = db.Column(db.String(5), nullable=False)
-    asiento = db.Column(db.String(5), nullable=False)
-
-    transporte = db.relationship(
-        "TransporteReserva",
-        backref=db.backref("asientos", cascade="all, delete-orphan", lazy=True)
-    )
-
-
 class Favorito(db.Model):
     __tablename__ = "favoritos"
 
@@ -786,6 +735,39 @@ class IntentoPagoSimulado(db.Model):
     reserva = db.relationship(
         "Reserva",
         backref=db.backref("intentos_pago_simulado", lazy=True)
+    )
+
+
+class TransporteReserva(db.Model):
+    """Asientos de transporte ficticio asociados a una reserva Zuqara."""
+    __tablename__ = "transportes_reserva"
+    __table_args__ = (
+        UniqueConstraint(
+            "tour_id", "fecha_viaje", "tipo_transporte", "asiento",
+            name="uq_asiento_transporte_tour_fecha"
+        ),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    reserva_id = db.Column(
+        db.Integer, db.ForeignKey("reservas.id_reserva"),
+        nullable=False, index=True
+    )
+    tour_id = db.Column(
+        db.Integer, db.ForeignKey("tours.id_tour"),
+        nullable=False, index=True
+    )
+    fecha_viaje = db.Column(db.Date, nullable=False)
+    tipo_transporte = db.Column(db.String(20), nullable=False)
+    origen = db.Column(db.String(120), nullable=False)
+    destino = db.Column(db.String(120), nullable=False)
+    hora_salida = db.Column(db.String(5), nullable=False)
+    asiento = db.Column(db.String(8), nullable=False)
+    pasajero_indice = db.Column(db.Integer, nullable=False)
+
+    reserva = db.relationship(
+        "Reserva",
+        backref=db.backref("asientos_transporte", lazy=True, cascade="all, delete-orphan")
     )
 
 
