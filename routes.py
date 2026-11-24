@@ -3747,51 +3747,73 @@ def comentar(reserva_id):
 
 
 
-@app.route(
-    "/cancelar_reserva/<int:reserva_id>"
-)
+
+@app.route("/cancelar_reserva/<int:reserva_id>", methods=["GET", "POST"])
 def cancelar_reserva(reserva_id):
 
     if "usuario_id" not in session:
-        return redirect(
-            url_for("login_usuario")
-        )
+        return redirect(url_for("login_usuario"))
 
-    reserva = Reserva.query.get_or_404(
-        reserva_id
-    )
+    reserva = Reserva.query.get_or_404(reserva_id)
 
-    if reserva.id_viajero != session["usuario_id"]:
-        flash(
-            "No tienes permiso para cancelar esta reserva."
-        )
-        return redirect(
-            url_for("reservas")
-        )
+    if str(reserva.id_viajero) != str(session["usuario_id"]):
+        flash("No tienes permiso para cancelar esta reserva.", "danger")
+        return redirect(url_for("reservas"))
 
     if reserva.estado_reserva == "cancelada":
+        flash("Esta reserva ya fue cancelada.", "warning")
+        return redirect(url_for("reservas"))
+
+    if reserva.estado_reserva == "finalizada":
+        flash("No puedes cancelar una reserva de un viaje finalizado.", "warning")
+        return redirect(url_for("reservas"))
+
+    if reserva.estado_reserva not in ["pendiente", "confirmada"]:
+        flash("No se puede cancelar esta reserva.", "warning")
+        return redirect(url_for("reservas"))
+
+    try:
+
+        reserva.estado_reserva = "cancelada"
+
+  
+        pago = Pago.query.filter_by(
+            reserva_id=reserva.id_reserva
+        ).first()
+
+        if pago:
+            pago.estado = "Cancelado"
+
+  
+        tour = reserva.tour
+
+        if tour:
+            tour.cupo_disponible = min(
+                tour.cupo_maximo,
+                tour.cupo_disponible + reserva.cantidad_personas
+            )
+
+
+        TransporteReserva.query.filter_by(
+            reserva_id=reserva.id_reserva
+        ).delete(synchronize_session=False)
+
+        db.session.commit()
+
         flash(
-            "Esta reserva ya fue cancelada."
-        )
-        return redirect(
-            url_for("reservas")
+            "Tu reserva y su pago han sido cancelados correctamente.",
+            "success"
         )
 
-    reserva.estado_reserva = "cancelada"
+    except Exception:
+        db.session.rollback()
+        flash(
+            "Ocurrió un error al cancelar la reserva. Inténtalo nuevamente.",
+            "danger"
+        )
 
-    TransporteReserva.query.filter_by(
-        reserva_id=reserva.id_reserva
-    ).delete(synchronize_session=False)
+    return redirect(url_for("reservas"))
 
-    db.session.commit()
-
-    flash(
-        "Reserva cancelada correctamente."
-    )
-
-    return redirect(
-        url_for("reservas")
-    )
 
 
 @app.route("/chat/<int:tour_id>")
