@@ -24,7 +24,6 @@ if not secret_key:
 
 app.config["SECRET_KEY"] = secret_key
 
-
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = (
@@ -36,15 +35,21 @@ database_url = os.environ.get("DATABASE_URL")
 if not database_url:
     raise RuntimeError("DATABASE_URL no está configurada")
 
+# Configurar explícitamente el controlador psycopg2
 if database_url.startswith("postgres://"):
     database_url = database_url.replace(
-        "postgres://", "postgresql://", 1
+        "postgres://",
+        "postgresql+psycopg2://",
+        1
+    )
+elif database_url.startswith("postgresql://"):
+    database_url = database_url.replace(
+        "postgresql://",
+        "postgresql+psycopg2://",
+        1
     )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -92,7 +97,6 @@ with app.app_context():
     if Categoria.query.count() == 0:
 
         for nombre, icono in CATEGORIAS_POR_DEFECTO:
-
             db.session.add(
                 Categoria(
                     nombre=nombre,
@@ -105,7 +109,6 @@ with app.app_context():
     if ParametroSistema.query.count() == 0:
 
         for clave, valor, descripcion in PARAMETROS_POR_DEFECTO:
-
             db.session.add(
                 ParametroSistema(
                     clave=clave,
@@ -118,7 +121,4 @@ with app.app_context():
 
 
 if __name__ == "__main__":
-
-    app.run(
-        debug=True
-    )
+    app.run(debug=True)
