@@ -1,3 +1,4 @@
+
 Flask==3.0.3
 Flask-SQLAlchemy==3.1.1
 psycopg2-binary==2.9.9
@@ -6,4 +7,4 @@ gunicorn
 python-dotenv
 SQLAlchemy<2.1
 google-genai
-qrcode==8.2git add requirements.txt
+qrcode==8.2
